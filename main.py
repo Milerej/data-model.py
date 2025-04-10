@@ -61,7 +61,7 @@ edges = [
     ("System Management", "Risk Materiality Level", "determines"),
     ("System Management", "System Resiliency", "improves"),
     ("System Management", "Hosting and System Dependencies", "depends on"),
-    ("System Management", "Central Programmes", "aligns with")
+    ("System Management", "Central Programmes", "aligns with"),
     ("System Management", "Supplier Contracts", "depends on"),
     ("Supplier Contracts", "Hosting and System Dependencies", "depends on")
 ]
