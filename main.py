@@ -32,7 +32,7 @@ entities = {
 # Define edges
 edges = [
     ("Agency", "System Overview"),
-    ("Agency", "Ministry Familyw"),
+    ("Agency", "Ministry Family"),
     ("System Overview", "Criticality Assessment"),
     ("Policy", "Policy Waivers"),
     ("Policy", "Industry Waiver"),
