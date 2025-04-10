@@ -39,10 +39,20 @@ entities = {
         ],
         "type": "Entity"
     }
-    # Add other entities similarly...
 }
 
 def create_node_table(node_name, entity_info):
+    field_list = []
+    for field in entity_info["fields"]:
+        style = ""
+        if field.get("is_key"):
+            style = "font-weight: bold; text-decoration: underline;"
+        elif field.get("is_foreign_key"):
+            style = "font-style: italic; text-decoration: underline;"
+        
+        suffix = " (PK)" if field.get("is_key") else " (FK)" if field.get("is_foreign_key") else ""
+        field_list.append(f'<li style="{style}">{field["name"]}{suffix}</li>')
+    
     table_html = f"""
     <table border="1" style="background-color: {entity_info['color']}; border-collapse: collapse; width: 200px;">
         <tr>
@@ -53,9 +63,97 @@ def create_node_table(node_name, entity_info):
         <tr>
             <td style="padding: 5px; border: 1px solid black;">
                 <ul style="margin: 0; padding-left: 20px;">
-                    {''.join(
-                        f'<li style="{"text-decoration: underline;" if field.get("is_key") or field.get("is_foreign_key") else ""}'
-                        f'{"font-weight: bold;" if field.get("is_key") else ""}'
-                        f'{"font-style: italic;" if field.get("is_foreign_key") else ""}">'
-                        f'{field["name"]}'
-                        f
+                    {''.join(field_list)}
+                </ul>
+            </td>
+        </tr>
+    </table>
+    """
+    return html.escape(table_html)
+
+# Create NetworkX graph
+G = nx.DiGraph()
+for node, info in entities.items():
+    G.add_node(node, 
+               title=create_node_table(node, info),
+               color=info['color'],
+               shape='box')
+
+# Define edges based on foreign key relationships
+edges = []
+for entity_name, entity_info in entities.items():
+    for field in entity_info['fields']:
+        if field.get('is_foreign_key'):
+            referenced_entity = field.get('references')
+            if referenced_entity:
+                edges.append((
+                    entity_name,
+                    referenced_entity,
+                    f"FK: {field['name']} → {referenced_entity}"
+                ))
+
+# Add edges to graph
+for source, target, label in edges:
+    G.add_edge(source, target, title=label, label=label)
+
+# Create interactive PyVis network
+net = Network(height="700px", width="100%", directed=True)
+net.from_nx(G)
+net.repulsion(node_distance=300, central_gravity=0.2)
+
+# Customize nodes and edges
+for node in net.nodes:
+    node["shape"] = "box"
+    node["font"] = {"size": 12}
+    node["margin"] = 10
+
+for edge in net.edges:
+    edge["label"] = edge["title"]
+    edge["font"] = {"size": 10}
+    edge["arrows"] = "to"
+    edge["color"] = {"color": "gray"}
+
+# Add custom CSS
+custom_css = """
+<style>
+    .node-table {
+        border-collapse: collapse;
+        background-color: white;
+    }
+    .node-table th {
+        background-color: #f0f0f0;
+        padding: 5px;
+    }
+    .node-table td {
+        padding: 3px;
+    }
+    .primary-key {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    .foreign-key {
+        font-style: italic;
+        text-decoration: underline;
+    }
+</style>
+"""
+
+# Save and display in Streamlit
+net.save_graph("graph.html")
+with open("graph.html", "r", encoding='utf-8') as f:
+    html_content = custom_css + f.read()
+components.html(html_content, height=750, scrolling=True)
+
+# Add legend
+st.sidebar.title("Legend")
+st.sidebar.markdown("""
+    **Key:**
+    - **Bold Underline** = Primary Key (PK)
+    - *Italic Underline* = Foreign Key (FK)
+""")
+for entity, info in entities.items():
+    st.sidebar.markdown(
+        f'<div style="background-color:{info["color"]};width:20px;height:20px;display:inline-block"></div> '
+        f'{entity} ({info["type"]})', 
+        unsafe_allow_html=True
+    )
