@@ -1,13 +1,12 @@
 # main.py
 
 import streamlit as st
+from pyvis.network import Network
 import networkx as nx
-import matplotlib.pyplot as plt
+import streamlit.components.v1 as components
 
-# Set Streamlit page config
-st.set_page_config(page_title="Data Model Interdependency Chart", layout="wide")
-
-st.title("📊 Data Model Interdependency Chart")
+st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+st.title("🧠 Interactive Data Model Interdependency Chart")
 
 # Define entity modules and colors
 entities = {
@@ -31,7 +30,7 @@ entities = {
     "Audit Findings": "gray"
 }
 
-# Define inter-entity relationships
+# Define edges
 edges = [
     ("Agency", "System Overview"),
     ("System Overview", "Criticality Assessment"),
@@ -51,19 +50,17 @@ edges = [
     ("System Overview", "Supplier Contracts")
 ]
 
-# Build the graph
+# Create NetworkX graph
 G = nx.DiGraph()
-for entity, color in entities.items():
-    G.add_node(entity, color=color)
-
+for node, color in entities.items():
+    G.add_node(node, title=node, color=color)
 G.add_edges_from(edges)
 
-# Generate colors from node attributes
-node_colors = [G.nodes[n]["color"] for n in G.nodes]
+# Create interactive PyVis network
+net = Network(height="700px", width="100%", directed=True)
+net.from_nx(G)
+net.repulsion(node_distance=200, central_gravity=0.3)
 
-# Draw the graph using matplotlib
-fig, ax = plt.subplots(figsize=(16, 10))
-pos = nx.spring_layout(G, k=0.6, iterations=50, seed=42)
-nx.draw(G, pos, with_labels=True, node_color=node_colors, node_size=2000,
-        font_size=10, edge_color='black', arrows=True, ax=ax)
-st.pyplot(fig)
+# Save and display in Streamlit
+net.save_graph("graph.html")
+components.html(open("graph.html", "r", encoding='utf-8').read(), height=750, scrolling=True)
