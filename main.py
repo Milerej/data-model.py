@@ -39,7 +39,7 @@ edges = [
     ("Agency", "System Overview", "relates to"),
     ("Agency", "Ministry Family", "manages"),
     ("System Overview", "Criticality Assessment", "supports"),
-    ("System Overview", "Policynt", "defines"),
+    ("System Overview", "Policy", "defines"),
     ("Policy", "Policy Waivers", "grants"),
     ("Supplier Profile", "Supplier Risk Management", "informs"),
     ("Supplier Profile", "Supplier Contracts", "oversees"),
@@ -62,6 +62,8 @@ edges = [
     ("System Management", "System Resiliency", "improves"),
     ("System Management", "Hosting and System Dependencies", "depends on"),
     ("System Management", "Central Programmes", "aligns with")
+    ("System Management", "Supplier Contracts", "depends on"),
+    ("Supplier Contracts", "Hosting and System Dependencies", "depends on")
 ]
 
 # Create NetworkX graph
