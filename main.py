@@ -1,11 +1,10 @@
-# main.py
-
 import streamlit as st
 from pyvis.network import Network
 import networkx as nx
 import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+
 st.title("🧠 Interactive Data Model Interdependency Chart")
 
 # Define entity modules and colors
@@ -29,37 +28,45 @@ entities = {
     "Audit Findings": "gray"
 }
 
-# Define edges
+# Define edges with labels for relationships
 edges = [
-    ("Agency", "System Overview"),
-    ("Agency", "Ministry Family"),
-    ("System Overview", "Criticality Assessment"),
-    ("Policy", "Policy Waivers"),
-    ("Policy", "Industry Waiver"),
-    ("Supplier Profile", "Supplier Risk Management"),
-    ("Supplier Profile", "Supplier Contracts"),
-    ("Supplier Profile", "Actions Against Errant Supplier"),
-    ("Supplier Profile", "Supplier Performance Feedback"),
-    ("Supplier Profile", "Bulk Tender ECN Details"),
-    ("Supplier Profile", "EDH Agency"),
-    ("Risk Assessments", "Risk Treatments"),
-    ("Audit Findings", "Risk Treatments"),
-    ("Supplier Risk Management", "Risk Assessments"),
-    ("Supplier Performance Feedback", "Supplier Risk Management"),
-    ("Actions Against Errant Supplier", "Supplier Contracts"),
-    ("System Overview", "Supplier Contracts")
+    ("Agency", "System Overview", "relates to"),
+    ("Agency", "Ministry Family", "manages"),
+    ("System Overview", "Criticality Assessment", "supports"),
+    ("Policy", "Policy Waivers", "defines"),
+    ("Policy", "Industry Waiver", "grants"),
+    ("Supplier Profile", "Supplier Risk Management", "informs"),
+    ("Supplier Profile", "Supplier Contracts", "oversees"),
+    ("Supplier Profile", "Actions Against Errant Supplier", "initiates"),
+    ("Supplier Profile", "Supplier Performance Feedback", "monitors"),
+    ("Supplier Profile", "Bulk Tender ECN Details", "includes"),
+    ("Supplier Profile", "EDH Agency", "collaborates with"),
+    ("Risk Assessments", "Risk Treatments", "leads to"),
+    ("Audit Findings", "Risk Treatments", "triggers"),
+    ("Supplier Risk Management", "Risk Assessments", "feeds into"),
+    ("Supplier Performance Feedback", "Supplier Risk Management", "affects"),
+    ("Actions Against Errant Supplier", "Supplier Contracts", "cancels"),
+    ("System Overview", "Supplier Contracts", "references"),
+    ("System Overview", "Audit Findings", "monitors")  # New edge
 ]
 
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, color in entities.items():
     G.add_node(node, title=node, color=color)
-G.add_edges_from(edges)
+
+# Add edges with labels
+for source, target, label in edges:
+    G.add_edge(source, target, title=label, label=label)
 
 # Create interactive PyVis network
 net = Network(height="700px", width="100%", directed=True)
 net.from_nx(G)
 net.repulsion(node_distance=200, central_gravity=0.3)
+
+# Customize edge labels
+for edge in net.edges:
+    edge["label"] = edge["title"]
 
 # Save and display in Streamlit
 net.save_graph("graph.html")
