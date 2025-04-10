@@ -25,7 +25,14 @@ entities = {
     "EDH Agency": "purple",
     "Risk Assessments": "orange",
     "Risk Treatments": "orange",
-    "Audit Findings": "gray"
+    "Audit Findings": "gray",
+    # New nodes
+    "System Management": "green",
+    "Security & Sensitivity Classification": "green",
+    "Risk Materiality Level": "green",
+    "System Resiliency": "green",
+    "Hosting and System Dependencies": "green",
+    "Central Programmes": "green"
 }
 
 # Define edges with labels for relationships
@@ -47,7 +54,15 @@ edges = [
     ("Supplier Performance Feedback", "Supplier Risk Management", "affects"),
     ("Actions Against Errant Supplier", "Supplier Contracts", "cancels"),
     ("System Overview", "Supplier Contracts", "references"),
-    ("System Overview", "Audit Findings", "monitors")  # New edge
+    ("System Overview", "Audit Findings", "monitors"),
+    # New edges for System Management
+    ("System Management", "System Overview", "manages"),
+    ("System Management", "Criticality Assessment", "supports"),
+    ("System Management", "Security & Sensitivity Classification", "evaluates"),
+    ("System Management", "Risk Materiality Level", "determines"),
+    ("System Management", "System Resiliency", "improves"),
+    ("System Management", "Hosting and System Dependencies", "depends on"),
+    ("System Management", "Central Programmes", "aligns with")
 ]
 
 # Create NetworkX graph
