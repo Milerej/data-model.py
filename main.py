@@ -5,10 +5,10 @@ from pyvis.network import Network
 import networkx as nx
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Interactive Dependency Lineage", layout="wide")
-st.title("🧠 Interactive Data Model Lineage Viewer")
+st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+st.title("🧠 Interactive Data Model Interdependency Chart")
 
-# Define nodes with colors
+# Define entity modules and colors
 entities = {
     "Ministry": "blue",
     "Family": "blue",
@@ -50,27 +50,17 @@ edges = [
     ("System Overview", "Supplier Contracts")
 ]
 
-# Full graph
-full_graph = nx.DiGraph()
+# Create NetworkX graph
+G = nx.DiGraph()
 for node, color in entities.items():
-    full_graph.add_node(node, title=node, color=color)
-full_graph.add_edges_from(edges)
+    G.add_node(node, title=node, color=color)
+G.add_edges_from(edges)
 
-# Node selector
-selected_node = st.selectbox("🔍 Select a Node to Show Lineage:", sorted(full_graph.nodes))
-
-# Traverse: Get all reachable descendants from the selected node
-descendants = nx.descendants(full_graph, selected_node)
-ancestors = nx.ancestors(full_graph, selected_node)
-
-# Include the selected node itself
-lineage_nodes = descendants.union(ancestors).union({selected_node})
-lineage_subgraph = full_graph.subgraph(lineage_nodes)
-
-# Render with PyVis
+# Create interactive PyVis network
 net = Network(height="700px", width="100%", directed=True)
-net.from_nx(lineage_subgraph)
+net.from_nx(G)
 net.repulsion(node_distance=200, central_gravity=0.3)
 
+# Save and display in Streamlit
 net.save_graph("graph.html")
 components.html(open("graph.html", "r", encoding='utf-8').read(), height=750, scrolling=True)
