@@ -10,8 +10,7 @@ st.title("🧠 Interactive Data Model Interdependency Chart")
 
 # Define entity modules and colors
 entities = {
-    "Ministry": "blue",
-    "Family": "blue",
+    "Ministry Family": "blue",
     "Agency": "blue",
     "System Overview": "teal",
     "Criticality Assessment": "teal",
@@ -33,6 +32,7 @@ entities = {
 # Define edges
 edges = [
     ("Agency", "System Overview"),
+    ("Agency", "Ministry Familyw"),
     ("System Overview", "Criticality Assessment"),
     ("Policy", "Policy Waivers"),
     ("Policy", "Industry Waiver"),
