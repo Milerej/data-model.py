@@ -4,7 +4,6 @@ import networkx as nx
 import streamlit.components.v1 as components
 import tempfile
 import os
-import json
 
 st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
@@ -101,8 +100,9 @@ for source, target, label, direction in edges:
 net = Network(height="700px", width="100%", directed=True, notebook=True)
 net.from_nx(G)
 
-# Set options for physics and edges
-options = {
+# Set options as a string
+net.set_options('''
+{
     "physics": {
         "forceAtlas2Based": {
             "springLength": 200,
@@ -119,7 +119,7 @@ options = {
         }
     }
 }
-net.set_options(json.dumps(options))
+''')
 
 net.repulsion(node_distance=300, central_gravity=0.3)
 
