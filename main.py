@@ -19,14 +19,6 @@ entities = {
     "Central Programmes": {"color": "green", "size": 20}
 }
 
-# Add filter in sidebar
-st.sidebar.title("Filter Options")
-selected_nodes = st.sidebar.multiselect(
-    "Select nodes to highlight:",
-    options=list(entities.keys()),
-    default=None
-)
-
 # Define edges with PK/FK relationships
 edges = [
     ("System Management", "System Overview", "FK: System_ID", "both"),
@@ -64,60 +56,46 @@ for edge in net.edges:
         edge["arrows"] = edge["arrows"]
 
 # Add JavaScript for highlighting selected nodes and their connections
-highlight_js = f"""
+highlight_js = """
 <script>
-function highlightNodes(selectedNodes) {{
-    if (selectedNodes.length === 0) {{
-        Object.values(network.body.nodes).forEach(node => {{
-            node.options.opacity = 1.0;
-        }});
-        Object.values(network.body.edges).forEach(edge => {{
-            edge.options.opacity = 1.0;
-        }});
-        network.redraw();
-        return;
-    }}
-
-    var connectedNodes = new Set(selectedNodes);
-    var connectedEdges = new Set();
-    
-    selectedNodes.forEach(function(nodeId) {{
-        network.getConnectedNodes(nodeId).forEach(function(connectedNode) {{
+network.on("click", function(params) {
+    if (params.nodes.length > 0) {
+        var selectedNode = params.nodes[0];
+        var connectedNodes = new Set([selectedNode]);
+        var connectedEdges = new Set();
+        
+        network.getConnectedNodes(selectedNode).forEach(function(connectedNode) {
             connectedNodes.add(connectedNode);
-            network.getConnectedEdges(nodeId).forEach(function(edgeId) {{
+            network.getConnectedEdges(selectedNode).forEach(function(edgeId) {
                 connectedEdges.add(edgeId);
-            }});
-        }});
-    }});
+            });
+        });
 
-    Object.values(network.body.nodes).forEach(function(node) {{
-        if (connectedNodes.has(node.id)) {{
+        Object.values(network.body.nodes).forEach(function(node) {
+            if (connectedNodes.has(node.id)) {
+                node.options.opacity = 1.0;
+            } else {
+                node.options.opacity = 0.2;
+            }
+        });
+        
+        Object.values(network.body.edges).forEach(function(edge) {
+            if (connectedEdges.has(edge.id)) {
+                edge.options.opacity = 1.0;
+            } else {
+                edge.options.opacity = 0.2;
+            }
+        });
+    } else {
+        Object.values(network.body.nodes).forEach(node => {
             node.options.opacity = 1.0;
-        }} else {{
-            node.options.opacity = 0.2;
-        }}
-    }});
-    
-    Object.values(network.body.edges).forEach(function(edge) {{
-        if (connectedEdges.has(edge.id)) {{
+        });
+        Object.values(network.body.edges).forEach(edge => {
             edge.options.opacity = 1.0;
-        }} else {{
-            edge.options.opacity = 0.2;
-        }}
-    }});
-    
+        });
+    }
     network.redraw();
-}}
-
-highlightNodes({str(selected_nodes)});
-
-network.on("click", function(params) {{
-    if (params.nodes.length > 0) {{
-        highlightNodes([params.nodes[0]]);
-    }} else {{
-        highlightNodes([]);
-    }}
-}});
+});
 </script>
 """
 
@@ -127,23 +105,3 @@ with open("graph.html", "r", encoding='utf-8') as f:
     html_content = f.read()
     html_content = html_content.replace('</body>', f'{highlight_js}</body>')
 components.html(html_content, height=750, scrolling=True)
-
-# Add legend
-st.sidebar.markdown("### Color Legend")
-for entity_type, color in {
-    "System Management & Overview": "green",
-    "Criticality Assessment": "teal"
-}.items():
-    st.sidebar.markdown(
-        f'<div style="display: flex; align-items: center;">'
-        f'<div style="width: 20px; height: 20px; background-color: {color}; margin-right: 10px;"></div>'
-        f'<div>{entity_type}</div></div>',
-        unsafe_allow_html=True
-    )
-
-# Add instructions
-st.sidebar.markdown("""### Instructions
-1. Select nodes from the dropdown above to highlight them and their connections
-2. Click on any node in the graph to highlight its connections
-3. Click on empty space to reset the view
-4. Drag nodes to rearrange the layout""")
