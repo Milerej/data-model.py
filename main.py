@@ -86,7 +86,6 @@ edges = [
     ("Audit Findings", "System Overview", 
      "FK: System_ID")
 ]
-]
 
 # Create NetworkX graph
 G = nx.DiGraph()
@@ -112,33 +111,6 @@ components.html(open("graph.html", "r", encoding='utf-8').read(), height=750, sc
 
 
 st.title("🧠🧠 Viz - Mock Up Data ")
-
-# Define entity modules and colors
-entities = {
-    "Ministry Family": "blue",
-    "Agency": "blue",
-    "System Overview": "teal",
-    "Criticality Assessment": "teal",
-    "Policy": "red",
-    "Policy Waivers": "red",
-    "Supplier Profile": "purple",
-    "Supplier Risk Management": "purple",
-    "Supplier Contracts": "purple",
-    "Actions Against Errant Supplier": "purple",
-    "Supplier Performance Feedback": "purple",
-    "Bulk Tender ECN Details": "purple",
-    "EDH Agency": "purple",
-    "Risk Assessments": "orange",
-    "Risk Treatments": "orange",
-    "Audit Findings": "gray",
-    # New nodes
-    "System Management": "green",
-    "Security & Sensitivity Classification": "green",
-    "Risk Materiality Level": "green",
-    "System Resiliency": "green",
-    "Hosting and System Dependencies": "green",
-    "Central Programmes": "green"
-}
 
 # Define edges with labels for relationships
 edges = [
