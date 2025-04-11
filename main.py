@@ -13,7 +13,7 @@ st.title("🧠 Interactive System Management Data Model")
 # Create two columns
 col1, col2 = st.columns([2, 1])
 
-# Define entities first
+# Define entity modules and colors
 entities = {
     "System Management": {
         "color": "#2E7D32", 
@@ -25,29 +25,60 @@ entities = {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "System overview information"
+        "title": "\n".join([
+            "Fields:",
+            "• Agency",
+            "• Ministry Family",
+            "• System ID (Primary Key)",
+            "• System Name",
+            "• System Description",
+            "• System Status"
+        ])
     },
     "Criticality Assessment": {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "Criticality assessment details"
+        "title": "\n".join([
+            "Fields:",
+            "• Economy",
+            "• Public Health and Safety",
+            "• National Security",
+            "• Social Preparedness",
+            "• Public Service",
+            "• Designated CII under the Cybersecurity Act",
+            "• System Criticality (System Auto-generated)"
+        ])
     },
     "Security & Sensitivity Classification": {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "Security classification details"
+        "title": "\n".join([
+            "Fields:",
+            "• Classification Level",
+            "• Data Sensitivity",
+            "• Security Controls",
+            "• Access Requirements",
+            "• Data Protection Measures"
+        ])
     },
     "Risk Materiality Level": {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "Risk assessment details"
+        "title": "\n".join([
+            "Fields:",
+            "• Risk Level",
+            "• Impact Score",
+            "• Probability Rating",
+            "• Mitigation Status",
+            "• Risk Assessment Date"
+        ])
     }
 }
 
-# Define edges
+# Define edges with PK/FK relationships
 edges = [
     ("System Management", "System Overview", "PK: System_ID", "both"),
     ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
@@ -75,7 +106,9 @@ table_data = {
             ["Public Health and Safety", "Health & safety impact"],
             ["National Security", "Security impact"],
             ["Social Preparedness", "Social impact"],
-            ["Public Service", "Service impact"]
+            ["Public Service", "Service impact"],
+            ["Designated CII", "Critical Infrastructure status"],
+            ["System Criticality", "Auto-generated assessment"]
         ]
     },
     "Security & Sensitivity Classification": {
@@ -83,7 +116,9 @@ table_data = {
         "rows": [
             ["Classification Level", "System classification level"],
             ["Data Sensitivity", "Sensitivity of data handled"],
-            ["Security Controls", "Implemented security measures"]
+            ["Security Controls", "Implemented security measures"],
+            ["Access Requirements", "Access control requirements"],
+            ["Data Protection", "Data protection measures"]
         ]
     },
     "Risk Materiality Level": {
@@ -91,7 +126,9 @@ table_data = {
         "rows": [
             ["Risk Level", "Overall risk assessment"],
             ["Impact Score", "Potential impact measurement"],
-            ["Mitigation Status", "Status of risk mitigation measures"]
+            ["Probability Rating", "Likelihood of risk occurrence"],
+            ["Mitigation Status", "Status of risk mitigation measures"],
+            ["Assessment Date", "Date of last risk assessment"]
         ]
     }
 }
@@ -127,13 +164,42 @@ net.set_options('''
         "enabled": true,
         "stabilization": {
             "enabled": true,
-            "iterations": 1000
+            "iterations": 1000,
+            "updateInterval": 50,
+            "onlyDynamicEdges": false,
+            "fit": true
+        },
+        "barnesHut": {
+            "gravitationalConstant": -5000,
+            "centralGravity": 0.2,
+            "springLength": 350,
+            "springConstant": 0.02,
+            "damping": 0.2,
+            "avoidOverlap": 1
         }
     },
     "edges": {
         "smooth": {
-            "type": "continuous"
+            "type": "continuous",
+            "forceDirection": "none"
+        },
+        "length": 350,
+        "font": {
+            "size": 14,
+            "strokeWidth": 2,
+            "strokeColor": "#ffffff"
         }
+    },
+    "nodes": {
+        "font": {
+            "size": 16,
+            "strokeWidth": 3,
+            "strokeColor": "#ffffff"
+        }
+    },
+    "interaction": {
+        "hover": true,
+        "tooltipDelay": 100
     }
 }
 ''')
