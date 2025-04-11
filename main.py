@@ -7,16 +7,16 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
-# Define entity modules and colors - only System Management related, without Supplier Contracts
+# Define entity modules and colors - updated System Overview to green
 entities = {
-    "System Management": "green",
-    "System Overview": "teal",
-    "Criticality Assessment": "teal",
-    "Security & Sensitivity Classification": "green",
-    "Risk Materiality Level": "green",
-    "System Resiliency": "green",
-    "Hosting and System Dependencies": "green",
-    "Central Programmes": "green"
+    "System Management": {"color": "green", "size": 30},  # Bigger size for main module
+    "System Overview": {"color": "green", "size": 20},    # Same color as System Management
+    "Criticality Assessment": {"color": "teal", "size": 20},
+    "Security & Sensitivity Classification": {"color": "green", "size": 20},
+    "Risk Materiality Level": {"color": "green", "size": 20},
+    "System Resiliency": {"color": "green", "size": 20},
+    "Hosting and System Dependencies": {"color": "green", "size": 20},
+    "Central Programmes": {"color": "green", "size": 20}
 }
 
 # Add filter in sidebar
@@ -27,7 +27,7 @@ selected_nodes = st.sidebar.multiselect(
     default=None
 )
 
-# Define edges with PK/FK relationships - only System Management related, without Supplier Contracts
+# Define edges with PK/FK relationships
 edges = [
     ("System Management", "System Overview", "FK: System_ID", "both"),
     ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
@@ -40,8 +40,8 @@ edges = [
 
 # Create NetworkX graph
 G = nx.DiGraph()
-for node, color in entities.items():
-    G.add_node(node, title=node, color=color)
+for node, attributes in entities.items():
+    G.add_node(node, title=node, color=attributes["color"], size=attributes["size"])
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
@@ -52,7 +52,10 @@ net = Network(height="700px", width="100%", directed=True)
 net.from_nx(G)
 net.repulsion(node_distance=200, central_gravity=0.3)
 
-# Customize edge labels and arrows
+# Customize edge labels, arrows, and node sizes
+for node in net.nodes:
+    node["value"] = entities[node["id"]]["size"]  # Set node size
+
 for edge in net.edges:
     edge["label"] = edge["title"]
     if edge["arrows"] == "both":
@@ -128,8 +131,8 @@ components.html(html_content, height=750, scrolling=True)
 # Add legend
 st.sidebar.markdown("### Color Legend")
 for entity_type, color in {
-    "System Management": "green",
-    "System & Criticality": "teal"
+    "System Management & Overview": "green",
+    "Criticality Assessment": "teal"
 }.items():
     st.sidebar.markdown(
         f'<div style="display: flex; align-items: center;">'
@@ -144,5 +147,4 @@ st.sidebar.markdown("""
 1. Select nodes from the dropdown above to highlight them and their connections
 2. Click on any node in the graph to highlight its connections
 3. Click on empty space to reset the view
-4. Drag nodes to rearrange the layout
-""")
+4. Drag nodes to
