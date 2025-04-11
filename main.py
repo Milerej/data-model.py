@@ -69,7 +69,6 @@ edges = [
     ("System Management", "System Resiliency", "PK: System_ID", "both"),
     ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
     ("System Management", "Central Programmes", "PK: System_ID", "both"),
-    # Removed the edge between Criticality Assessment and Risk Materiality Level
     ("Hosting and System Dependencies", "Risk Materiality Level", "PK: System_ID", "both"),
     ("Security & Sensitivity Classification", "Risk Materiality Level", "PK: System_ID", "both")
 ]
@@ -106,28 +105,28 @@ net.set_options('{' + '''
         "enabled": true,
         "stabilization": {
             "enabled": true,
-            "iterations": 2000,
+            "iterations": 1000,
             "updateInterval": 50,
             "onlyDynamicEdges": false,
             "fit": true
         },
         "barnesHut": {
-            "gravitationalConstant": -8000,
-            "centralGravity": 0.1,
-            "springLength": 400,
-            "springConstant": 0.04,
-            "damping": 0.5,
+            "gravitationalConstant": -5000,
+            "centralGravity": 0.2,
+            "springLength": 350,
+            "springConstant": 0.02,
+            "damping": 0.2,
             "avoidOverlap": 1
         },
-        "minVelocity": 0.75,
-        "maxVelocity": 30
+        "minVelocity": 0.5,
+        "maxVelocity": 40
     },
     "edges": {
         "smooth": {
             "type": "continuous",
             "forceDirection": "none"
         },
-        "length": 400,
+        "length": 350,
         "font": {
             "size": 14,
             "strokeWidth": 2,
@@ -215,7 +214,7 @@ network.on("stabilizationProgress", function(params) {
 });
 
 network.on("stabilizationIterationsDone", function() {
-    network.setOptions( { physics: { enabled: false } } );
+    // Physics remains enabled after stabilization
 });
 """
 
