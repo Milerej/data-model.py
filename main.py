@@ -31,14 +31,14 @@ custom_css = """
 
 # Define tooltip content for each node
 tooltip_info = {
-    "System Overview": '<table class="tooltip-table">' + \
-        '<tr><td class="field-name">Agency</td><td></td></tr>' + \
-        '<tr><td class="field-name">Ministry Family</td><td></td></tr>' + \
-        '<tr><td class="field-name">System ID (Primary Key)</td><td></td></tr>' + \
-        '<tr><td class="field-name">System Name</td><td></td></tr>' + \
-        '<tr><td class="field-name">System Description</td><td></td></tr>' + \
-        '<tr><td class="field-name">System Status</td><td></td></tr>' + \
-        '</table>',
+    "System Overview": '''<table style="border-collapse: collapse; width: 100%; background-color: white;">
+        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Agency</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Ministry Family</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System ID (Primary Key)</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Name</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Description</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Status</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+    </table>''',
     "System Management": "",
     "Criticality Assessment": "",
     "Security & Sensitivity Classification": "",
