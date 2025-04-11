@@ -96,7 +96,7 @@ net.save_graph("graph.html")
 components.html(open("graph.html", "r", encoding='utf-8').read(), height=750, scrolling=True)
 
 
-st.title("🧠🧠 Viz - Mock Up Data ")
+st.title("🧠🧠 Viz - Mock Up Data "
 
 # Define edges with labels for relationships and directions
 edges = [
