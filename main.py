@@ -64,62 +64,62 @@ for edge in net.edges:
         edge["arrows"] = edge["arrows"]
 
 # Add JavaScript for highlighting selected nodes and their connections
-highlight_js = """
+highlight_js = f"""
 <script>
-function highlightNodes(selectedNodes) {
-    if (selectedNodes.length === 0) {
-        Object.values(network.body.nodes).forEach(node => {
+function highlightNodes(selectedNodes) {{
+    if (selectedNodes.length === 0) {{
+        Object.values(network.body.nodes).forEach(node => {{
             node.options.opacity = 1.0;
-        });
-        Object.values(network.body.edges).forEach(edge => {
+        }});
+        Object.values(network.body.edges).forEach(edge => {{
             edge.options.opacity = 1.0;
-        });
+        }});
         network.redraw();
         return;
-    }
+    }}
 
     var connectedNodes = new Set(selectedNodes);
     var connectedEdges = new Set();
     
-    selectedNodes.forEach(function(nodeId) {
-        network.getConnectedNodes(nodeId).forEach(function(connectedNode) {
+    selectedNodes.forEach(function(nodeId) {{
+        network.getConnectedNodes(nodeId).forEach(function(connectedNode) {{
             connectedNodes.add(connectedNode);
-            network.getConnectedEdges(nodeId).forEach(function(edgeId) {
+            network.getConnectedEdges(nodeId).forEach(function(edgeId) {{
                 connectedEdges.add(edgeId);
-            });
-        });
-    });
+            }});
+        }});
+    }});
 
-    Object.values(network.body.nodes).forEach(function(node) {
-        if (connectedNodes.has(node.id)) {
+    Object.values(network.body.nodes).forEach(function(node) {{
+        if (connectedNodes.has(node.id)) {{
             node.options.opacity = 1.0;
-        } else {
+        }} else {{
             node.options.opacity = 0.2;
-        }
-    });
+        }}
+    }});
     
-    Object.values(network.body.edges).forEach(function(edge) {
-        if (connectedEdges.has(edge.id)) {
+    Object.values(network.body.edges).forEach(function(edge) {{
+        if (connectedEdges.has(edge.id)) {{
             edge.options.opacity = 1.0;
-        } else {
+        }} else {{
             edge.options.opacity = 0.2;
-        }
-    });
+        }}
+    }});
     
     network.redraw();
-}
+}}
 
-highlightNodes(%s);
+highlightNodes({str(selected_nodes)});
 
-network.on("click", function(params) {
-    if (params.nodes.length > 0) {
+network.on("click", function(params) {{
+    if (params.nodes.length > 0) {{
         highlightNodes([params.nodes[0]]);
-    } else {
+    }} else {{
         highlightNodes([]);
-    }
-});
+    }}
+}});
 </script>
-""" % str(selected_nodes)
+"""
 
 # Save and display in Streamlit
 net.save_graph("graph.html")
@@ -142,9 +142,8 @@ for entity_type, color in {
     )
 
 # Add instructions
-st.sidebar.markdown("""
-### Instructions
+st.sidebar.markdown("""### Instructions
 1. Select nodes from the dropdown above to highlight them and their connections
 2. Click on any node in the graph to highlight its connections
 3. Click on empty space to reset the view
-4. Drag nodes to
+4. Drag nodes to rearrange the layout""")
