@@ -48,13 +48,13 @@ entities = {
     },
     "Security & Sensitivity Classification": {
         "color": "#4CAF50", 
-        "size": 215, 
+        "size": 15, 
         "shape": "dot",
         "title": "Security and sensitivity classification details"
     },
     "Risk Materiality Level": {
         "color": "#4CAF50", 
-        "size": 215, 
+        "size": 15, 
         "shape": "dot",
         "title": "Risk materiality assessment details"
     },
