@@ -5,32 +5,19 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
-st.title("🧠 Interactive Data Model Interdependency Chart")
+st.title("🧠 Interactive System Management Data Model")
 
-# Define entity modules and colors
+# Define entity modules and colors - only System Management related
 entities = {
-    "Ministry Family": "blue",
-    "Agency": "blue",
+    "System Management": "green",
     "System Overview": "teal",
     "Criticality Assessment": "teal",
-    "Policy": "red",
-    "Policy Waivers": "red",
-    "Supplier Profile": "purple",
-    "Supplier Risk Management": "purple",
-    "Supplier Contracts": "purple",
-    "Actions Against Errant Supplier": "purple",
-    "Supplier Performance Feedback": "purple",
-    "Bulk Tender ECN Details": "purple",
-    "EDH Agency": "purple",
-    "Risk Assessments": "orange",
-    "Risk Treatments": "orange",
-    "Audit Findings": "gray",
-    "System Management": "green",
     "Security & Sensitivity Classification": "green",
     "Risk Materiality Level": "green",
     "System Resiliency": "green",
     "Hosting and System Dependencies": "green",
-    "Central Programmes": "green"
+    "Central Programmes": "green",
+    "Supplier Contracts": "purple"
 }
 
 # Add filter in sidebar
@@ -41,26 +28,8 @@ selected_nodes = st.sidebar.multiselect(
     default=None
 )
 
-# Define edges with PK/FK relationships
+# Define edges with PK/FK relationships - only System Management related
 edges = [
-    ("Agency", "System Overview", "FK: Agency_ID", "both"),
-    ("Agency", "Ministry Family", "FK: Ministry_ID", "both"),
-    ("System Overview", "Criticality Assessment", "FK: System_ID", "both"),
-    ("System Overview", "Policy", "FK: Policy_ID", "both"),
-    ("Policy", "Policy Waivers", "FK: Policy_ID", "both"),
-    ("Supplier Profile", "Supplier Risk Management", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "Supplier Contracts", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "Actions Against Errant Supplier", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "Supplier Performance Feedback", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "Bulk Tender ECN Details", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "EDH Agency", "FK: Supplier_ID", "both"),
-    ("Risk Assessments", "Risk Treatments", "FK: Assessment_ID", "both"),
-    ("Audit Findings", "Risk Treatments", "FK: Finding_ID", "both"),
-    ("Supplier Risk Management", "Risk Assessments", "FK: Risk_ID", "both"),
-    ("Supplier Performance Feedback", "Supplier Risk Management", "FK: Feedback_ID", "both"),
-    ("Actions Against Errant Supplier", "Supplier Contracts", "FK: Action_ID", "both"),
-    ("System Overview", "Supplier Contracts", "FK: System_ID", "both"),
-    ("System Overview", "Audit Findings", "FK: System_ID", "both"),
     ("System Management", "System Overview", "FK: System_ID", "both"),
     ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
     ("System Management", "Security & Sensitivity Classification", "FK: System_ID", "both"),
@@ -98,7 +67,6 @@ for edge in net.edges:
 highlight_js = """
 <script>
 function highlightNodes(selectedNodes) {
-    // If no nodes are selected, show all nodes and edges normally
     if (selectedNodes.length === 0) {
         Object.values(network.body.nodes).forEach(node => {
             node.options.opacity = 1.0;
@@ -113,7 +81,6 @@ function highlightNodes(selectedNodes) {
     var connectedNodes = new Set(selectedNodes);
     var connectedEdges = new Set();
     
-    // Find directly connected nodes and edges
     selectedNodes.forEach(function(nodeId) {
         network.getConnectedNodes(nodeId).forEach(function(connectedNode) {
             connectedNodes.add(connectedNode);
@@ -123,7 +90,6 @@ function highlightNodes(selectedNodes) {
         });
     });
 
-    // Update visualization
     Object.values(network.body.nodes).forEach(function(node) {
         if (connectedNodes.has(node.id)) {
             node.options.opacity = 1.0;
@@ -143,10 +109,8 @@ function highlightNodes(selectedNodes) {
     network.redraw();
 }
 
-// Initial highlight based on selected nodes
 highlightNodes(%s);
 
-// Add event listener for node clicks
 network.on("click", function(params) {
     if (params.nodes.length > 0) {
         highlightNodes([params.nodes[0]]);
@@ -167,13 +131,9 @@ components.html(html_content, height=750, scrolling=True)
 # Add legend
 st.sidebar.markdown("### Color Legend")
 for entity_type, color in {
-    "Ministry & Agency": "blue",
+    "System Management": "green",
     "System & Criticality": "teal",
-    "Policy": "red",
-    "Supplier": "purple",
-    "Risk": "orange",
-    "Audit": "gray",
-    "System Management": "green"
+    "Supplier": "purple"
 }.items():
     st.sidebar.markdown(
         f'<div style="display: flex; align-items: center;">'
