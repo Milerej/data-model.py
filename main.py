@@ -13,9 +13,14 @@ st.title("🧠 Interactive System Management Data Model")
 entities = {
     "System Management": {"color": "green", "size": 30, "shape": "dot"},
     "System Overview": {
-        "color": "rgba(0,0,0,0)", # Changed to transparent
+        "color": "rgba(0,0,0,0)",
         "size": 40, 
         "shape": "box",
+        "margin": 20,
+        "widthConstraint": {
+            "minimum": 200,
+            "maximum": 200
+        },
         "label": "\n".join([
             "SYSTEM OVERVIEW",
             "─────────────",
@@ -28,9 +33,14 @@ entities = {
         ])
     },
     "Criticality Assessment": {
-        "color": "rgba(0,0,0,0)", # Changed to transparent
+        "color": "rgba(0,0,0,0)",
         "size": 40, 
         "shape": "box",
+        "margin": 20,
+        "widthConstraint": {
+            "minimum": 200,
+            "maximum": 200
+        },
         "label": "\n".join([
             "CRITICALITY ASSESSMENT",
             "─────────────",
@@ -67,13 +77,20 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    G.add_node(
-        node,
-        color=attributes["color"],
-        size=attributes["size"],
-        shape=attributes["shape"],
-        label=attributes.get("label", node)
-    )
+    node_attrs = {
+        "color": attributes["color"],
+        "size": attributes["size"],
+        "shape": attributes["shape"],
+        "label": attributes.get("label", node)
+    }
+    
+    # Add additional attributes for boxes
+    if "margin" in attributes:
+        node_attrs["margin"] = attributes["margin"]
+    if "widthConstraint" in attributes:
+        node_attrs["widthConstraint"] = attributes["widthConstraint"]
+    
+    G.add_node(node, **node_attrs)
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
@@ -82,7 +99,29 @@ for source, target, label, direction in edges:
 # Create interactive PyVis network
 net = Network(height="700px", width="100%", directed=True, notebook=True)
 net.from_nx(G)
-net.repulsion(node_distance=200, central_gravity=0.3)
+
+# Adjust physics settings
+net.set_options("""
+const options = {
+    "physics": {
+        "forceAtlas2Based": {
+            "springLength": 200,
+            "springConstant": 0.5,
+            "damping": 0.5
+        },
+        "minVelocity": 0.75,
+        "solver": "forceAtlas2Based"
+    },
+    "edges": {
+        "smooth": {
+            "type": "continuous",
+            "forceDirection": "none"
+        }
+    }
+}
+""")
+
+net.repulsion(node_distance=300, central_gravity=0.3)
 
 # Customize edge labels and arrows
 for edge in net.edges:
@@ -122,25 +161,4 @@ network.on("click", function(params) {
         });
     } else {
         Object.values(network.body.nodes).forEach(node => {
-            node.options.opacity = 1.0;
-        });
-        Object.values(network.body.edges).forEach(edge => {
-            edge.options.opacity = 1.0;
-        });
-    }
-    network.redraw();
-});
-"""
-
-# Create a temporary directory and save the graph
-with tempfile.TemporaryDirectory() as temp_dir:
-    path = os.path.join(temp_dir, "graph.html")
-    net.save_graph(path)
-    
-    with open(path, "r", encoding="utf-8") as f:
-        html_content = f.read()
-    
-    # Add JavaScript
-    html_content = html_content.replace('</body>', f'<script>{highlight_js}</script></body>')
-    
-    components.html(html_content, height=750, scrolling=True)
+            node.options.opacity =
