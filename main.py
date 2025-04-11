@@ -9,6 +9,110 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
+# Define custom CSS for tooltips
+custom_css = """
+<style>
+.tooltip-table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.tooltip-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+.tooltip-table .field-name {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+</style>
+"""
+
+# Define tooltip content for each node
+tooltip_info = {
+    "System Overview": """
+    <table class='tooltip-table'>
+        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
+        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
+        <tr><td class='field-name'>System ID</td><td><b>SYS_001</b></td></tr>
+        <tr><td class='field-name'>System Name</td><td>System Overview Module</td></tr>
+        <tr><td class='field-name'>System Description</td><td>Core module for system information management</td></tr>
+        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
+    </table>
+    """,
+    "System Management": """
+    <table class='tooltip-table'>
+        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
+        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
+        <tr><td class='field-name'>System ID</td><td><b>SYS_002</b></td></tr>
+        <tr><td class='field-name'>System Name</td><td>System Management Console</td></tr>
+        <tr><td class='field-name'>System Description</td><td>Central management interface</td></tr>
+        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
+    </table>
+    """,
+    "Criticality Assessment": """
+    <table class='tooltip-table'>
+        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
+        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
+        <tr><td class='field-name'>System ID</td><td><b>SYS_003</b></td></tr>
+        <tr><td class='field-name'>System Name</td><td>Criticality Assessment Module</td></tr>
+        <tr><td class='field-name'>System Description</td><td>System criticality evaluation tool</td></tr>
+        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
+    </table>
+    """,
+    "Security & Sensitivity Classification": """
+    <table class='tooltip-table'>
+        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
+        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
+        <tr><td class='field-name'>System ID</td><td><b>SYS_004</b></td></tr>
+        <tr><td class='field-name'>System Name</td><td>Security Classification Module</td></tr>
+        <tr><td class='field-name'>System Description</td><td>Security level management system</td></tr>
+        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
+    </table>
+    """,
+    "Risk Materiality Level": """
+    <table class='tooltip-table'>
+        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
+        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
+        <tr><td class='field-name'>System ID</td><td><b>SYS_005</b></td></tr>
+        <tr><td class='field-name'>System Name</td><td>Risk Assessment Module</td></tr>
+        <tr><td class='field-name'>System Description</td><td>Risk evaluation and tracking system</td></tr>
+        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
+    </table>
+    """,
+    "System Resiliency": """
+    <table class='tooltip-table'>
+        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
+        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
+        <tr><td class='field-name'>System ID</td><td><b>SYS_006</b></td></tr>
+        <tr><td class='field-name'>System Name</td><td>Resiliency Management Module</td></tr>
+        <tr><td class='field-name'>System Description</td><td>System resilience monitoring tool</td></tr>
+        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
+    </table>
+    """,
+    "Hosting and System Dependencies": """
+    <table class='tooltip-table'>
+        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
+        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
+        <tr><td class='field-name'>System ID</td><td><b>SYS_007</b></td></tr>
+        <tr><td class='field-name'>System Name</td><td>Dependencies Management Module</td></tr>
+        <tr><td class='field-name'>System Description</td><td>System dependencies tracking tool</td></tr>
+        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
+    </table>
+    """,
+    "Central Programmes": """
+    <table class='tooltip-table'>
+        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
+        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
+        <tr><td class='field-name'>System ID</td><td><b>SYS_008</b></td></tr>
+        <tr><td class='field-name'>System Name</td><td>Central Programs Module</td></tr>
+        <tr><td class='field-name'>System Description</td><td>Program management system</td></tr>
+        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
+    </table>
+    """
+}
+
 # Define entity modules and colors
 entities = {
     "System Management": {"color": "green", "size": 30},
@@ -27,92 +131,4 @@ edges = [
     ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
     ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
     ("System Management", "Risk Materiality Level", "PK: System_ID", "both"),
-    ("System Management", "System Resiliency", "PK: System_ID", "both"),
-    ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
-    ("System Management", "Central Programmes", "PK: System_ID", "both"),
-    ("Criticality Assessment", "Risk Materiality Level", "PK: System_ID", "both"),
-    ("Hosting and System Dependencies", "Risk Materiality Level", "PK: System_ID", "both"),
-    ("Security & Sensitivity Classification", "Risk Materiality Level", "PK: System_ID", "both")
-]
-
-# Create NetworkX graph
-G = nx.DiGraph()
-for node, attributes in entities.items():
-    G.add_node(node, color=attributes["color"], size=attributes["size"])
-
-# Add edges with labels and custom arrow directions
-for source, target, label, direction in edges:
-    G.add_edge(source, target, title=label, label=label, arrows=direction)
-
-# Create interactive PyVis network
-net = Network(height="700px", width="100%", directed=True, notebook=True)
-net.from_nx(G)
-net.repulsion(node_distance=200, central_gravity=0.3)
-
-# Customize edge labels, arrows, and node sizes
-for node in net.nodes:
-    node["value"] = entities[node["id"]]["size"]
-
-for edge in net.edges:
-    edge["label"] = edge["title"]
-    if edge["arrows"] == "both":
-        edge["arrows"] = "to,from"
-    else:
-        edge["arrows"] = edge["arrows"]
-
-# Add JavaScript for highlighting selected nodes and their connections
-highlight_js = """
-<script>
-network.on("click", function(params) {
-    if (params.nodes.length > 0) {
-        var selectedNode = params.nodes[0];
-        var connectedNodes = new Set([selectedNode]);
-        var connectedEdges = new Set();
-        
-        network.getConnectedNodes(selectedNode).forEach(function(connectedNode) {
-            connectedNodes.add(connectedNode);
-            network.getConnectedEdges(selectedNode).forEach(function(edgeId) {
-                connectedEdges.add(edgeId);
-            });
-        });
-
-        Object.values(network.body.nodes).forEach(function(node) {
-            if (connectedNodes.has(node.id)) {
-                node.options.opacity = 1.0;
-            } else {
-                node.options.opacity = 0.2;
-            }
-        });
-        
-        Object.values(network.body.edges).forEach(function(edge) {
-            if (connectedEdges.has(edge.id)) {
-                edge.options.opacity = 1.0;
-            } else {
-                edge.options.opacity = 0.2;
-            }
-        });
-    } else {
-        Object.values(network.body.nodes).forEach(node => {
-            node.options.opacity = 1.0;
-        });
-        Object.values(network.body.edges).forEach(edge => {
-            edge.options.opacity = 1.0;
-        });
-    }
-    network.redraw();
-});
-</script>
-"""
-
-# Create a temporary directory and save the graph
-with tempfile.TemporaryDirectory() as temp_dir:
-    path = os.path.join(temp_dir, "graph.html")
-    net.save_graph(path)
-    
-    with open(path, "r", encoding="utf-8") as f:
-        html_content = f.read()
-    
-    # Add highlighting JavaScript
-    html_content = html_content.replace('</body>', f'{highlight_js}</body>')
-    
-    components.html(html_content, height=750, scrolling=True)
+    ("System Management", "System Resiliency
