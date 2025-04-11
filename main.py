@@ -18,8 +18,8 @@ entities = {
         "title": "Central node managing system relationships"
     },
     "System Overview": {
-        "color": "white", 
-        "size": 25, 
+        "color": "green", 
+        "size": 15, 
         "shape": "dot",
         "title": "\n".join([
             "Fields:",
@@ -32,8 +32,8 @@ entities = {
         ])
     },
     "Criticality Assessment": {
-        "color": "white", 
-        "size": 25, 
+        "color": "green", 
+        "size": 15,
         "shape": "dot",
         "title": "\n".join([
             "Fields:",
@@ -47,32 +47,32 @@ entities = {
         ])
     },
     "Security & Sensitivity Classification": {
-        "color": "white", 
-        "size": 25, 
+        "color": "green", 
+        "size": 15, 
         "shape": "dot",
         "title": "Security and sensitivity classification details"
     },
     "Risk Materiality Level": {
-        "color": "white", 
-        "size": 25, 
+        "color": "green", 
+        "size": 15, 
         "shape": "dot",
         "title": "Risk materiality assessment details"
     },
     "System Resiliency": {
-        "color": "white", 
-        "size": 25, 
+        "color": "green", 
+        "size": 125, 
         "shape": "dot",
         "title": "System resiliency metrics and details"
     },
     "Hosting and System Dependencies": {
-        "color": "white", 
-        "size": 25, 
+        "color": "green", 
+        "size": 15, 
         "shape": "dot",
         "title": "Hosting environment and system dependency information"
     },
     "Central Programmes": {
-        "color": "white", 
-        "size": 25, 
+        "color": "green", 
+        "size": 15, 
         "shape": "dot",
         "title": "Central programmes information"
     }
