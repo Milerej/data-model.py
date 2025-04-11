@@ -13,7 +13,92 @@ st.title("🧠 Interactive System Management Data Model")
 # Create two columns
 col1, col2 = st.columns([2, 1])
 
-# [Previous entities, edges, and table_data definitions remain the same]
+# Define entities first
+entities = {
+    "System Management": {
+        "color": "#2E7D32", 
+        "size": 30, 
+        "shape": "dot",
+        "title": "Central node managing system relationships"
+    },
+    "System Overview": {
+        "color": "#4CAF50", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "System overview information"
+    },
+    "Criticality Assessment": {
+        "color": "#4CAF50", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "Criticality assessment details"
+    },
+    "Security & Sensitivity Classification": {
+        "color": "#4CAF50", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "Security classification details"
+    },
+    "Risk Materiality Level": {
+        "color": "#4CAF50", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "Risk assessment details"
+    }
+}
+
+# Define edges
+edges = [
+    ("System Management", "System Overview", "PK: System_ID", "both"),
+    ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
+    ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
+    ("System Management", "Risk Materiality Level", "PK: System_ID", "both")
+]
+
+# Define table data
+table_data = {
+    "System Overview": {
+        "headers": ["Field", "Description"],
+        "rows": [
+            ["Agency", "Agency name"],
+            ["Ministry Family", "Parent ministry"],
+            ["System ID", "Primary Key"],
+            ["System Name", "Name of the system"],
+            ["System Description", "Detailed description"],
+            ["System Status", "Current status"]
+        ]
+    },
+    "Criticality Assessment": {
+        "headers": ["Field", "Description"],
+        "rows": [
+            ["Economy", "Economic impact"],
+            ["Public Health and Safety", "Health & safety impact"],
+            ["National Security", "Security impact"],
+            ["Social Preparedness", "Social impact"],
+            ["Public Service", "Service impact"]
+        ]
+    },
+    "Security & Sensitivity Classification": {
+        "headers": ["Field", "Description"],
+        "rows": [
+            ["Classification Level", "System classification level"],
+            ["Data Sensitivity", "Sensitivity of data handled"],
+            ["Security Controls", "Implemented security measures"]
+        ]
+    },
+    "Risk Materiality Level": {
+        "headers": ["Field", "Description"],
+        "rows": [
+            ["Risk Level", "Overall risk assessment"],
+            ["Impact Score", "Potential impact measurement"],
+            ["Mitigation Status", "Status of risk mitigation measures"]
+        ]
+    }
+}
+
+# Initialize session state
+if 'selected_node' not in st.session_state:
+    st.session_state.selected_node = None
 
 # Initialize PyVis network
 net = Network(notebook=True, cdn_resources='remote')
