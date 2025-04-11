@@ -9,117 +9,6 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
-# Define custom CSS for tooltips
-custom_css = """
-<style>
-#tooltip {
-    position: absolute;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px;
-    font-family: Arial;
-    font-size: 14px;
-    z-index: 1000;
-    max-width: 500px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-#tooltip table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 5px;
-}
-#tooltip th, #tooltip td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-#tooltip th {
-    background-color: #f2f2f2;
-}
-</style>
-"""
-
-# Define table information for mouseover
-table_info = {
-    "System Overview": """
-    <table border='1' style='background-color: white; padding: 5px;'>
-    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
-    <tr><td>system_id (PK)</td><td>UUID</td><td>Unique identifier for the system</td></tr>
-    <tr><td>agency</td><td>VARCHAR(100)</td><td>Agency name</td></tr>
-    <tr><td>ministry_family</td><td>VARCHAR(100)</td><td>Ministry family name</td></tr>
-    <tr><td>system_name</td><td>VARCHAR(200)</td><td>Name of the system</td></tr>
-    <tr><td>system_description</td><td>TEXT</td><td>Detailed description of the system</td></tr>
-    <tr><td>system_status</td><td>VARCHAR(50)</td><td>Current status of the system</td></tr>
-    <tr><td>created_at</td><td>TIMESTAMP</td><td>Record creation timestamp</td></tr>
-    <tr><td>updated_at</td><td>TIMESTAMP</td><td>Last update timestamp</td></tr>
-    </table>
-    """,
-    "System Management": """
-    <table border='1' style='background-color: white; padding: 5px;'>
-    <tr><th>Column</th><th>Type</th></tr>
-    <tr><td>system_id (PK)</td><td>UUID</td></tr>
-    <tr><td>system_name</td><td>VARCHAR(200)</td></tr>
-    <tr><td>created_at</td><td>TIMESTAMP</td></tr>
-    <tr><td>updated_at</td><td>TIMESTAMP</td></tr>
-    </table>
-    """,
-    "Criticality Assessment": """
-    <table border='1' style='background-color: white; padding: 5px;'>
-    <tr><th>Column</th><th>Type</th></tr>
-    <tr><td>assessment_id (PK)</td><td>UUID</td></tr>
-    <tr><td>system_id (FK)</td><td>UUID</td></tr>
-    <tr><td>criticality_level</td><td>VARCHAR(50)</td></tr>
-    <tr><td>assessment_date</td><td>DATE</td></tr>
-    </table>
-    """,
-    "Security & Sensitivity Classification": """
-    <table border='1' style='background-color: white; padding: 5px;'>
-    <tr><th>Column</th><th>Type</th></tr>
-    <tr><td>security_id (PK)</td><td>UUID</td></tr>
-    <tr><td>system_id (FK)</td><td>UUID</td></tr>
-    <tr><td>classification_level</td><td>VARCHAR(50)</td></tr>
-    <tr><td>last_review_date</td><td>DATE</td></tr>
-    </table>
-    """,
-    "Risk Materiality Level": """
-    <table border='1' style='background-color: white; padding: 5px;'>
-    <tr><th>Column</th><th>Type</th></tr>
-    <tr><td>risk_id (PK)</td><td>UUID</td></tr>
-    <tr><td>system_id (FK)</td><td>UUID</td></tr>
-    <tr><td>materiality_level</td><td>VARCHAR(50)</td></tr>
-    <tr><td>assessment_date</td><td>DATE</td></tr>
-    </table>
-    """,
-    "System Resiliency": """
-    <table border='1' style='background-color: white; padding: 5px;'>
-    <tr><th>Column</th><th>Type</th></tr>
-    <tr><td>resiliency_id (PK)</td><td>UUID</td></tr>
-    <tr><td>system_id (FK)</td><td>UUID</td></tr>
-    <tr><td>resiliency_level</td><td>VARCHAR(50)</td></tr>
-    <tr><td>last_test_date</td><td>DATE</td></tr>
-    </table>
-    """,
-    "Hosting and System Dependencies": """
-    <table border='1' style='background-color: white; padding: 5px;'>
-    <tr><th>Column</th><th>Type</th></tr>
-    <tr><td>dependency_id (PK)</td><td>UUID</td></tr>
-    <tr><td>system_id (FK)</td><td>UUID</td></tr>
-    <tr><td>dependency_type</td><td>VARCHAR(100)</td></tr>
-    <tr><td>dependency_details</td><td>TEXT</td></tr>
-    </table>
-    """,
-    "Central Programmes": """
-    <table border='1' style='background-color: white; padding: 5px;'>
-    <tr><th>Column</th><th>Type</th></tr>
-    <tr><td>programme_id (PK)</td><td>UUID</td></tr>
-    <tr><td>system_id (FK)</td><td>UUID</td></tr>
-    <tr><td>programme_name</td><td>VARCHAR(200)</td></tr>
-    <tr><td>status</td><td>VARCHAR(50)</td></tr>
-    </table>
-    """
-}
-
 # Define entity modules and colors
 entities = {
     "System Management": {"color": "green", "size": 30},
@@ -149,8 +38,7 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    tooltip = table_info[node].replace('\n', '').replace('"', '\\"')
-    G.add_node(node, title=tooltip, color=attributes["color"], size=attributes["size"])
+    G.add_node(node, color=attributes["color"], size=attributes["size"])
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
@@ -171,46 +59,6 @@ for edge in net.edges:
         edge["arrows"] = "to,from"
     else:
         edge["arrows"] = edge["arrows"]
-
-# Add JavaScript for tooltip handling
-tooltip_js = """
-<script>
-network.on("hoverNode", function(params) {
-    var node = params.node;
-    var x = params.event.center.x;
-    var y = params.event.center.y;
-    
-    // Remove existing tooltip if any
-    var existingTooltip = document.getElementById('tooltip');
-    if (existingTooltip) {
-        existingTooltip.parentNode.removeChild(existingTooltip);
-    }
-    
-    var tooltip = document.createElement('div');
-    tooltip.id = 'tooltip';
-    tooltip.style.left = (x + 10) + 'px';
-    tooltip.style.top = (y + 10) + 'px';
-    tooltip.innerHTML = node.title;
-    
-    document.body.appendChild(tooltip);
-});
-
-network.on("blurNode", function(params) {
-    var tooltip = document.getElementById('tooltip');
-    if (tooltip) {
-        tooltip.parentNode.removeChild(tooltip);
-    }
-});
-
-// Update tooltip position on canvas drag
-network.on("dragging", function(params) {
-    var tooltip = document.getElementById('tooltip');
-    if (tooltip) {
-        tooltip.parentNode.removeChild(tooltip);
-    }
-});
-</script>
-"""
 
 # Add JavaScript for highlighting selected nodes and their connections
 highlight_js = """
@@ -264,12 +112,7 @@ with tempfile.TemporaryDirectory() as temp_dir:
     with open(path, "r", encoding="utf-8") as f:
         html_content = f.read()
     
-    # Add necessary scripts and styles
-    html_content = html_content.replace('</head>', f'{custom_css}</head>')
-    html_content = html_content.replace('</body>', f'{tooltip_js}{highlight_js}</body>')
-    
-    # Fix HTML escaping
-    html_content = html_content.replace('&lt;', '<').replace('&gt;', '>')
-    html_content = html_content.replace('&quot;', '"')
+    # Add highlighting JavaScript
+    html_content = html_content.replace('</body>', f'{highlight_js}</body>')
     
     components.html(html_content, height=750, scrolling=True)
