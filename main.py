@@ -9,17 +9,24 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
-# Add table for System Overview using Streamlit
-st.subheader("System Overview Details")
-system_overview_data = {
-    "Field": ["Agency", "Ministry Family", "System ID (Primary Key)", "System Name", "System Description", "System Status"],
-}
-st.table(system_overview_data)
-
 # Define entity modules and colors
 entities = {
     "System Management": {"color": "green", "size": 30, "shape": "dot"},
-    "System Overview": {"color": "green", "size": 30, "shape": "dot"},  # Changed to match other nodes
+    "System Overview": {
+        "color": "green", 
+        "size": 30, 
+        "shape": "dot",
+        "details": "\n".join([
+            "SYSTEM OVERVIEW FIELDS",
+            "─────────────",
+            "Agency",
+            "Ministry Family",
+            "System ID (Primary Key)",
+            "System Name",
+            "System Description",
+            "System Status"
+        ])
+    },
     "Criticality Assessment": {"color": "green", "size": 20, "shape": "dot"},
     "Security & Sensitivity Classification": {"color": "green", "size": 20, "shape": "dot"},
     "Risk Materiality Level": {"color": "green", "size": 20, "shape": "dot"},
@@ -45,13 +52,33 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    G.add_node(
-        node,
-        color=attributes["color"],
-        size=attributes["size"],
-        shape=attributes["shape"],
-        label=node
-    )
+    if node == "System Overview":
+        # Add the main node
+        G.add_node(
+            node,
+            color=attributes["color"],
+            size=attributes["size"],
+            shape=attributes["shape"],
+            label=node
+        )
+        # Add the details node
+        G.add_node(
+            f"{node}_details",
+            color="white",
+            size=40,
+            shape="box",
+            label=attributes["details"]
+        )
+        # Add invisible edge to keep them close
+        G.add_edge(node, f"{node}_details", color="rgba(0,0,0,0)")
+    else:
+        G.add_node(
+            node,
+            color=attributes["color"],
+            size=attributes["size"],
+            shape=attributes["shape"],
+            label=node
+        )
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
@@ -64,11 +91,11 @@ net.repulsion(node_distance=200, central_gravity=0.3)
 
 # Customize edge labels and arrows
 for edge in net.edges:
-    edge["label"] = edge["title"]
-    if edge["arrows"] == "both":
+    if "color" in edge:
+        edge["color"] = edge["color"]
+    edge["label"] = edge.get("title", "")
+    if edge.get("arrows") == "both":
         edge["arrows"] = "to,from"
-    else:
-        edge["arrows"] = edge["arrows"]
 
 # Add JavaScript for highlighting
 combined_js = """
@@ -86,43 +113,4 @@ network.on("click", function(params) {
             });
         });
 
-        Object.values(network.body.nodes).forEach(function(node) {
-            if (connectedNodes.has(node.id)) {
-                node.options.opacity = 1.0;
-            } else {
-                node.options.opacity = 0.2;
-            }
-        });
-        
-        Object.values(network.body.edges).forEach(function(edge) {
-            if (connectedEdges.has(edge.id)) {
-                edge.options.opacity = 1.0;
-            } else {
-                edge.options.opacity = 0.2;
-            }
-        });
-    } else {
-        Object.values(network.body.nodes).forEach(node => {
-            node.options.opacity = 1.0;
-        });
-        Object.values(network.body.edges).forEach(edge => {
-            edge.options.opacity = 1.0;
-        });
-    }
-    network.redraw();
-});
-</script>
-"""
-
-# Create a temporary directory and save the graph
-with tempfile.TemporaryDirectory() as temp_dir:
-    path = os.path.join(temp_dir, "graph.html")
-    net.save_graph(path)
-    
-    with open(path, "r", encoding="utf-8") as f:
-        html_content = f.read()
-    
-    # Add JavaScript
-    html_content = html_content.replace('</body>', f'{combined_js}</body>')
-    
-    components.html(html_content, height=750, scrolling=True)
+        Object.values(network
