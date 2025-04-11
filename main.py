@@ -12,7 +12,7 @@ st.title("🧠 Interactive System Management Data Model")
 # Define custom CSS for tooltips
 custom_css = """
 <style>
-.vis-tooltip {
+#tooltip {
     position: absolute;
     background-color: white;
     border: 1px solid #ccc;
@@ -22,19 +22,19 @@ custom_css = """
     font-size: 14px;
     z-index: 1000;
     max-width: 500px;
-    white-space: normal;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
-.vis-tooltip table {
+#tooltip table {
     border-collapse: collapse;
     width: 100%;
     margin-top: 5px;
 }
-.vis-tooltip th, .vis-tooltip td {
+#tooltip th, #tooltip td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
 }
-.vis-tooltip th {
+#tooltip th {
     background-color: #f2f2f2;
 }
 </style>
@@ -43,97 +43,81 @@ custom_css = """
 # Define table information for mouseover
 table_info = {
     "System Overview": """
-<div class='vis-tooltip'>
-<table>
-<tr><th>Column</th><th>Type</th><th>Description</th></tr>
-<tr><td>system_id (PK)</td><td>UUID</td><td>Unique identifier for the system</td></tr>
-<tr><td>agency</td><td>VARCHAR(100)</td><td>Agency name</td></tr>
-<tr><td>ministry_family</td><td>VARCHAR(100)</td><td>Ministry family name</td></tr>
-<tr><td>system_name</td><td>VARCHAR(200)</td><td>Name of the system</td></tr>
-<tr><td>system_description</td><td>TEXT</td><td>Detailed description of the system</td></tr>
-<tr><td>system_status</td><td>VARCHAR(50)</td><td>Current status of the system</td></tr>
-<tr><td>created_at</td><td>TIMESTAMP</td><td>Record creation timestamp</td></tr>
-<tr><td>updated_at</td><td>TIMESTAMP</td><td>Last update timestamp</td></tr>
-</table>
-</div>
-""",
+    <table border='1' style='background-color: white; padding: 5px;'>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>system_id (PK)</td><td>UUID</td><td>Unique identifier for the system</td></tr>
+    <tr><td>agency</td><td>VARCHAR(100)</td><td>Agency name</td></tr>
+    <tr><td>ministry_family</td><td>VARCHAR(100)</td><td>Ministry family name</td></tr>
+    <tr><td>system_name</td><td>VARCHAR(200)</td><td>Name of the system</td></tr>
+    <tr><td>system_description</td><td>TEXT</td><td>Detailed description of the system</td></tr>
+    <tr><td>system_status</td><td>VARCHAR(50)</td><td>Current status of the system</td></tr>
+    <tr><td>created_at</td><td>TIMESTAMP</td><td>Record creation timestamp</td></tr>
+    <tr><td>updated_at</td><td>TIMESTAMP</td><td>Last update timestamp</td></tr>
+    </table>
+    """,
     "System Management": """
-<div class='vis-tooltip'>
-<table>
-<tr><th>Column</th><th>Type</th></tr>
-<tr><td>system_id (PK)</td><td>UUID</td></tr>
-<tr><td>system_name</td><td>VARCHAR(200)</td></tr>
-<tr><td>created_at</td><td>TIMESTAMP</td></tr>
-<tr><td>updated_at</td><td>TIMESTAMP</td></tr>
-</table>
-</div>
-""",
+    <table border='1' style='background-color: white; padding: 5px;'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>system_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_name</td><td>VARCHAR(200)</td></tr>
+    <tr><td>created_at</td><td>TIMESTAMP</td></tr>
+    <tr><td>updated_at</td><td>TIMESTAMP</td></tr>
+    </table>
+    """,
     "Criticality Assessment": """
-<div class='vis-tooltip'>
-<table>
-<tr><th>Column</th><th>Type</th></tr>
-<tr><td>assessment_id (PK)</td><td>UUID</td></tr>
-<tr><td>system_id (FK)</td><td>UUID</td></tr>
-<tr><td>criticality_level</td><td>VARCHAR(50)</td></tr>
-<tr><td>assessment_date</td><td>DATE</td></tr>
-</table>
-</div>
-""",
+    <table border='1' style='background-color: white; padding: 5px;'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>assessment_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>criticality_level</td><td>VARCHAR(50)</td></tr>
+    <tr><td>assessment_date</td><td>DATE</td></tr>
+    </table>
+    """,
     "Security & Sensitivity Classification": """
-<div class='vis-tooltip'>
-<table>
-<tr><th>Column</th><th>Type</th></tr>
-<tr><td>security_id (PK)</td><td>UUID</td></tr>
-<tr><td>system_id (FK)</td><td>UUID</td></tr>
-<tr><td>classification_level</td><td>VARCHAR(50)</td></tr>
-<tr><td>last_review_date</td><td>DATE</td></tr>
-</table>
-</div>
-""",
+    <table border='1' style='background-color: white; padding: 5px;'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>security_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>classification_level</td><td>VARCHAR(50)</td></tr>
+    <tr><td>last_review_date</td><td>DATE</td></tr>
+    </table>
+    """,
     "Risk Materiality Level": """
-<div class='vis-tooltip'>
-<table>
-<tr><th>Column</th><th>Type</th></tr>
-<tr><td>risk_id (PK)</td><td>UUID</td></tr>
-<tr><td>system_id (FK)</td><td>UUID</td></tr>
-<tr><td>materiality_level</td><td>VARCHAR(50)</td></tr>
-<tr><td>assessment_date</td><td>DATE</td></tr>
-</table>
-</div>
-""",
+    <table border='1' style='background-color: white; padding: 5px;'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>risk_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>materiality_level</td><td>VARCHAR(50)</td></tr>
+    <tr><td>assessment_date</td><td>DATE</td></tr>
+    </table>
+    """,
     "System Resiliency": """
-<div class='vis-tooltip'>
-<table>
-<tr><th>Column</th><th>Type</th></tr>
-<tr><td>resiliency_id (PK)</td><td>UUID</td></tr>
-<tr><td>system_id (FK)</td><td>UUID</td></tr>
-<tr><td>resiliency_level</td><td>VARCHAR(50)</td></tr>
-<tr><td>last_test_date</td><td>DATE</td></tr>
-</table>
-</div>
-""",
+    <table border='1' style='background-color: white; padding: 5px;'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>resiliency_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>resiliency_level</td><td>VARCHAR(50)</td></tr>
+    <tr><td>last_test_date</td><td>DATE</td></tr>
+    </table>
+    """,
     "Hosting and System Dependencies": """
-<div class='vis-tooltip'>
-<table>
-<tr><th>Column</th><th>Type</th></tr>
-<tr><td>dependency_id (PK)</td><td>UUID</td></tr>
-<tr><td>system_id (FK)</td><td>UUID</td></tr>
-<tr><td>dependency_type</td><td>VARCHAR(100)</td></tr>
-<tr><td>dependency_details</td><td>TEXT</td></tr>
-</table>
-</div>
-""",
+    <table border='1' style='background-color: white; padding: 5px;'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>dependency_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>dependency_type</td><td>VARCHAR(100)</td></tr>
+    <tr><td>dependency_details</td><td>TEXT</td></tr>
+    </table>
+    """,
     "Central Programmes": """
-<div class='vis-tooltip'>
-<table>
-<tr><th>Column</th><th>Type</th></tr>
-<tr><td>programme_id (PK)</td><td>UUID</td></tr>
-<tr><td>system_id (FK)</td><td>UUID</td></tr>
-<tr><td>programme_name</td><td>VARCHAR(200)</td></tr>
-<tr><td>status</td><td>VARCHAR(50)</td></tr>
-</table>
-</div>
-"""
+    <table border='1' style='background-color: white; padding: 5px;'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>programme_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>programme_name</td><td>VARCHAR(200)</td></tr>
+    <tr><td>status</td><td>VARCHAR(50)</td></tr>
+    </table>
+    """
 }
 
 # Define entity modules and colors
@@ -173,7 +157,7 @@ for source, target, label, direction in edges:
     G.add_edge(source, target, title=label, label=label, arrows=direction)
 
 # Create interactive PyVis network
-net = Network(height="700px", width="100%", directed=True)
+net = Network(height="700px", width="100%", directed=True, notebook=True)
 net.from_nx(G)
 net.repulsion(node_distance=200, central_gravity=0.3)
 
@@ -192,17 +176,37 @@ for edge in net.edges:
 tooltip_js = """
 <script>
 network.on("hoverNode", function(params) {
-    var tooltip = document.querySelector('.vis-tooltip');
-    if (tooltip) {
-        tooltip.innerHTML = params.node.title;
-        tooltip.style.display = 'block';
+    var node = params.node;
+    var x = params.event.center.x;
+    var y = params.event.center.y;
+    
+    // Remove existing tooltip if any
+    var existingTooltip = document.getElementById('tooltip');
+    if (existingTooltip) {
+        existingTooltip.parentNode.removeChild(existingTooltip);
     }
+    
+    var tooltip = document.createElement('div');
+    tooltip.id = 'tooltip';
+    tooltip.style.left = (x + 10) + 'px';
+    tooltip.style.top = (y + 10) + 'px';
+    tooltip.innerHTML = node.title;
+    
+    document.body.appendChild(tooltip);
 });
 
 network.on("blurNode", function(params) {
-    var tooltip = document.querySelector('.vis-tooltip');
+    var tooltip = document.getElementById('tooltip');
     if (tooltip) {
-        tooltip.style.display = 'none';
+        tooltip.parentNode.removeChild(tooltip);
+    }
+});
+
+// Update tooltip position on canvas drag
+network.on("dragging", function(params) {
+    var tooltip = document.getElementById('tooltip');
+    if (tooltip) {
+        tooltip.parentNode.removeChild(tooltip);
     }
 });
 </script>
@@ -259,14 +263,13 @@ with tempfile.TemporaryDirectory() as temp_dir:
     
     with open(path, "r", encoding="utf-8") as f:
         html_content = f.read()
-        
-    # Insert custom CSS and JavaScript
+    
+    # Add necessary scripts and styles
     html_content = html_content.replace('</head>', f'{custom_css}</head>')
     html_content = html_content.replace('</body>', f'{tooltip_js}{highlight_js}</body>')
     
-    # Remove HTML escaping in node titles
+    # Fix HTML escaping
     html_content = html_content.replace('&lt;', '<').replace('&gt;', '>')
-    html_content = html_content.replace('\\n', '')
-    html_content = html_content.replace('\\"', '"')
+    html_content = html_content.replace('&quot;', '"')
     
     components.html(html_content, height=750, scrolling=True)
