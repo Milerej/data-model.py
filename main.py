@@ -112,12 +112,12 @@ net.set_options('{' + '''
             "fit": true
         },
         "barnesHut": {
-            "gravitationalConstant": -2000,
+            "gravitationalConstant": -3000,
             "centralGravity": 0.3,
             "springLength": 300,
-            "springConstant": 0.04,
+            "springConstant": 0.05,
             "damping": 0.09,
-            "avoidOverlap": 0.1
+            "avoidOverlap": 1
         },
         "minVelocity": 0.1,
         "maxVelocity": 50
@@ -126,12 +126,29 @@ net.set_options('{' + '''
         "smooth": {
             "type": "continuous",
             "forceDirection": "none"
-        }
+        },
+        "length": 300
+    },
+    "nodes": {
+        "font": {
+            "size": 16,
+            "strokeWidth": 3,
+            "strokeColor": "#ffffff"
+        },
+        "margin": 15
     },
     "interaction": {
         "dragNodes": true,
         "dragView": true,
         "zoomView": true
+    },
+    "layout": {
+        "improvedLayout": true,
+        "hierarchical": {
+            "enabled": false,
+            "nodeSpacing": 200,
+            "levelSeparation": 200
+        }
     }
 ''' + '}')
 
