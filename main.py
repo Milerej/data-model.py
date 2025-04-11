@@ -101,8 +101,7 @@ net = Network(height="700px", width="100%", directed=True, notebook=True)
 net.from_nx(G)
 
 # Set options as a string
-net.set_options('''
-{
+net.set_options('''{
     "physics": {
         "enabled": true,
         "stabilization": {
@@ -116,4 +115,6 @@ net.set_options('''
             "gravitationalConstant": -2000,
             "centralGravity": 0.3,
             "springLength": 200,
-            "
+            "springConstant": 0.04,
+            "damping": 0.09,
+            
