@@ -14,7 +14,7 @@ entities = {
     "System Management": {"color": "green", "size": 30, "shape": "dot"},
     "System Overview": {
         "color": "green", 
-        "size": 30, 
+        "size": 20, 
         "shape": "dot",
         "details": "\n".join([
             "SYSTEM OVERVIEW FIELDS",
@@ -98,8 +98,7 @@ for edge in net.edges:
         edge["arrows"] = "to,from"
 
 # Add JavaScript for highlighting
-combined_js = """
-<script>
+highlight_js = """
 network.on("click", function(params) {
     if (params.nodes.length > 0) {
         var selectedNode = params.nodes[0];
@@ -113,4 +112,42 @@ network.on("click", function(params) {
             });
         });
 
-        Object.values(network
+        Object.values(network.body.nodes).forEach(function(node) {
+            if (connectedNodes.has(node.id)) {
+                node.options.opacity = 1.0;
+            } else {
+                node.options.opacity = 0.2;
+            }
+        });
+        
+        Object.values(network.body.edges).forEach(function(edge) {
+            if (connectedEdges.has(edge.id)) {
+                edge.options.opacity = 1.0;
+            } else {
+                edge.options.opacity = 0.2;
+            }
+        });
+    } else {
+        Object.values(network.body.nodes).forEach(node => {
+            node.options.opacity = 1.0;
+        });
+        Object.values(network.body.edges).forEach(edge => {
+            edge.options.opacity = 1.0;
+        });
+    }
+    network.redraw();
+});
+"""
+
+# Create a temporary directory and save the graph
+with tempfile.TemporaryDirectory() as temp_dir:
+    path = os.path.join(temp_dir, "graph.html")
+    net.save_graph(path)
+    
+    with open(path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+    
+    # Add JavaScript
+    html_content = html_content.replace('</body>', f'<script>{highlight_js}</script></body>')
+    
+    components.html(html_content, height=750, scrolling=True)
