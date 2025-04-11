@@ -11,14 +11,29 @@ st.title("🧠 Interactive System Management Data Model")
 
 # Define entity modules and colors
 entities = {
-    "System Management": {"color": "green", "size": 30, "shape": "dot"},
+    "System Management": {
+        "color": "white", 
+        "size": 40, 
+        "shape": "box",
+        "font.size": 12,
+        "label": "\n".join([
+            "SYSTEM MANAGEMENT",
+            "─────────────",
+            "Agency Code",
+            "Ministry Code",
+            "System ID",
+            "System Name",
+            "System Description",
+            "System Status"
+        ])
+    },
     "System Overview": {
         "color": "white", 
         "size": 40, 
         "shape": "box",
         "font.size": 12,
         "label": "\n".join([
-            "SYSTEM OVERVIEW",  # Made uppercase for emphasis since HTML bold won't work
+            "SYSTEM OVERVIEW",
             "─────────────",
             "Agency",
             "Ministry Family",
@@ -53,7 +68,7 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    if node == "System Overview":
+    if node in ["System Overview", "System Management"]:
         G.add_node(
             node,
             color=attributes["color"],
