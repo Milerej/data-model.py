@@ -4,6 +4,7 @@ import networkx as nx
 import streamlit.components.v1 as components
 import tempfile
 import os
+import json
 
 st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
@@ -118,7 +119,7 @@ options = {
         }
     }
 }
-net.set_options(str(options))
+net.set_options(json.dumps(options))
 
 net.repulsion(node_distance=300, central_gravity=0.3)
 
