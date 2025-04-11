@@ -100,9 +100,8 @@ for source, target, label, direction in edges:
 net = Network(height="700px", width="100%", directed=True, notebook=True)
 net.from_nx(G)
 
-# Adjust physics settings
-net.set_options("""
-const options = {
+# Set options for physics and edges
+options = {
     "physics": {
         "forceAtlas2Based": {
             "springLength": 200,
@@ -119,7 +118,7 @@ const options = {
         }
     }
 }
-""")
+net.set_options(str(options))
 
 net.repulsion(node_distance=300, central_gravity=0.3)
 
@@ -161,4 +160,25 @@ network.on("click", function(params) {
         });
     } else {
         Object.values(network.body.nodes).forEach(node => {
-            node.options.opacity =
+            node.options.opacity = 1.0;
+        });
+        Object.values(network.body.edges).forEach(edge => {
+            edge.options.opacity = 1.0;
+        });
+    }
+    network.redraw();
+});
+"""
+
+# Create a temporary directory and save the graph
+with tempfile.TemporaryDirectory() as temp_dir:
+    path = os.path.join(temp_dir, "graph.html")
+    net.save_graph(path)
+    
+    with open(path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+    
+    # Add JavaScript
+    html_content = html_content.replace('</body>', f'<script>{highlight_js}</script></body>')
+    
+    components.html(html_content, height=750, scrolling=True)
