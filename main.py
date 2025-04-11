@@ -33,26 +33,36 @@ entities = {
     "Central Programmes": "green"
 }
 
-# Network visualization options
+# Enhanced network visualization options
 network_options = """
 const options = {
     "nodes": {
         "font": {
             "size": 12
+        },
+        "color": {
+            "highlight": {
+                "border": "#FFA500",
+                "background": "#FFA500"
+            }
         }
     },
     "edges": {
         "color": {
-            "inherit": true
+            "inherit": false,
+            "highlight": "#FFA500"
         },
         "smooth": {
             "enabled": false
-        }
+        },
+        "width": 1.5
     },
     "interaction": {
         "hover": true,
         "hoverConnectedEdges": true,
-        "selectConnectedEdges": true
+        "selectConnectedEdges": true,
+        "multiselect": true,
+        "navigationButtons": true
     },
     "physics": {
         "enabled": true,
@@ -70,73 +80,118 @@ const options = {
             "iterations": 1000,
             "updateInterval": 25
         }
+    },
+    "layout": {
+        "improvedLayout": true,
+        "hierarchical": {
+            "enabled": false
+        }
     }
-}
+};
+
+// Add event listeners for node selection
+network.on("click", function(params) {
+    if (params.nodes.length > 0) {
+        var selectedNode = params.nodes[0];
+        var connectedNodes = new Set();
+        var connectedEdges = new Set();
+        
+        // First degree connections
+        network.getConnectedNodes(selectedNode).forEach(function(nodeId) {
+            connectedNodes.add(nodeId);
+            network.getConnectedEdges(nodeId).forEach(function(edgeId) {
+                connectedEdges.add(edgeId);
+            });
+        });
+        
+        // Second degree connections
+        connectedNodes.forEach(function(nodeId) {
+            network.getConnectedNodes(nodeId).forEach(function(secondDegreeNode) {
+                connectedNodes.add(secondDegreeNode);
+                network.getConnectedEdges(secondDegreeNode).forEach(function(edgeId) {
+                    connectedEdges.add(edgeId);
+                });
+            });
+        });
+
+        // Update visualization
+        var allNodes = network.body.nodes;
+        var allEdges = network.body.edges;
+        
+        Object.values(allNodes).forEach(function(node) {
+            if (node.id === selectedNode || connectedNodes.has(node.id)) {
+                node.options.opacity = 1.0;
+            } else {
+                node.options.opacity = 0.2;
+            }
+        });
+        
+        Object.values(allEdges).forEach(function(edge) {
+            if (connectedEdges.has(edge.id)) {
+                edge.options.opacity = 1.0;
+            } else {
+                edge.options.opacity = 0.2;
+            }
+        });
+        
+        network.redraw();
+    } else {
+        // Reset all nodes and edges if clicking on empty space
+        Object.values(network.body.nodes).forEach(function(node) {
+            node.options.opacity = 1.0;
+        });
+        Object.values(network.body.edges).forEach(function(edge) {
+            edge.options.opacity = 1.0;
+        });
+        network.redraw();
+    }
+});
 """
 
-# First visualization
+# First visualization edges
 edges = [
-    # Ministry and Agency relationships (one-way)
     ("Agency", "Ministry Family", "FK: Ministry_ID", "to"),
-    # ... (rest of your first edges list)
+    # Add your first set of edges here
 ]
 
-# Create first NetworkX graph
-G = nx.DiGraph()
-for node, color in entities.items():
-    G.add_node(node, title=node, color=color)
+def create_network(edges, entities):
+    G = nx.DiGraph()
+    for node, color in entities.items():
+        G.add_node(node, title=node, color=color)
+    
+    for source, target, label, direction in edges:
+        G.add_edge(source, target, title=label, label=label, arrows=direction)
+    
+    net = Network(height="700px", width="100%", directed=True)
+    net.from_nx(G)
+    net.repulsion(node_distance=200, central_gravity=0.3)
+    net.toggle_hide_edges_on_drag(True)
+    net.toggle_physics(False)
+    net.set_options(network_options)
+    
+    for edge in net.edges:
+        edge["label"] = edge["title"]
+        if edge["arrows"] == "both":
+            edge["arrows"] = "to,from"
+        else:
+            edge["arrows"] = edge["arrows"]
+    
+    return net
 
-for source, target, label, direction in edges:
-    G.add_edge(source, target, title=label, label=label, arrows=direction)
-
-# Create first interactive PyVis network
-net = Network(height="700px", width="100%", directed=True)
-net.from_nx(G)
-net.repulsion(node_distance=200, central_gravity=0.3)
-net.toggle_hide_edges_on_drag(True)
-net.toggle_physics(False)
-net.set_options(network_options)
-
-for edge in net.edges:
-    edge["label"] = edge["title"]
-    if edge["arrows"] == "both":
-        edge["arrows"] = "to,from"
-    else:
-        edge["arrows"] = edge["arrows"]
-
-net.save_graph("graph1.html")
+# Create and display first visualization
+net1 = create_network(edges, entities)
+net1.save_graph("graph1.html")
 components.html(open("graph1.html", "r", encoding='utf-8').read(), height=750, scrolling=True)
 
 # Second visualization
 st.title("🧠🧠 Viz - Mock Up Data")
 
-edges = [
+edges_mock = [
     ("Agency", "System Overview", "relates to", "both"),
-    # ... (rest of your second edges list)
+    # Add your second set of edges here
 ]
 
-# Create second NetworkX graph
-G = nx.DiGraph()
-for node, color in entities.items():
-    G.add_node(node, title=node, color=color)
-
-for source, target, label, direction in edges:
-    G.add_edge(source, target, title=label, label=label, arrows=direction)
-
-# Create second interactive PyVis network
-net = Network(height="700px", width="100%", directed=True)
-net.from_nx(G)
-net.repulsion(node_distance=200, central_gravity=0.3)
-net.toggle_hide_edges_on_drag(True)
-net.toggle_physics(False)
-net.set_options(network_options)
-
-for edge in net.edges:
-    edge["label"] = edge["title"]
-    if edge["arrows"] == "both":
-        edge["arrows"] = "to,from"
-    else:
-        edge["arrows"] = edge["arrows"]
-
-net.save_graph("graph2.html")
+# Create and display second visualization
+net2 = create_network(edges_mock, entities)
+net2.save_graph("graph2.html")
 components.html(open("graph2.html", "r", encoding='utf-8').read(), height=750, scrolling=True)
