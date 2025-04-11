@@ -112,4 +112,35 @@ network.on("click", function(params) {
             }
         });
         
-        Object.values(network.body.edges).forEach(function
+        Object.values(network.body.edges).forEach(function(edge) {
+            if (connectedEdges.has(edge.id)) {
+                edge.options.opacity = 1.0;
+            } else {
+                edge.options.opacity = 0.2;
+            }
+        });
+    } else {
+        Object.values(network.body.nodes).forEach(node => {
+            node.options.opacity = 1.0;
+        });
+        Object.values(network.body.edges).forEach(edge => {
+            edge.options.opacity = 1.0;
+        });
+    }
+    network.redraw();
+});
+</script>
+"""
+
+# Create a temporary directory and save the graph
+with tempfile.TemporaryDirectory() as temp_dir:
+    path = os.path.join(temp_dir, "graph.html")
+    net.save_graph(path)
+    
+    with open(path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+    
+    # Add JavaScript
+    html_content = html_content.replace('</body>', f'{combined_js}</body>')
+    
+    components.html(html_content, height=750, scrolling=True)
