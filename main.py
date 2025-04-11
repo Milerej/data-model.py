@@ -101,7 +101,7 @@ net = Network(height="700px", width="100%", directed=True, notebook=True)
 net.from_nx(G)
 
 # Set options as a string
-net.set_options('''{
+net.set_options('{' + '''
     "physics": {
         "enabled": true,
         "stabilization": {
@@ -117,4 +117,16 @@ net.set_options('''{
             "springLength": 200,
             "springConstant": 0.04,
             "damping": 0.09,
-            
+            "avoidOverlap": 0.1
+        },
+        "minVelocity": 0.1,
+        "maxVelocity": 50
+    },
+    "edges": {
+        "smooth": {
+            "type": "continuous",
+            "forceDirection": "none"
+        }
+    },
+    "interaction": {
+        
