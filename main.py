@@ -8,9 +8,99 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive Data Model Interdependency Chart")
 
-# Define entity modules and colors (your existing entities dictionary)
+# Define entity modules and colors
+entities = {
+    "Ministry Family": "blue",
+    "Agency": "blue",
+    "System Overview": "teal",
+    "Criticality Assessment": "teal",
+    "Policy": "red",
+    "Policy Waivers": "red",
+    "Supplier Profile": "purple",
+    "Supplier Risk Management": "purple",
+    "Supplier Contracts": "purple",
+    "Actions Against Errant Supplier": "purple",
+    "Supplier Performance Feedback": "purple",
+    "Bulk Tender ECN Details": "purple",
+    "EDH Agency": "purple",
+    "Risk Assessments": "orange",
+    "Risk Treatments": "orange",
+    "Audit Findings": "gray",
+    "System Management": "green",
+    "Security & Sensitivity Classification": "green",
+    "Risk Materiality Level": "green",
+    "System Resiliency": "green",
+    "Hosting and System Dependencies": "green",
+    "Central Programmes": "green"
+}
 
-# Modified network options as a Python dictionary
+# Define edges for first visualization
+edges = [
+    # Ministry and Agency relationships (one-way)
+    ("Agency", "Ministry Family", "FK: Ministry_ID", "to"),
+    
+    # System Overview relationships (one-way)
+    ("System Overview", "Agency", "FK: Agency_ID", "to"),
+    ("Criticality Assessment", "System Overview", "FK: System_ID", "to"),
+    
+    # Policy relationships (one-way)
+    ("Policy Waivers", "Policy", "FK: Policy_ID", "to"),
+    
+    # Supplier relationships (bidirectional)
+    ("Supplier Risk Management", "Supplier Profile", "FK: Supplier_ID", "both"),
+    ("Supplier Contracts", "Supplier Profile", "FK: Supplier_ID", "both"),
+    ("Actions Against Errant Supplier", "Supplier Profile", "FK: Supplier_ID", "both"),
+    ("Supplier Performance Feedback", "Supplier Profile", "FK: Supplier_ID", "both"),
+    ("Bulk Tender ECN Details", "Supplier Profile", "FK: Supplier_ID", "both"),
+    
+    # Risk Management relationships (bidirectional)
+    ("Risk Treatments", "Risk Assessments", "FK: Assessment_ID", "both"),
+    
+    # System Management relationships (bidirectional)
+    ("System Management", "System Overview", "FK: System_ID", "both"),
+    ("Security & Sensitivity Classification", "System Overview", "FK: System_ID", "both"),
+    ("Risk Materiality Level", "System Overview", "FK: System_ID", "both"),
+    ("System Resiliency", "System Overview", "FK: System_ID", "both"),
+    ("Hosting and System Dependencies", "System Overview", "FK: System_ID", "both"),
+    ("Central Programmes", "System Overview", "FK: System_ID", "both"),
+    
+    # Cross-domain relationships (one-way)
+    ("Supplier Contracts", "System Overview", "FK: System_ID", "to"),
+    ("Audit Findings", "System Overview", "FK: System_ID", "to")
+]
+
+# Define edges for second visualization (mock data)
+edges_mock = [
+    ("Agency", "System Overview", "relates to", "both"),
+    ("Agency", "Ministry Family", "manages", "to"),
+    ("System Overview", "Criticality Assessment", "supports", "both"),
+    ("System Overview", "Policy", "defines", "to"),
+    ("Policy", "Policy Waivers", "grants", "to"),
+    ("Supplier Profile", "Supplier Risk Management", "informs", "both"),
+    ("Supplier Profile", "Supplier Contracts", "oversees", "both"),
+    ("Supplier Profile", "Actions Against Errant Supplier", "initiates", "both"),
+    ("Supplier Profile", "Supplier Performance Feedback", "monitors", "both"),
+    ("Supplier Profile", "Bulk Tender ECN Details", "includes", "both"),
+    ("Supplier Profile", "EDH Agency", "collaborates with", "both"),
+    ("Risk Assessments", "Risk Treatments", "leads to", "both"),
+    ("Audit Findings", "Risk Treatments", "triggers", "to"),
+    ("Supplier Risk Management", "Risk Assessments", "feeds into", "to"),
+    ("Supplier Performance Feedback", "Supplier Risk Management", "affects", "to"),
+    ("Actions Against Errant Supplier", "Supplier Contracts", "cancels", "to"),
+    ("System Overview", "Supplier Contracts", "references", "both"),
+    ("System Overview", "Audit Findings", "monitors", "both"),
+    ("System Management", "System Overview", "manages", "both"),
+    ("System Management", "Criticality Assessment", "supports", "both"),
+    ("System Management", "Security & Sensitivity Classification", "evaluates", "both"),
+    ("System Management", "Risk Materiality Level", "determines", "both"),
+    ("System Management", "System Resiliency", "improves", "both"),
+    ("System Management", "Hosting and System Dependencies", "depends on", "both"),
+    ("System Management", "Central Programmes", "aligns with", "both"),
+    ("System Management", "Supplier Contracts", "depends on", "both"),
+    ("Supplier Contracts", "Hosting and System Dependencies", "depends on", "both")
+]
+
+# Network options
 network_options = {
     "nodes": {
         "font": {"size": 12},
@@ -76,8 +166,6 @@ def create_network(edges, entities):
     net.repulsion(node_distance=200, central_gravity=0.3)
     net.toggle_hide_edges_on_drag(True)
     net.toggle_physics(False)
-    
-    # Convert Python dictionary to JSON string
     net.set_options(json.dumps(network_options))
     
     for edge in net.edges:
@@ -89,7 +177,6 @@ def create_network(edges, entities):
     
     return net
 
-# Add custom JavaScript for highlighting to HTML
 def add_highlighting_js(html_content):
     highlight_js = """
     <script>
@@ -153,12 +240,6 @@ def add_highlighting_js(html_content):
     """
     return html_content.replace('</body>', f'{highlight_js}</body>')
 
-# First visualization
-edges = [
-    ("Agency", "Ministry Family", "FK: Ministry_ID", "to"),
-    # Add your first set of edges here
-]
-
 # Create and display first visualization
 net1 = create_network(edges, entities)
 net1.save_graph("graph1.html")
@@ -168,11 +249,6 @@ components.html(add_highlighting_js(html_content), height=750, scrolling=True)
 
 # Second visualization
 st.title("🧠🧠 Viz - Mock Up Data")
-
-edges_mock = [
-    ("Agency", "System Overview", "relates to", "both"),
-    # Add your second set of edges here
-]
 
 # Create and display second visualization
 net2 = create_network(edges_mock, entities)
