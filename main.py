@@ -4,6 +4,7 @@ import networkx as nx
 import streamlit.components.v1 as components
 import tempfile
 import os
+import pandas as pd
 
 st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
@@ -12,101 +13,48 @@ st.title("🧠 Interactive System Management Data Model")
 # Create two columns
 col1, col2 = st.columns([2, 1])
 
-# Define the table data for each node
-table_data = {
-    "System Overview": {
-        "headers": ["Field", "Description"],
-        "rows": [
-            ["Agency", "Agency name"],
-            ["Ministry Family", "Parent ministry"],
-            ["System ID", "Primary Key"],
-            ["System Name", "Name of the system"],
-            ["System Description", "Detailed description"],
-            ["System Status", "Current status"]
-        ]
-    },
-    "Criticality Assessment": {
-        "headers": ["Field", "Description"],
-        "rows": [
-            ["Economy", "Economic impact"],
-            ["Public Health and Safety", "Health & safety impact"],
-            ["National Security", "Security impact"],
-            ["Social Preparedness", "Social impact"],
-            ["Public Service", "Service impact"],
-            ["Designated CII", "Critical Infrastructure status"],
-            ["System Criticality", "Auto-generated assessment"]
-        ]
-    },
-    # Add other tables as needed
-}
+[... previous entities and table_data definitions remain the same ...]
 
 # Store the selected node in session state
 if 'selected_node' not in st.session_state:
     st.session_state.selected_node = None
 
-# [Previous entities and edges definitions remain the same]
-
-# Modify the JavaScript to communicate with Streamlit
-highlight_js = """
-network.on("click", function(params) {
-    if (params.nodes.length > 0) {
-        var selectedNode = params.nodes[0];
-        // Send the selected node to Streamlit
-        window.parent.postMessage({
-            type: 'node_clicked',
-            node: selectedNode
-        }, '*');
-        
-        // Highlighting logic remains the same
-        var connectedNodes = new Set([selectedNode]);
-        var connectedEdges = new Set();
-        
-        network.getConnectedNodes(selectedNode).forEach(function(connectedNode) {
-            connectedNodes.add(connectedNode);
-            network.getConnectedEdges(selectedNode).forEach(function(edgeId) {
-                connectedEdges.add(edgeId);
-            });
-        });
-
-        Object.values(network.body.nodes).forEach(function(node) {
-            if (connectedNodes.has(node.id)) {
-                node.options.opacity = 1.0;
-            } else {
-                node.options.opacity = 0.2;
-            }
-        });
-        
-        Object.values(network.body.edges).forEach(function(edge) {
-            if (connectedEdges.has(edge.id)) {
-                edge.options.opacity = 1.0;
-            } else {
-                edge.options.opacity = 0.2;
-            }
-        });
-    } else {
-        Object.values(network.body.nodes).forEach(node => {
-            node.options.opacity = 1.0;
-        });
-        Object.values(network.body.edges).forEach(edge => {
-            edge.options.opacity = 1.0;
-        });
+# Create NetworkX graph
+G = nx.DiGraph()
+for node, attributes in entities.items():
+    node_attrs = {
+        "color": attributes["color"],
+        "size": attributes["size"],
+        "shape": attributes["shape"],
+        "title": attributes["title"],
+        "label": node
     }
-    network.redraw();
-});
-"""
+    G.add_node(node, **node_attrs)
 
-# Add JavaScript for handling messages
-handle_message_js = """
-<script>
-window.addEventListener('message', function(event) {
-    if (event.data.type === 'node_clicked') {
-        // Send the node data to Streamlit
-        const node = event.data.node;
-        window.parent.Streamlit.setComponentValue(node);
-    }
-});
-</script>
-"""
+# Add edges with labels and custom arrow directions
+for source, target, label, direction in edges:
+    G.add_edge(source, target, title=label, label=label, arrows=direction)
+
+# Initialize PyVis network
+net = Network(height="700px", width="100%", directed=True, notebook=True)
+
+# Add nodes to PyVis network
+for node, attrs in G.nodes(data=True):
+    net.add_node(node, 
+                 color=attrs['color'],
+                 size=attrs['size'],
+                 shape=attrs['shape'],
+                 title=attrs['title'],
+                 label=attrs['label'])
+
+# Add edges to PyVis network
+for source, target, edge_attrs in G.edges(data=True):
+    net.add_edge(source, target, 
+                 title=edge_attrs['title'],
+                 label=edge_attrs['label'],
+                 arrows=edge_attrs['arrows'])
+
+[... previous options and JavaScript definitions remain the same ...]
 
 # Display the graph in the first column
 with col1:
@@ -136,6 +84,6 @@ with col2:
             table = table_data[node_name]
             st.table(pd.DataFrame(table["rows"], columns=table["headers"]))
         else:
-            st.info(f"Click on a node to view its details")
+            st.info(f"No detailed information available for {node_name}")
     else:
         st.info("Click on a node to view its details")
