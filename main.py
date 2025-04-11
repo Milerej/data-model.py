@@ -31,14 +31,14 @@ custom_css = """
 
 # Define tooltip content for each node
 tooltip_info = {
-    "System Overview": <table style="border-collapse: collapse; width: 100%; background-color: white;">
-        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Agency</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
-        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Ministry Family</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
-        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System ID (Primary Key)</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
-        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Name</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
-        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Description</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
-        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Status</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
-    </table>,
+    "System Overview": '<table style="border-collapse: collapse; width: 100%; background-color: white;">' + \
+        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Agency</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
+        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Ministry Family</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
+        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System ID (Primary Key)</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
+        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Name</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
+        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Description</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
+        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Status</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
+        '</table>',
     "System Management": "",
     "Criticality Assessment": "",
     "Security & Sensitivity Classification": "",
