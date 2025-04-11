@@ -7,7 +7,7 @@ import os
 
 st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
-st.title("🧠 Interactive System Management Data Model")
+st.title("Data Model : System Management")
 
 # Define entity modules and colors
 entities = {
