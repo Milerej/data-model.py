@@ -19,7 +19,7 @@ entities = {
     },
     "System Overview": {
         "color": "#4CAF50",  # Standard green
-        "size": 25, 
+        "size": 15, 
         "shape": "dot",
         "title": "\n".join([
             "Fields:",
@@ -33,7 +33,7 @@ entities = {
     },
     "Criticality Assessment": {
         "color": "#4CAF50", 
-        "size": 25, 
+        "size": 15, 
         "shape": "dot",
         "title": "\n".join([
             "Fields:",
@@ -48,31 +48,31 @@ entities = {
     },
     "Security & Sensitivity Classification": {
         "color": "#4CAF50", 
-        "size": 25, 
+        "size": 215, 
         "shape": "dot",
         "title": "Security and sensitivity classification details"
     },
     "Risk Materiality Level": {
         "color": "#4CAF50", 
-        "size": 25, 
+        "size": 215, 
         "shape": "dot",
         "title": "Risk materiality assessment details"
     },
     "System Resiliency": {
         "color": "#4CAF50", 
-        "size": 25, 
+        "size": 15, 
         "shape": "dot",
         "title": "System resiliency metrics and details"
     },
     "Hosting and System Dependencies": {
         "color": "#4CAF50", 
-        "size": 25, 
+        "size": 15, 
         "shape": "dot",
         "title": "Hosting environment and system dependency information"
     },
     "Central Programmes": {
         "color": "#4CAF50", 
-        "size": 25, 
+        "size": 15, 
         "shape": "dot",
         "title": "Central programmes information"
     }
