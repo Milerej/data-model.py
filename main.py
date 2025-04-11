@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
-st.title("🧠🧠🧠 Interactive Data Model Interdependency Chart")
+st.title("🧠 Interactive Data Model Interdependency Chart")
 
 # Define entity modules and colors
 entities = {
