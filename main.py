@@ -33,36 +33,36 @@ entities = {
     "Central Programmes": "green"
 }
 
-# Define edges with labels for relationships and directions
+# Define edges with PK/FK relationships - all with bidirectional arrows
 edges = [
-    ("Agency", "System Overview", "relates to", "both"),
-    ("Agency", "Ministry Family", "manages", "to"),
-    ("System Overview", "Criticality Assessment", "supports", "both"),
-    ("System Overview", "Policy", "defines", "to"),
-    ("Policy", "Policy Waivers", "grants", "to"),
-    ("Supplier Profile", "Supplier Risk Management", "informs", "both"),
-    ("Supplier Profile", "Supplier Contracts", "oversees", "both"),
-    ("Supplier Profile", "Actions Against Errant Supplier", "initiates", "both"),
-    ("Supplier Profile", "Supplier Performance Feedback", "monitors", "both"),
-    ("Supplier Profile", "Bulk Tender ECN Details", "includes", "both"),
-    ("Supplier Profile", "EDH Agency", "collaborates with", "both"),
-    ("Risk Assessments", "Risk Treatments", "leads to", "both"),
-    ("Audit Findings", "Risk Treatments", "triggers", "to"),
-    ("Supplier Risk Management", "Risk Assessments", "feeds into", "to"),
-    ("Supplier Performance Feedback", "Supplier Risk Management", "affects", "to"),
-    ("Actions Against Errant Supplier", "Supplier Contracts", "cancels", "to"),
-    ("System Overview", "Supplier Contracts", "references", "both"),
-    ("System Overview", "Audit Findings", "monitors", "both"),
-    # New edges for System Management
-    ("System Management", "System Overview", "manages", "both"),
-    ("System Management", "Criticality Assessment", "supports", "both"),
-    ("System Management", "Security & Sensitivity Classification", "evaluates", "both"),
-    ("System Management", "Risk Materiality Level", "determines", "both"),
-    ("System Management", "System Resiliency", "improves", "both"),
-    ("System Management", "Hosting and System Dependencies", "depends on", "both"),
-    ("System Management", "Central Programmes", "aligns with", "both"),
-    ("System Management", "Supplier Contracts", "depends on", "both"),
-    ("Supplier Contracts", "Hosting and System Dependencies", "depends on", "both")
+    ("Agency", "System Overview", "FK: Agency_ID", "both"),
+    ("Agency", "Ministry Family", "FK: Ministry_ID", "both"),
+    ("System Overview", "Criticality Assessment", "FK: System_ID", "both"),
+    ("System Overview", "Policy", "FK: Policy_ID", "both"),
+    ("Policy", "Policy Waivers", "FK: Policy_ID", "both"),
+    ("Supplier Profile", "Supplier Risk Management", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Supplier Contracts", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Actions Against Errant Supplier", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Supplier Performance Feedback", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Bulk Tender ECN Details", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "EDH Agency", "FK: Supplier_ID", "both"),
+    ("Risk Assessments", "Risk Treatments", "FK: Assessment_ID", "both"),
+    ("Audit Findings", "Risk Treatments", "FK: Finding_ID", "both"),
+    ("Supplier Risk Management", "Risk Assessments", "FK: Risk_ID", "both"),
+    ("Supplier Performance Feedback", "Supplier Risk Management", "FK: Feedback_ID", "both"),
+    ("Actions Against Errant Supplier", "Supplier Contracts", "FK: Action_ID", "both"),
+    ("System Overview", "Supplier Contracts", "FK: System_ID", "both"),
+    ("System Overview", "Audit Findings", "FK: System_ID", "both"),
+    # System Management relationships
+    ("System Management", "System Overview", "FK: System_ID", "both"),
+    ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
+    ("System Management", "Security & Sensitivity Classification", "FK: System_ID", "both"),
+    ("System Management", "Risk Materiality Level", "FK: System_ID", "both"),
+    ("System Management", "System Resiliency", "FK: System_ID", "both"),
+    ("System Management", "Hosting and System Dependencies", "FK: System_ID", "both"),
+    ("System Management", "Central Programmes", "FK: System_ID", "both"),
+    ("System Management", "Supplier Contracts", "FK: System_ID", "both"),
+    ("Supplier Contracts", "Hosting and System Dependencies", "FK: Contract_ID", "both")
 ]
 
 # Create NetworkX graph
