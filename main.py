@@ -12,13 +12,13 @@ st.title("🧠 Interactive System Management Data Model")
 # Define entity modules and colors
 entities = {
     "System Management": {
-        "color": "green", 
+        "color": "#2E7D32",  # Darker green for central node
         "size": 30, 
         "shape": "dot",
         "title": "Central node managing system relationships"
     },
     "System Overview": {
-        "color": "white", 
+        "color": "#4CAF50",  # Standard green
         "size": 25, 
         "shape": "dot",
         "title": "\n".join([
@@ -32,7 +32,7 @@ entities = {
         ])
     },
     "Criticality Assessment": {
-        "color": "white", 
+        "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
         "title": "\n".join([
@@ -47,37 +47,36 @@ entities = {
         ])
     },
     "Security & Sensitivity Classification": {
-        "color": "white", 
+        "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
         "title": "Security and sensitivity classification details"
     },
     "Risk Materiality Level": {
-        "color": "white", 
+        "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
         "title": "Risk materiality assessment details"
     },
     "System Resiliency": {
-        "color": "white", 
+        "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
         "title": "System resiliency metrics and details"
     },
     "Hosting and System Dependencies": {
-        "color": "white", 
+        "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
         "title": "Hosting environment and system dependency information"
     },
     "Central Programmes": {
-        "color": "white", 
+        "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
         "title": "Central programmes information"
     }
 }
-
 # Define edges with PK/FK relationships
 edges = [
     ("System Management", "System Overview", "PK: System_ID", "both"),
