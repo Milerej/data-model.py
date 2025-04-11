@@ -11,53 +11,71 @@ st.title("🧠 Interactive System Management Data Model")
 
 # Define entity modules and colors
 entities = {
-    "System Management": {"color": "green", "size": 30, "shape": "dot"},
+    "System Management": {
+        "color": "green", 
+        "size": 30, 
+        "shape": "dot",
+        "title": "Central node managing system relationships"
+    },
     "System Overview": {
-        "color": "white",
-        "size": 40, 
-        "shape": "box",
-        "margin": 20,
-        "widthConstraint": {
-            "minimum": 200,
-            "maximum": 200
-        },
-        "label": "\n".join([
-            "SYSTEM OVERVIEW",
-            "─────────────",
-            "Agency",
-            "Ministry Family",
-            "System ID (Primary Key)",
-            "System Name",
-            "System Description",
-            "System Status"
+        "color": "white", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "\n".join([
+            "Fields:",
+            "• Agency",
+            "• Ministry Family",
+            "• System ID (Primary Key)",
+            "• System Name",
+            "• System Description",
+            "• System Status"
         ])
     },
     "Criticality Assessment": {
-        "color": "white",
-        "size": 40, 
-        "shape": "box",
-        "margin": 20,
-        "widthConstraint": {
-            "minimum": 200,
-            "maximum": 200
-        },
-        "label": "\n".join([
-            "CRITICALITY ASSESSMENT",
-            "─────────────",
-            "Economy",
-            "Public Health and Safety",
-            "National Security",
-            "Social Preparedness",
-            "Public Service",
-            "Designated CII under the Cybersecurity Act",
-            "System Criticality (System Auto-generated)"
+        "color": "white", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "\n".join([
+            "Fields:",
+            "• Economy",
+            "• Public Health and Safety",
+            "• National Security",
+            "• Social Preparedness",
+            "• Public Service",
+            "• Designated CII under the Cybersecurity Act",
+            "• System Criticality (System Auto-generated)"
         ])
     },
-    "Security & Sensitivity Classification": {"color": "green", "size": 20, "shape": "dot"},
-    "Risk Materiality Level": {"color": "green", "size": 20, "shape": "dot"},
-    "System Resiliency": {"color": "green", "size": 20, "shape": "dot"},
-    "Hosting and System Dependencies": {"color": "green", "size": 20, "shape": "dot"},
-    "Central Programmes": {"color": "green", "size": 20, "shape": "dot"}
+    "Security & Sensitivity Classification": {
+        "color": "white", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "Security and sensitivity classification details"
+    },
+    "Risk Materiality Level": {
+        "color": "white", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "Risk materiality assessment details"
+    },
+    "System Resiliency": {
+        "color": "white", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "System resiliency metrics and details"
+    },
+    "Hosting and System Dependencies": {
+        "color": "white", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "Hosting environment and system dependency information"
+    },
+    "Central Programmes": {
+        "color": "white", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "Central programmes information"
+    }
 }
 
 # Define edges with PK/FK relationships
@@ -81,15 +99,9 @@ for node, attributes in entities.items():
         "color": attributes["color"],
         "size": attributes["size"],
         "shape": attributes["shape"],
-        "label": attributes.get("label", node)
+        "title": attributes["title"],
+        "label": node
     }
-    
-    # Add additional attributes for boxes
-    if "margin" in attributes:
-        node_attrs["margin"] = attributes["margin"]
-    if "widthConstraint" in attributes:
-        node_attrs["widthConstraint"] = attributes["widthConstraint"]
-    
     G.add_node(node, **node_attrs)
 
 # Add edges with labels and custom arrow directions
@@ -149,7 +161,8 @@ net.set_options('{' + '''
     "interaction": {
         "dragNodes": true,
         "dragView": true,
-        "zoomView": true
+        "zoomView": true,
+        "hover": true
     },
     "layout": {
         "improvedLayout": true,
@@ -207,15 +220,6 @@ network.on("click", function(params) {
         });
     }
     network.redraw();
-});
-
-// Add stabilization progress handler
-network.on("stabilizationProgress", function(params) {
-    // console.log(params.iterations + ' / ' + params.total);
-});
-
-network.on("stabilizationIterationsDone", function() {
-    // Physics remains enabled after stabilization
 });
 """
 
