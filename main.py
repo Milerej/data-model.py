@@ -165,7 +165,8 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    G.add_node(node, title=table_info[node], color=attributes["color"], size=attributes["size"])
+    tooltip = table_info[node].replace('\n', '').replace('"', '\\"')
+    G.add_node(node, title=tooltip, color=attributes["color"], size=attributes["size"])
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
@@ -186,6 +187,26 @@ for edge in net.edges:
         edge["arrows"] = "to,from"
     else:
         edge["arrows"] = edge["arrows"]
+
+# Add JavaScript for tooltip handling
+tooltip_js = """
+<script>
+network.on("hoverNode", function(params) {
+    var tooltip = document.querySelector('.vis-tooltip');
+    if (tooltip) {
+        tooltip.innerHTML = params.node.title;
+        tooltip.style.display = 'block';
+    }
+});
+
+network.on("blurNode", function(params) {
+    var tooltip = document.querySelector('.vis-tooltip');
+    if (tooltip) {
+        tooltip.style.display = 'none';
+    }
+});
+</script>
+"""
 
 # Add JavaScript for highlighting selected nodes and their connections
 highlight_js = """
@@ -241,8 +262,11 @@ with tempfile.TemporaryDirectory() as temp_dir:
         
     # Insert custom CSS and JavaScript
     html_content = html_content.replace('</head>', f'{custom_css}</head>')
-    html_content = html_content.replace('</body>', f'{highlight_js}</body>')
-    # Fix HTML escaping in node titles
+    html_content = html_content.replace('</body>', f'{tooltip_js}{highlight_js}</body>')
+    
+    # Remove HTML escaping in node titles
     html_content = html_content.replace('&lt;', '<').replace('&gt;', '>')
+    html_content = html_content.replace('\\n', '')
+    html_content = html_content.replace('\\"', '"')
     
     components.html(html_content, height=750, scrolling=True)
