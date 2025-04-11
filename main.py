@@ -13,7 +13,7 @@ st.title("🧠 Interactive System Management Data Model")
 entities = {
     "System Management": {
         "color": "white", 
-        "size": 40, 
+        "size": 60,  # Increased size
         "shape": "box",
         "font.size": 12,
         "label": "\n".join([
@@ -29,7 +29,7 @@ entities = {
     },
     "System Overview": {
         "color": "white", 
-        "size": 40, 
+        "size": 60,  # Increased size
         "shape": "box",
         "font.size": 12,
         "label": "\n".join([
@@ -93,7 +93,15 @@ for source, target, label, direction in edges:
 # Create interactive PyVis network
 net = Network(height="700px", width="100%", directed=True, notebook=True)
 net.from_nx(G)
-net.repulsion(node_distance=200, central_gravity=0.3)
+
+# Adjust network physics for better layout
+net.repulsion(
+    node_distance=300,  # Increased distance between nodes
+    central_gravity=0.2,
+    spring_length=200,  # Added spring length
+    spring_strength=0.05,  # Reduced spring strength
+    damping=0.09  # Added damping
+)
 
 # Customize edge labels and arrows
 for edge in net.edges:
