@@ -12,51 +12,49 @@ st.title("🧠 Interactive System Management Data Model")
 # Define custom CSS for tooltips
 custom_css = """
 <style>
-.tooltip-table {
+.custom-tooltip {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.custom-tooltip table {
     border-collapse: collapse;
     width: 100%;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.tooltip-table td {
-    padding: 8px;
+
+.custom-tooltip td {
     border: 1px solid #ddd;
+    padding: 8px;
 }
-.tooltip-table .field-name {
+
+.custom-tooltip td:first-child {
     font-weight: bold;
     background-color: #f5f5f5;
 }
 </style>
 """
 
-# Define tooltip content for each node
-tooltip_info = {
-    "System Overview": "<table style='width:100%;border-collapse:collapse;background:white'>" + 
-                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>Agency</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
-                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>Ministry Family</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
-                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>System ID (Primary Key)</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
-                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>System Name</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
-                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>System Description</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
-                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>System Status</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
-                      "</table>",
-    "System Management": "",
-    "Criticality Assessment": "",
-    "Security & Sensitivity Classification": "",
-    "Risk Materiality Level": "",
-    "System Resiliency": "",
-    "Hosting and System Dependencies": "",
-    "Central Programmes": ""
+# Define tooltip content
+tooltip_data = {
+    "System Overview": {
+        "Agency": "",
+        "Ministry Family": "",
+        "System ID (Primary Key)": "",
+        "System Name": "",
+        "System Description": "",
+        "System Status": ""
+    }
 }
 
+# Convert tooltip data to a format that can be passed to JavaScript
 tooltip_info = {
-    "System Overview": '<table style="border-collapse: collapse; width: 100%; background-color: white;">' + \
-        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Agency</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
-        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Ministry Family</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
-        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System ID (Primary Key)</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
-        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Name</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
-        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Description</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
-        '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">System Status</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
-        '</table>',
+    "System Overview": "TOOLTIP_DATA:" + str(list(tooltip_data["System Overview"].items())),
     "System Management": "",
     "Criticality Assessment": "",
     "Security & Sensitivity Classification": "",
@@ -117,37 +115,52 @@ for edge in net.edges:
     else:
         edge["arrows"] = edge["arrows"]
 
-# Add JavaScript for tooltips and highlighting
+# Add JavaScript for custom tooltips and highlighting
 combined_js = """
 <script>
+// Custom tooltip handling
+function createTooltipContent(data) {
+    if (!data.startsWith('TOOLTIP_DATA:')) return data;
+    
+    try {
+        const tooltipData = eval(data.replace('TOOLTIP_DATA:', ''));
+        let table = '<table>';
+        tooltipData.forEach(([key, value]) => {
+            table += `<tr><td>${key}</td><td>${value || '&nbsp;'}</td></tr>`;
+        });
+        table += '</table>';
+        return table;
+    } catch (e) {
+        console.error('Error parsing tooltip data:', e);
+        return '';
+    }
+}
+
 // Tooltip handling
 network.on("hoverNode", function(params) {
     var node = params.node;
     var x = params.event.center.x;
     var y = params.event.center.y;
     
-    var existingTooltip = document.getElementById('tooltip');
+    var existingTooltip = document.getElementById('custom-tooltip');
     if (existingTooltip) {
         existingTooltip.parentNode.removeChild(existingTooltip);
     }
     
+    if (!node.title) return;
+    
     var tooltip = document.createElement('div');
-    tooltip.id = 'tooltip';
-    tooltip.style.position = 'absolute';
+    tooltip.id = 'custom-tooltip';
+    tooltip.className = 'custom-tooltip';
     tooltip.style.left = (x + 10) + 'px';
     tooltip.style.top = (y + 10) + 'px';
-    tooltip.style.backgroundColor = 'white';
-    tooltip.style.padding = '10px';
-    tooltip.style.borderRadius = '5px';
-    tooltip.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-    tooltip.style.zIndex = '1000';
-    tooltip.innerHTML = node.title;
+    tooltip.innerHTML = createTooltipContent(node.title);
     
     document.body.appendChild(tooltip);
 });
 
 network.on("blurNode", function(params) {
-    var tooltip = document.getElementById('tooltip');
+    var tooltip = document.getElementById('custom-tooltip');
     if (tooltip) {
         tooltip.parentNode.removeChild(tooltip);
     }
@@ -195,7 +208,7 @@ network.on("click", function(params) {
 
 // Update tooltip position on canvas drag
 network.on("dragging", function(params) {
-    var tooltip = document.getElementById('tooltip');
+    var tooltip = document.getElementById('custom-tooltip');
     if (tooltip) {
         tooltip.parentNode.removeChild(tooltip);
     }
