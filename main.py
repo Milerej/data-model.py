@@ -7,7 +7,7 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
-# Define entity modules and colors - only System Management related
+# Define entity modules and colors - only System Management related, without Supplier Contracts
 entities = {
     "System Management": "green",
     "System Overview": "teal",
@@ -16,8 +16,7 @@ entities = {
     "Risk Materiality Level": "green",
     "System Resiliency": "green",
     "Hosting and System Dependencies": "green",
-    "Central Programmes": "green",
-    "Supplier Contracts": "purple"
+    "Central Programmes": "green"
 }
 
 # Add filter in sidebar
@@ -28,7 +27,7 @@ selected_nodes = st.sidebar.multiselect(
     default=None
 )
 
-# Define edges with PK/FK relationships - only System Management related
+# Define edges with PK/FK relationships - only System Management related, without Supplier Contracts
 edges = [
     ("System Management", "System Overview", "FK: System_ID", "both"),
     ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
@@ -36,9 +35,7 @@ edges = [
     ("System Management", "Risk Materiality Level", "FK: System_ID", "both"),
     ("System Management", "System Resiliency", "FK: System_ID", "both"),
     ("System Management", "Hosting and System Dependencies", "FK: System_ID", "both"),
-    ("System Management", "Central Programmes", "FK: System_ID", "both"),
-    ("System Management", "Supplier Contracts", "FK: System_ID", "both"),
-    ("Supplier Contracts", "Hosting and System Dependencies", "FK: Contract_ID", "both")
+    ("System Management", "Central Programmes", "FK: System_ID", "both")
 ]
 
 # Create NetworkX graph
@@ -132,8 +129,7 @@ components.html(html_content, height=750, scrolling=True)
 st.sidebar.markdown("### Color Legend")
 for entity_type, color in {
     "System Management": "green",
-    "System & Criticality": "teal",
-    "Supplier": "purple"
+    "System & Criticality": "teal"
 }.items():
     st.sidebar.markdown(
         f'<div style="display: flex; align-items: center;">'
