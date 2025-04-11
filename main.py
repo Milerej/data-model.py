@@ -11,7 +11,7 @@ st.title("🧠 Interactive System Management Data Model")
 entities = {
     "System Management": {"color": "green", "size": 30},  # Bigger size for main module
     "System Overview": {"color": "green", "size": 20},    # Same color as System Management
-    "Criticality Assessment": {"color": "teal", "size": 20},
+    "Criticality Assessment": {"color": "green", "size": 20},
     "Security & Sensitivity Classification": {"color": "green", "size": 20},
     "Risk Materiality Level": {"color": "green", "size": 20},
     "System Resiliency": {"color": "green", "size": 20},
@@ -27,7 +27,11 @@ edges = [
     ("System Management", "Risk Materiality Level", "FK: System_ID", "both"),
     ("System Management", "System Resiliency", "FK: System_ID", "both"),
     ("System Management", "Hosting and System Dependencies", "FK: System_ID", "both"),
-    ("System Management", "Central Programmes", "FK: System_ID", "both")
+    ("System Management", "Central Programmes", "FK: System_ID", "both"),
+    # Added new relationships
+    ("Criticality Assessment", "Risk Materiality Level", "FK: Assessment_ID", "both"),
+    ("Hosting and System Dependencies", "Risk Materiality Level", "FK: Dependency_ID", "both"),
+    ("Security & Sensitivity Classification", "Risk Materiality Level", "FK: Security_ID", "both")
 ]
 
 # Create NetworkX graph
