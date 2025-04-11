@@ -54,27 +54,31 @@ entities = {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "\n".join([
-            "Fields:",
-            "• Classification Level",
-            "• Data Sensitivity",
-            "• Security Controls",
-            "• Access Requirements",
-            "• Data Protection Measures"
-        ])
+        "title": "Security and sensitivity classification details"
     },
     "Risk Materiality Level": {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "\n".join([
-            "Fields:",
-            "• Risk Level",
-            "• Impact Score",
-            "• Probability Rating",
-            "• Mitigation Status",
-            "• Risk Assessment Date"
-        ])
+        "title": "Risk materiality assessment details"
+    },
+    "System Resiliency": {
+        "color": "#4CAF50", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "System resiliency metrics and details"
+    },
+    "Hosting and System Dependencies": {
+        "color": "#4CAF50", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "Hosting environment and system dependency information"
+    },
+    "Central Programmes": {
+        "color": "#4CAF50", 
+        "size": 25, 
+        "shape": "dot",
+        "title": "Central programmes information"
     }
 }
 
@@ -83,10 +87,16 @@ edges = [
     ("System Management", "System Overview", "PK: System_ID", "both"),
     ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
     ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
-    ("System Management", "Risk Materiality Level", "PK: System_ID", "both")
+    ("System Management", "Risk Materiality Level", "PK: System_ID", "both"),
+    ("System Management", "System Resiliency", "PK: System_ID", "both"),
+    ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
+    ("System Management", "Central Programmes", "PK: System_ID", "both"),
+    ("Risk Materiality Level", "Security & Sensitivity Classification", "PK: System_ID", "both"),
+    ("Risk Materiality Level", "Hosting and System Dependencies", "PK: System_ID", "both"),
+    ("Risk Materiality Level", "Criticality Assessment", "PK: System_ID", "both")
 ]
 
-# Define table data
+# Define the table data for each node
 table_data = {
     "System Overview": {
         "headers": ["Field", "Description"],
@@ -116,9 +126,7 @@ table_data = {
         "rows": [
             ["Classification Level", "System classification level"],
             ["Data Sensitivity", "Sensitivity of data handled"],
-            ["Security Controls", "Implemented security measures"],
-            ["Access Requirements", "Access control requirements"],
-            ["Data Protection", "Data protection measures"]
+            ["Security Controls", "Implemented security measures"]
         ]
     },
     "Risk Materiality Level": {
@@ -126,40 +134,54 @@ table_data = {
         "rows": [
             ["Risk Level", "Overall risk assessment"],
             ["Impact Score", "Potential impact measurement"],
-            ["Probability Rating", "Likelihood of risk occurrence"],
-            ["Mitigation Status", "Status of risk mitigation measures"],
-            ["Assessment Date", "Date of last risk assessment"]
+            ["Mitigation Status", "Status of risk mitigation measures"]
+        ]
+    },
+    "System Resiliency": {
+        "headers": ["Field", "Description"],
+        "rows": [
+            ["Availability Target", "System uptime target"],
+            ["Recovery Time", "Expected recovery time"],
+            ["Redundancy Level", "System redundancy measures"]
+        ]
+    },
+    "Hosting and System Dependencies": {
+        "headers": ["Field", "Description"],
+        "rows": [
+            ["Hosting Environment", "System hosting location"],
+            ["Dependencies", "External system dependencies"],
+            ["Integration Points", "System integration details"]
+        ]
+    },
+    "Central Programmes": {
+        "headers": ["Field", "Description"],
+        "rows": [
+            ["Programme Name", "Name of central programme"],
+            ["Programme Status", "Current programme status"],
+            ["Integration Status", "System integration status"]
         ]
     }
 }
 
-# Initialize session state
+# Store the selected node in session state
 if 'selected_node' not in st.session_state:
     st.session_state.selected_node = None
 
-# Initialize PyVis network
-net = Network(notebook=True, cdn_resources='remote')
-net.width = "100%"
-net.height = "700px"
-net.bgcolor = "#ffffff"
-net.font_color = True
-
-# Add nodes to network
+# Create NetworkX graph
+G = nx.DiGraph()
 for node, attributes in entities.items():
-    net.add_node(node,
-                 color=attributes["color"],
-                 size=attributes["size"],
-                 shape=attributes["shape"],
-                 title=attributes["title"],
-                 label=node)
+    G.add_node(node, **attributes)
 
-# Add edges to network
+# Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
-    net.add_edge(source, target, title=label, label=label, arrows=direction)
+    G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-# Set network options
-net.set_options('''
-{
+# Create interactive PyVis network
+net = Network(height="700px", width="100%", directed=True, notebook=True)
+net.from_nx(G)
+
+# Set options as a string
+net.set_options('{' + '''
     "physics": {
         "enabled": true,
         "stabilization": {
@@ -176,7 +198,9 @@ net.set_options('''
             "springConstant": 0.02,
             "damping": 0.2,
             "avoidOverlap": 1
-        }
+        },
+        "minVelocity": 0.5,
+        "maxVelocity": 40
     },
     "edges": {
         "smooth": {
@@ -195,68 +219,120 @@ net.set_options('''
             "size": 16,
             "strokeWidth": 3,
             "strokeColor": "#ffffff"
+        },
+        "margin": 20,
+        "fixed": {
+            "x": false,
+            "y": false
         }
     },
     "interaction": {
-        "hover": true,
-        "tooltipDelay": 100
+        "dragNodes": true,
+        "dragView": true,
+        "zoomView": true,
+        "hover": true
+    },
+    "layout": {
+        "improvedLayout": true,
+        "randomSeed": 42,
+        "hierarchical": {
+            "enabled": false,
+            "nodeSpacing": 250,
+            "levelSeparation": 250
+        }
     }
-}
-''')
+''' + '}')
 
-# Generate HTML file
-try:
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.html', mode='w', encoding='utf-8') as f:
-        net.save_graph(f.name)
-        with open(f.name, 'r', encoding='utf-8') as saved_file:
-            html_content = saved_file.read()
+# Modify the JavaScript to communicate with Streamlit
+highlight_js = """
+network.on("click", function(params) {
+    if (params.nodes.length > 0) {
+        var selectedNode = params.nodes[0];
+        // Send the selected node to Streamlit
+        window.parent.postMessage({
+            type: 'node_clicked',
+            node: selectedNode
+        }, '*');
         
-        # Add custom JavaScript
-        html_content = html_content.replace('</head>', '''
-            <script>
-            window.addEventListener('message', function(event) {
-                if (event.data.type === 'node_clicked') {
-                    window.parent.Streamlit.setComponentValue(event.data.node);
-                }
-            });
-            </script>
-            </head>
-        ''')
+        // Highlighting logic
+        var connectedNodes = new Set([selectedNode]);
+        var connectedEdges = new Set();
         
-        html_content = html_content.replace('</body>', '''
-            <script>
-            network.on("click", function(params) {
-                if (params.nodes.length > 0) {
-                    var selectedNode = params.nodes[0];
-                    window.parent.postMessage({
-                        type: 'node_clicked',
-                        node: selectedNode
-                    }, '*');
-                }
+        network.getConnectedNodes(selectedNode).forEach(function(connectedNode) {
+            connectedNodes.add(connectedNode);
+            network.getConnectedEdges(selectedNode).forEach(function(edgeId) {
+                connectedEdges.add(edgeId);
             });
-            </script>
-            </body>
-        ''')
+        });
 
-    # Display network in first column
-    with col1:
-        st.components.v1.html(html_content, height=750)
+        Object.values(network.body.nodes).forEach(function(node) {
+            if (connectedNodes.has(node.id)) {
+                node.options.opacity = 1.0;
+            } else {
+                node.options.opacity = 0.2;
+            }
+        });
+        
+        Object.values(network.body.edges).forEach(function(edge) {
+            if (connectedEdges.has(edge.id)) {
+                edge.options.opacity = 1.0;
+            } else {
+                edge.options.opacity = 0.2;
+            }
+        });
+    } else {
+        Object.values(network.body.nodes).forEach(node => {
+            node.options.opacity = 1.0;
+        });
+        Object.values(network.body.edges).forEach(edge => {
+            edge.options.opacity = 1.0;
+        });
+    }
+    network.redraw();
+});
+"""
 
-    # Display table in second column
-    with col2:
-        if st.session_state.get('selected_node'):
-            node_name = st.session_state.selected_node
-            if node_name in table_data:
-                st.subheader(f"{node_name} Details")
-                table = table_data[node_name]
-                st.table(pd.DataFrame(table["rows"], columns=table["headers"]))
-            else:
-                st.info(f"No detailed information available for {node_name}")
+# Add JavaScript for handling messages
+handle_message_js = """
+<script>
+window.addEventListener('message', function(event) {
+    if (event.data.type === 'node_clicked') {
+        // Send the node data to Streamlit
+        const node = event.data.node;
+        window.parent.Streamlit.setComponentValue(node);
+    }
+});
+</script>
+"""
+
+# Display the graph in the first column
+with col1:
+    # Create a temporary directory and save the graph
+    with tempfile.TemporaryDirectory() as temp_dir:
+        path = os.path.join(temp_dir, "graph.html")
+        net.save_graph(path)
+        
+        with open(path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+        
+        # Add JavaScript
+        html_content = html_content.replace('</body>', f'{handle_message_js}<script>{highlight_js}</script></body>')
+        
+        # Create a unique key for the component
+        component_value = components.html(html_content, height=750, scrolling=True, key="network_graph")
+        
+        if component_value is not None:
+            st.session_state.selected_node = component_value
+
+# Display the table in the second column
+with col2:
+    if st.session_state.selected_node:
+        node_name = st.session_state.selected_node
+        if node_name in table_data:
+            st.subheader(f"{node_name} Details")
+            table = table_data[node_name]
+            st.table(pd.DataFrame(table["rows"], columns=table["headers"]))
         else:
-            st.info("Click on a node to view its details")
-
-finally:
-    try:
-        os.unlink(f.name)
-    except:
-        pass
+            st.info(f"No detailed information available for {node_name}")
+    else:
+        st.info("Click on a node to view its details")
