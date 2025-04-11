@@ -13,7 +13,7 @@ st.title("🧠 Interactive System Management Data Model")
 entities = {
     "System Management": {"color": "green", "size": 30, "shape": "dot"},
     "System Overview": {
-        "color": "rgba(0,0,0,0)",
+        "color": "white",
         "size": 40, 
         "shape": "box",
         "margin": 20,
@@ -33,7 +33,7 @@ entities = {
         ])
     },
     "Criticality Assessment": {
-        "color": "rgba(0,0,0,0)",
+        "color": "white",
         "size": 40, 
         "shape": "box",
         "margin": 20,
