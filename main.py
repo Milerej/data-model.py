@@ -104,13 +104,15 @@ net.from_nx(G)
 net.set_options('''
 {
     "physics": {
-        "forceAtlas2Based": {
+        "barnesHut": {
+            "gravitationalConstant": -2000,
+            "centralGravity": 0.3,
             "springLength": 200,
-            "springConstant": 0.5,
-            "damping": 0.5
+            "springConstant": 0.04,
+            "damping": 0.09,
+            "avoidOverlap": 0.1
         },
-        "minVelocity": 0.75,
-        "solver": "forceAtlas2Based"
+        "minVelocity": 0.75
     },
     "edges": {
         "smooth": {
@@ -120,8 +122,6 @@ net.set_options('''
     }
 }
 ''')
-
-net.repulsion(node_distance=300, central_gravity=0.3)
 
 # Customize edge labels and arrows
 for edge in net.edges:
