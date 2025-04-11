@@ -106,28 +106,33 @@ net.set_options('{' + '''
         "enabled": true,
         "stabilization": {
             "enabled": true,
-            "iterations": 1000,
-            "updateInterval": 100,
+            "iterations": 2000,
+            "updateInterval": 50,
             "onlyDynamicEdges": false,
             "fit": true
         },
         "barnesHut": {
-            "gravitationalConstant": -3000,
-            "centralGravity": 0.3,
-            "springLength": 300,
-            "springConstant": 0.05,
-            "damping": 0.09,
+            "gravitationalConstant": -8000,
+            "centralGravity": 0.1,
+            "springLength": 400,
+            "springConstant": 0.04,
+            "damping": 0.5,
             "avoidOverlap": 1
         },
-        "minVelocity": 0.1,
-        "maxVelocity": 50
+        "minVelocity": 0.75,
+        "maxVelocity": 30
     },
     "edges": {
         "smooth": {
             "type": "continuous",
             "forceDirection": "none"
         },
-        "length": 300
+        "length": 400,
+        "font": {
+            "size": 14,
+            "strokeWidth": 2,
+            "strokeColor": "#ffffff"
+        }
     },
     "nodes": {
         "font": {
@@ -135,7 +140,11 @@ net.set_options('{' + '''
             "strokeWidth": 3,
             "strokeColor": "#ffffff"
         },
-        "margin": 15
+        "margin": 20,
+        "fixed": {
+            "x": false,
+            "y": false
+        }
     },
     "interaction": {
         "dragNodes": true,
@@ -144,10 +153,11 @@ net.set_options('{' + '''
     },
     "layout": {
         "improvedLayout": true,
+        "randomSeed": 42,
         "hierarchical": {
             "enabled": false,
-            "nodeSpacing": 200,
-            "levelSeparation": 200
+            "nodeSpacing": 250,
+            "levelSeparation": 250
         }
     }
 ''' + '}')
@@ -197,6 +207,15 @@ network.on("click", function(params) {
         });
     }
     network.redraw();
+});
+
+// Add stabilization progress handler
+network.on("stabilizationProgress", function(params) {
+    // console.log(params.iterations + ' / ' + params.total);
+});
+
+network.on("stabilizationIterationsDone", function() {
+    network.setOptions( { physics: { enabled: false } } );
 });
 """
 
