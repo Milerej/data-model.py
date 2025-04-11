@@ -13,10 +13,10 @@ st.title("🧠 Interactive System Management Data Model")
 entities = {
     "System Management": {"color": "green", "size": 30, "shape": "dot"},
     "System Overview": {
-        "color": "green", 
-        "size": 30, 
-        "shape": "dot",
-        "details": "\n".join([
+        "color": "white", 
+        "size": 40, 
+        "shape": "box",
+        "label": "\n".join([
             "SYSTEM OVERVIEW",
             "─────────────",
             "Agency",
@@ -28,10 +28,10 @@ entities = {
         ])
     },
     "Criticality Assessment": {
-        "color": "green", 
-        "size": 30, 
-        "shape": "dot",
-        "details": "\n".join([
+        "color": "white", 
+        "size": 40, 
+        "shape": "box",
+        "label": "\n".join([
             "CRITICALITY ASSESSMENT",
             "─────────────",
             "Economy",
@@ -67,33 +67,13 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    if node in ["System Overview", "Criticality Assessment"]:
-        # Add the main node
-        G.add_node(
-            node,
-            color=attributes["color"],
-            size=attributes["size"],
-            shape=attributes["shape"],
-            label=node
-        )
-        # Add the details node
-        G.add_node(
-            f"{node}_details",
-            color="white",
-            size=40,
-            shape="box",
-            label=attributes["details"]
-        )
-        # Add invisible edge to keep them close
-        G.add_edge(node, f"{node}_details", color="rgba(0,0,0,0)")
-    else:
-        G.add_node(
-            node,
-            color=attributes["color"],
-            size=attributes["size"],
-            shape=attributes["shape"],
-            label=node
-        )
+    G.add_node(
+        node,
+        color=attributes["color"],
+        size=attributes["size"],
+        shape=attributes["shape"],
+        label=attributes.get("label", node)
+    )
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
@@ -106,8 +86,6 @@ net.repulsion(node_distance=200, central_gravity=0.3)
 
 # Customize edge labels and arrows
 for edge in net.edges:
-    if "color" in edge:
-        edge["color"] = edge["color"]
     edge["label"] = edge.get("title", "")
     if edge.get("arrows") == "both":
         edge["arrows"] = "to,from"
