@@ -2,6 +2,7 @@ import streamlit as st
 from pyvis.network import Network
 import networkx as nx
 import streamlit.components.v1 as components
+import json
 
 st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
