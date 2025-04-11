@@ -33,84 +33,21 @@ custom_css = """
 tooltip_info = {
     "System Overview": """
     <table class='tooltip-table'>
-        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
-        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
-        <tr><td class='field-name'>System ID</td><td><b>SYS_001</b></td></tr>
-        <tr><td class='field-name'>System Name</td><td>System Overview Module</td></tr>
-        <tr><td class='field-name'>System Description</td><td>Core module for system information management</td></tr>
-        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
+        <tr><td class='field-name'>Agency</td><td></td></tr>
+        <tr><td class='field-name'>Ministry Family</td><td></td></tr>
+        <tr><td class='field-name'>System ID (Primary Key)</td><td></td></tr>
+        <tr><td class='field-name'>System Name</td><td></td></tr>
+        <tr><td class='field-name'>System Description</td><td></td></tr>
+        <tr><td class='field-name'>System Status</td><td></td></tr>
     </table>
     """,
-    "System Management": """
-    <table class='tooltip-table'>
-        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
-        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
-        <tr><td class='field-name'>System ID</td><td><b>SYS_002</b></td></tr>
-        <tr><td class='field-name'>System Name</td><td>System Management Console</td></tr>
-        <tr><td class='field-name'>System Description</td><td>Central management interface</td></tr>
-        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
-    </table>
-    """,
-    "Criticality Assessment": """
-    <table class='tooltip-table'>
-        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
-        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
-        <tr><td class='field-name'>System ID</td><td><b>SYS_003</b></td></tr>
-        <tr><td class='field-name'>System Name</td><td>Criticality Assessment Module</td></tr>
-        <tr><td class='field-name'>System Description</td><td>System criticality evaluation tool</td></tr>
-        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
-    </table>
-    """,
-    "Security & Sensitivity Classification": """
-    <table class='tooltip-table'>
-        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
-        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
-        <tr><td class='field-name'>System ID</td><td><b>SYS_004</b></td></tr>
-        <tr><td class='field-name'>System Name</td><td>Security Classification Module</td></tr>
-        <tr><td class='field-name'>System Description</td><td>Security level management system</td></tr>
-        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
-    </table>
-    """,
-    "Risk Materiality Level": """
-    <table class='tooltip-table'>
-        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
-        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
-        <tr><td class='field-name'>System ID</td><td><b>SYS_005</b></td></tr>
-        <tr><td class='field-name'>System Name</td><td>Risk Assessment Module</td></tr>
-        <tr><td class='field-name'>System Description</td><td>Risk evaluation and tracking system</td></tr>
-        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
-    </table>
-    """,
-    "System Resiliency": """
-    <table class='tooltip-table'>
-        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
-        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
-        <tr><td class='field-name'>System ID</td><td><b>SYS_006</b></td></tr>
-        <tr><td class='field-name'>System Name</td><td>Resiliency Management Module</td></tr>
-        <tr><td class='field-name'>System Description</td><td>System resilience monitoring tool</td></tr>
-        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
-    </table>
-    """,
-    "Hosting and System Dependencies": """
-    <table class='tooltip-table'>
-        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
-        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
-        <tr><td class='field-name'>System ID</td><td><b>SYS_007</b></td></tr>
-        <tr><td class='field-name'>System Name</td><td>Dependencies Management Module</td></tr>
-        <tr><td class='field-name'>System Description</td><td>System dependencies tracking tool</td></tr>
-        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
-    </table>
-    """,
-    "Central Programmes": """
-    <table class='tooltip-table'>
-        <tr><td class='field-name'>Agency</td><td>MOF</td></tr>
-        <tr><td class='field-name'>Ministry Family</td><td>Ministry of Finance</td></tr>
-        <tr><td class='field-name'>System ID</td><td><b>SYS_008</b></td></tr>
-        <tr><td class='field-name'>System Name</td><td>Central Programs Module</td></tr>
-        <tr><td class='field-name'>System Description</td><td>Program management system</td></tr>
-        <tr><td class='field-name'>System Status</td><td>Active</td></tr>
-    </table>
-    """
+    "System Management": "",
+    "Criticality Assessment": "",
+    "Security & Sensitivity Classification": "",
+    "Risk Materiality Level": "",
+    "System Resiliency": "",
+    "Hosting and System Dependencies": "",
+    "Central Programmes": ""
 }
 
 # Define entity modules and colors
