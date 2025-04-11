@@ -184,110 +184,44 @@ entities = {
     }
 }
 
-# Define edges with labels for relationships
+# Define edges with labels for relationships - organized by domain
 edges = [
-    ("Agency", "System Overview", "relates to"),
-    ("Agency", "Ministry Family", "manages"),
-    ("System Overview", "Criticality Assessment", "supports"),
-    ("System Overview", "Policy", "defines"),
-    ("Policy", "Policy Waivers", "grants"),
-    ("Supplier Profile", "Supplier Risk Management", "informs"),
-    ("Supplier Profile", "Supplier Contracts", "oversees"),
-    ("Supplier Profile", "Actions Against Errant Supplier", "initiates"),
-    ("Supplier Profile", "Supplier Performance Feedback", "monitors"),
-    ("Supplier Profile", "Bulk Tender ECN Details", "includes"),
-    ("Supplier Profile", "EDH Agency", "collaborates with"),
-    ("Risk Assessments", "Risk Treatments", "leads to"),
-    ("Audit Findings", "Risk Treatments", "triggers"),
-    ("Supplier Risk Management", "Risk Assessments", "feeds into"),
-    ("Supplier Performance Feedback", "Supplier Risk Management", "affects"),
-    ("Actions Against Errant Supplier", "Supplier Contracts", "cancels"),
-    ("System Overview", "Supplier Contracts", "references"),
-    ("System Overview", "Audit Findings", "monitors"),
-    ("System Management", "System Overview", "manages"),
-    ("System Management", "Criticality Assessment", "supports"),
-    ("System Management", "Security & Sensitivity Classification", "evaluates"),
-    ("System Management", "Risk Materiality Level", "determines"),
-    ("System Management", "System Resiliency", "improves"),
-    ("System Management", "Hosting and System Dependencies", "depends on"),
-    ("System Management", "Central Programmes", "aligns with"),
-    ("System Management", "Supplier Contracts", "depends on"),
-    ("Supplier Contracts", "Hosting and System Dependencies", "depends on")
-]
-
-def create_node_table(node_name, entity_info):
-    field_list = []
-    for field in entity_info["fields"]:
-        style = ""
-        if field.get("is_key"):
-            style = "font-weight: bold; text-decoration: underline;"
-        elif field.get("is_foreign_key"):
-            style = "font-style: italic; text-decoration: underline;"
-        
-        suffix = " (PK)" if field.get("is_key") else " (FK)" if field.get("is_foreign_key") else ""
-        field_list.append(f'<li style="{style}">{field["name"]}{suffix}</li>')
+    # Ministry and Agency relationships
+    ("Agency", "Ministry Family", 
+     "FK: Agency.Ministry_ID → Ministry_Family.Ministry_ID"),
     
-    table_html = f"""
-    <table border="1" style="background-color: {entity_info['color']}; border-collapse: collapse; width: 200px;">
-        <tr>
-            <th style="text-align: center; padding: 5px; border: 1px solid black; background-color: {entity_info['color']};">
-                {node_name}
-            </th>
-        </tr>
-        <tr>
-            <td style="padding: 5px; border: 1px solid black;">
-                <ul style="margin: 0; padding-left: 20px;">
-                    {''.join(field_list)}
-                </ul>
-            </td>
-        </tr>
-    </table>
-    """
-    return html.escape(table_html)
-
-# Create NetworkX graph
-G = nx.DiGraph()
-for node, info in entities.items():
-    G.add_node(node, 
-               title=create_node_table(node, info),
-               color=info['color'],
-               shape='box')
-
-# Add edges to graph
-for source, target, label in edges:
-    G.add_edge(source, target, title=label, label=label)
-
-# Create interactive PyVis network
-net = Network(height="700px", width="100%", directed=True)
-net.from_nx(G)
-net.repulsion(node_distance=300, central_gravity=0.2)
-
-# Customize nodes and edges
-for node in net.nodes:
-    node["shape"] = "box"
-    node["font"] = {"size": 12}
-    node["margin"] = 10
-
-for edge in net.edges:
-    edge["label"] = edge["title"]
-    edge["font"] = {"size": 10}
-    edge["arrows"] = "to"
-
-# Save and display in Streamlit
-net.save_graph("graph.html")
-with open("graph.html", "r", encoding='utf-8') as f:
-    components.html(f.read(), height=750, scrolling=True)
-
-# Add legend
-st.sidebar.title("Legend")
-st.sidebar.markdown("""
-    **Key:**
-    - **Bold Underline** = Primary Key (PK)
-    - *Italic Underline* = Foreign Key (FK)
-""")
-for entity, info in entities.items():
-    st.sidebar.markdown(
-        f'<div style="background-color:{info["color"]};width:20px;height:20px;display:inline-block"></div> '
-        f'{entity} ({info["type"]})', 
-        unsafe_allow_html=True
-    )
+    # System Overview relationships
+    ("System Overview", "Agency", 
+     "FK: System_Overview.Agency_ID → Agency.Agency_ID"),
+    ("Criticality Assessment", "System Overview", 
+     "FK: Criticality_Assessment.System_ID → System_Overview.System_ID"),
+    
+    # Policy relationships
+    ("Policy Waivers", "Policy", 
+     "FK: Policy_Waivers.Policy_ID → Policy.Policy_ID"),
+    
+    # Supplier relationships
+    ("Supplier Risk Management", "Supplier Profile", 
+     "FK: Supplier_Risk_Management.Supplier_ID → Supplier_Profile.Supplier_ID"),
+    ("Supplier Contracts", "Supplier Profile", 
+     "FK: Supplier_Contracts.Supplier_ID → Supplier_Profile.Supplier_ID"),
+    ("Actions Against Errant Supplier", "Supplier Profile", 
+     "FK: Actions_Against_Errant_Supplier.Supplier_ID → Supplier_Profile.Supplier_ID"),
+    ("Supplier Performance Feedback", "Supplier Profile", 
+     "FK: Supplier_Performance_Feedback.Supplier_ID → Supplier_Profile.Supplier_ID"),
+    ("Bulk Tender ECN Details", "Supplier Profile", 
+     "FK: Bulk_Tender_ECN_Details.Supplier_ID → Supplier_Profile.Supplier_ID"),
+    
+    # Risk Management relationships
+    ("Risk Treatments", "Risk Assessments", 
+     "FK: Risk_Treatments.Assessment_ID → Risk_Assessments.Assessment_ID"),
+    
+    # System Management relationships
+    ("System Management", "System Overview", 
+     "FK: System_Management.System_ID → System_Overview.System_ID"),
+    ("Security & Sensitivity Classification", "System Overview", 
+     "FK: Security_Classification.System_ID → System_Overview.System_ID"),
+    ("Risk Materiality Level", "System Overview", 
+     "FK: Risk_Materiality.System_ID → System_Overview.System_ID"),
+    ("System Resiliency", "System Overview", 
+     "FK: System_Resiliency.System_ID → System_
