@@ -7,7 +7,87 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
-# Define entity modules and colors - updated System Overview to green
+# Define table information for mouseover
+table_info = {
+    "System Overview": """
+<table border='1'>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>system_id (PK)</td><td>UUID</td><td>Unique identifier for the system</td></tr>
+    <tr><td>agency</td><td>VARCHAR(100)</td><td>Agency name</td></tr>
+    <tr><td>ministry_family</td><td>VARCHAR(100)</td><td>Ministry family name</td></tr>
+    <tr><td>system_name</td><td>VARCHAR(200)</td><td>Name of the system</td></tr>
+    <tr><td>system_description</td><td>TEXT</td><td>Detailed description of the system</td></tr>
+    <tr><td>system_status</td><td>VARCHAR(50)</td><td>Current status of the system</td></tr>
+    <tr><td>created_at</td><td>TIMESTAMP</td><td>Record creation timestamp</td></tr>
+    <tr><td>updated_at</td><td>TIMESTAMP</td><td>Last update timestamp</td></tr>
+</table>
+""",
+    "System Management": """
+<table border='1'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>system_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_name</td><td>VARCHAR(200)</td></tr>
+    <tr><td>created_at</td><td>TIMESTAMP</td></tr>
+    <tr><td>updated_at</td><td>TIMESTAMP</td></tr>
+</table>
+""",
+    "Criticality Assessment": """
+<table border='1'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>assessment_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>criticality_level</td><td>VARCHAR(50)</td></tr>
+    <tr><td>assessment_date</td><td>DATE</td></tr>
+</table>
+""",
+    "Security & Sensitivity Classification": """
+<table border='1'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>security_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>classification_level</td><td>VARCHAR(50)</td></tr>
+    <tr><td>last_review_date</td><td>DATE</td></tr>
+</table>
+""",
+    "Risk Materiality Level": """
+<table border='1'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>risk_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>materiality_level</td><td>VARCHAR(50)</td></tr>
+    <tr><td>assessment_date</td><td>DATE</td></tr>
+</table>
+""",
+    "System Resiliency": """
+<table border='1'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>resiliency_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>resiliency_level</td><td>VARCHAR(50)</td></tr>
+    <tr><td>last_test_date</td><td>DATE</td></tr>
+</table>
+""",
+    "Hosting and System Dependencies": """
+<table border='1'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>dependency_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>dependency_type</td><td>VARCHAR(100)</td></tr>
+    <tr><td>dependency_details</td><td>TEXT</td></tr>
+</table>
+""",
+    "Central Programmes": """
+<table border='1'>
+    <tr><th>Column</th><th>Type</th></tr>
+    <tr><td>programme_id (PK)</td><td>UUID</td></tr>
+    <tr><td>system_id (FK)</td><td>UUID</td></tr>
+    <tr><td>programme_name</td><td>VARCHAR(200)</td></tr>
+    <tr><td>status</td><td>VARCHAR(50)</td></tr>
+</table>
+"""
+}
+
+# Define entity modules and colors
 entities = {
     "System Management": {"color": "green", "size": 30},  # Bigger size for main module
     "System Overview": {"color": "green", "size": 20},    # Same color as System Management
@@ -28,7 +108,6 @@ edges = [
     ("System Management", "System Resiliency", "PK: System_ID", "both"),
     ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
     ("System Management", "Central Programmes", "PK: System_ID", "both"),
-    # Added new relationships
     ("Criticality Assessment", "Risk Materiality Level", "PK: System_ID", "both"),
     ("Hosting and System Dependencies", "Risk Materiality Level", "PK: System_ID", "both"),
     ("Security & Sensitivity Classification", "Risk Materiality Level", "PK: System_ID", "both")
@@ -37,7 +116,7 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    G.add_node(node, title=node, color=attributes["color"], size=attributes["size"])
+    G.add_node(node, title=table_info[node], color=attributes["color"], size=attributes["size"])
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
@@ -50,7 +129,7 @@ net.repulsion(node_distance=200, central_gravity=0.3)
 
 # Customize edge labels, arrows, and node sizes
 for node in net.nodes:
-    node["value"] = entities[node["id"]]["size"]  # Set node size
+    node["value"] = entities[node["id"]]["size"]
 
 for edge in net.edges:
     edge["label"] = edge["title"]
