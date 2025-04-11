@@ -34,36 +34,58 @@ entities = {
     "Central Programmes": "green"
 }
 
-# Define edges with labels for relationships
+# Define edges with labels for relationships - organized by domain
 edges = [
-    ("Agency", "System Overview", "relates to"),
-    ("Agency", "Ministry Family", "manages"),
-    ("System Overview", "Criticality Assessment", "supports"),
-    ("System Overview", "Policy", "defines"),
-    ("Policy", "Policy Waivers", "grants"),
-    ("Supplier Profile", "Supplier Risk Management", "informs"),
-    ("Supplier Profile", "Supplier Contracts", "oversees"),
-    ("Supplier Profile", "Actions Against Errant Supplier", "initiates"),
-    ("Supplier Profile", "Supplier Performance Feedback", "monitors"),
-    ("Supplier Profile", "Bulk Tender ECN Details", "includes"),
-    ("Supplier Profile", "EDH Agency", "collaborates with"),
-    ("Risk Assessments", "Risk Treatments", "leads to"),
-    ("Audit Findings", "Risk Treatments", "triggers"),
-    ("Supplier Risk Management", "Risk Assessments", "feeds into"),
-    ("Supplier Performance Feedback", "Supplier Risk Management", "affects"),
-    ("Actions Against Errant Supplier", "Supplier Contracts", "cancels"),
-    ("System Overview", "Supplier Contracts", "references"),
-    ("System Overview", "Audit Findings", "monitors"),
-    # New edges for System Management
-    ("System Management", "System Overview", "manages"),
-    ("System Management", "Criticality Assessment", "supports"),
-    ("System Management", "Security & Sensitivity Classification", "evaluates"),
-    ("System Management", "Risk Materiality Level", "determines"),
-    ("System Management", "System Resiliency", "improves"),
-    ("System Management", "Hosting and System Dependencies", "depends on"),
-    ("System Management", "Central Programmes", "aligns with"),
-    ("System Management", "Supplier Contracts", "depends on"),
-    ("Supplier Contracts", "Hosting and System Dependencies", "depends on")
+    # Ministry and Agency relationships
+    ("Agency", "Ministry Family", 
+     "FK: Ministry_ID"),
+    
+    # System Overview relationships
+    ("System Overview", "Agency", 
+     "FK: Agency_ID"),
+    ("Criticality Assessment", "System Overview", 
+     "FK: System_ID"),
+    
+    # Policy relationships
+    ("Policy Waivers", "Policy", 
+     "FK: Policy_ID"),
+    
+    # Supplier relationships
+    ("Supplier Risk Management", "Supplier Profile", 
+     "FK: Supplier_ID"),
+    ("Supplier Contracts", "Supplier Profile", 
+     "FK: Supplier_ID"),
+    ("Actions Against Errant Supplier", "Supplier Profile", 
+     "FK: Supplier_ID"),
+    ("Supplier Performance Feedback", "Supplier Profile", 
+     "FK: Supplier_ID"),
+    ("Bulk Tender ECN Details", "Supplier Profile", 
+     "FK: Supplier_ID"),
+    
+    # Risk Management relationships
+    ("Risk Treatments", "Risk Assessments", 
+     "FK: Assessment_ID"),
+    
+    # System Management relationships
+    ("System Management", "System Overview", 
+     "FK: System_ID"),
+    ("Security & Sensitivity Classification", "System Overview", 
+     "FK: System_ID"),
+    ("Risk Materiality Level", "System Overview", 
+     "FK: System_ID"),
+    ("System Resiliency", "System Overview", 
+     "FK: System_ID"),
+    ("Hosting and System Dependencies", "System Overview", 
+     "FK: System_ID"),
+    ("Central Programmes", "System Overview", 
+     "FK: System_ID"),
+    
+    # Cross-domain relationships
+    ("Supplier Contracts", "System Overview", 
+     "FK: System_ID"),
+    ("Audit Findings", "System Overview", 
+     "FK: System_ID")
+]
 ]
 
 # Create NetworkX graph
@@ -89,7 +111,7 @@ net.save_graph("graph.html")
 components.html(open("graph.html", "r", encoding='utf-8').read(), height=750, scrolling=True)
 
 
-st.title("🧠🧠🧠 Interactive Data Model Interdependency Chart")
+st.title("🧠🧠 Viz - Mock Up Data ")
 
 # Define entity modules and colors
 entities = {
