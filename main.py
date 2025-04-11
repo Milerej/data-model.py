@@ -69,7 +69,7 @@ edges = [
     ("System Management", "System Resiliency", "PK: System_ID", "both"),
     ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
     ("System Management", "Central Programmes", "PK: System_ID", "both"),
-    ("Criticality Assessment", "Risk Materiality Level", "PK: System_ID", "both"),
+    # Removed the edge between Criticality Assessment and Risk Materiality Level
     ("Hosting and System Dependencies", "Risk Materiality Level", "PK: System_ID", "both"),
     ("Security & Sensitivity Classification", "Risk Materiality Level", "PK: System_ID", "both")
 ]
