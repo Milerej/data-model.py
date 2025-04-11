@@ -9,35 +9,31 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
-# Define tooltip content for each node
-tooltip_info = {
-    "System Overview": (
-        "Agency\n"
-        "Ministry Family\n"
-        "System ID (Primary Key)\n"
-        "System Name\n"
-        "System Description\n"
-        "System Status"
-    ),
-    "System Management": "",
-    "Criticality Assessment": "",
-    "Security & Sensitivity Classification": "",
-    "Risk Materiality Level": "",
-    "System Resiliency": "",
-    "Hosting and System Dependencies": "",
-    "Central Programmes": ""
-}
-
 # Define entity modules and colors
 entities = {
-    "System Management": {"color": "green", "size": 30},
-    "System Overview": {"color": "green", "size": 20},
-    "Criticality Assessment": {"color": "green", "size": 20},
-    "Security & Sensitivity Classification": {"color": "green", "size": 20},
-    "Risk Materiality Level": {"color": "green", "size": 20},
-    "System Resiliency": {"color": "green", "size": 20},
-    "Hosting and System Dependencies": {"color": "green", "size": 20},
-    "Central Programmes": {"color": "green", "size": 20}
+    "System Management": {"color": "green", "size": 30, "shape": "dot"},
+    "System Overview": {
+        "color": "white", 
+        "size": 40, 
+        "shape": "box",
+        "font.size": 12,
+        "label": "\n".join([
+            "System Overview",
+            "─────────────",
+            "Agency",
+            "Ministry Family",
+            "System ID (Primary Key)",
+            "System Name",
+            "System Description",
+            "System Status"
+        ])
+    },
+    "Criticality Assessment": {"color": "green", "size": 20, "shape": "dot"},
+    "Security & Sensitivity Classification": {"color": "green", "size": 20, "shape": "dot"},
+    "Risk Materiality Level": {"color": "green", "size": 20, "shape": "dot"},
+    "System Resiliency": {"color": "green", "size": 20, "shape": "dot"},
+    "Hosting and System Dependencies": {"color": "green", "size": 20, "shape": "dot"},
+    "Central Programmes": {"color": "green", "size": 20, "shape": "dot"}
 }
 
 # Define edges with PK/FK relationships
@@ -57,7 +53,23 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    G.add_node(node, title=tooltip_info[node], color=attributes["color"], size=attributes["size"])
+    if node == "System Overview":
+        G.add_node(
+            node,
+            color=attributes["color"],
+            size=attributes["size"],
+            shape=attributes["shape"],
+            label=attributes["label"],
+            font={'size': attributes["font.size"]}
+        )
+    else:
+        G.add_node(
+            node,
+            color=attributes["color"],
+            size=attributes["size"],
+            shape=attributes["shape"],
+            label=node
+        )
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
@@ -68,10 +80,7 @@ net = Network(height="700px", width="100%", directed=True, notebook=True)
 net.from_nx(G)
 net.repulsion(node_distance=200, central_gravity=0.3)
 
-# Customize edge labels, arrows, and node sizes
-for node in net.nodes:
-    node["value"] = entities[node["id"]]["size"]
-
+# Customize edge labels and arrows
 for edge in net.edges:
     edge["label"] = edge["title"]
     if edge["arrows"] == "both":
