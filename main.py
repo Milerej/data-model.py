@@ -131,4 +131,135 @@ edges = [
     ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
     ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
     ("System Management", "Risk Materiality Level", "PK: System_ID", "both"),
-    ("System Management", "System Resiliency
+    ("System Management", "System Resiliency", "PK: System_ID", "both"),
+    ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
+    ("System Management", "Central Programmes", "PK: System_ID", "both"),
+    ("Criticality Assessment", "Risk Materiality Level", "PK: System_ID", "both"),
+    ("Hosting and System Dependencies", "Risk Materiality Level", "PK: System_ID", "both"),
+    ("Security & Sensitivity Classification", "Risk Materiality Level", "PK: System_ID", "both")
+]
+
+# Create NetworkX graph
+G = nx.DiGraph()
+for node, attributes in entities.items():
+    G.add_node(node, title=tooltip_info[node], color=attributes["color"], size=attributes["size"])
+
+# Add edges with labels and custom arrow directions
+for source, target, label, direction in edges:
+    G.add_edge(source, target, title=label, label=label, arrows=direction)
+
+# Create interactive PyVis network
+net = Network(height="700px", width="100%", directed=True, notebook=True)
+net.from_nx(G)
+net.repulsion(node_distance=200, central_gravity=0.3)
+
+# Customize edge labels, arrows, and node sizes
+for node in net.nodes:
+    node["value"] = entities[node["id"]]["size"]
+
+for edge in net.edges:
+    edge["label"] = edge["title"]
+    if edge["arrows"] == "both":
+        edge["arrows"] = "to,from"
+    else:
+        edge["arrows"] = edge["arrows"]
+
+# Add JavaScript for tooltips and highlighting
+combined_js = """
+<script>
+// Tooltip handling
+network.on("hoverNode", function(params) {
+    var node = params.node;
+    var x = params.event.center.x;
+    var y = params.event.center.y;
+    
+    var existingTooltip = document.getElementById('tooltip');
+    if (existingTooltip) {
+        existingTooltip.parentNode.removeChild(existingTooltip);
+    }
+    
+    var tooltip = document.createElement('div');
+    tooltip.id = 'tooltip';
+    tooltip.style.position = 'absolute';
+    tooltip.style.left = (x + 10) + 'px';
+    tooltip.style.top = (y + 10) + 'px';
+    tooltip.style.backgroundColor = 'white';
+    tooltip.style.padding = '10px';
+    tooltip.style.borderRadius = '5px';
+    tooltip.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+    tooltip.style.zIndex = '1000';
+    tooltip.innerHTML = node.title;
+    
+    document.body.appendChild(tooltip);
+});
+
+network.on("blurNode", function(params) {
+    var tooltip = document.getElementById('tooltip');
+    if (tooltip) {
+        tooltip.parentNode.removeChild(tooltip);
+    }
+});
+
+// Node highlighting
+network.on("click", function(params) {
+    if (params.nodes.length > 0) {
+        var selectedNode = params.nodes[0];
+        var connectedNodes = new Set([selectedNode]);
+        var connectedEdges = new Set();
+        
+        network.getConnectedNodes(selectedNode).forEach(function(connectedNode) {
+            connectedNodes.add(connectedNode);
+            network.getConnectedEdges(selectedNode).forEach(function(edgeId) {
+                connectedEdges.add(edgeId);
+            });
+        });
+
+        Object.values(network.body.nodes).forEach(function(node) {
+            if (connectedNodes.has(node.id)) {
+                node.options.opacity = 1.0;
+            } else {
+                node.options.opacity = 0.2;
+            }
+        });
+        
+        Object.values(network.body.edges).forEach(function(edge) {
+            if (connectedEdges.has(edge.id)) {
+                edge.options.opacity = 1.0;
+            } else {
+                edge.options.opacity = 0.2;
+            }
+        });
+    } else {
+        Object.values(network.body.nodes).forEach(node => {
+            node.options.opacity = 1.0;
+        });
+        Object.values(network.body.edges).forEach(edge => {
+            edge.options.opacity = 1.0;
+        });
+    }
+    network.redraw();
+});
+
+// Update tooltip position on canvas drag
+network.on("dragging", function(params) {
+    var tooltip = document.getElementById('tooltip');
+    if (tooltip) {
+        tooltip.parentNode.removeChild(tooltip);
+    }
+});
+</script>
+"""
+
+# Create a temporary directory and save the graph
+with tempfile.TemporaryDirectory() as temp_dir:
+    path = os.path.join(temp_dir, "graph.html")
+    net.save_graph(path)
+    
+    with open(path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+    
+    # Add custom CSS and JavaScript
+    html_content = html_content.replace('</head>', f'{custom_css}</head>')
+    html_content = html_content.replace('</body>', f'{combined_js}</body>')
+    
+    components.html(html_content, height=750, scrolling=True)
