@@ -9,88 +9,78 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
-# Create network with specific physics options
-net = Network(height="700px", width="100%", directed=True)
-net.force_atlas_2based()
-
-# Add nodes directly to network
-net.add_node(1, 
-    label="\n".join([
-        "SYSTEM MANAGEMENT",
-        "─────────────",
-        "Agency Code",
-        "Ministry Code",
-        "System ID",
-        "System Name",
-        "System Description",
-        "System Status"
-    ]),
-    color="white",
-    shape="box",
-    size=60)
-
-net.add_node(2, 
-    label="\n".join([
-        "SYSTEM OVERVIEW",
-        "─────────────",
-        "Agency",
-        "Ministry Family",
-        "System ID (Primary Key)",
-        "System Name",
-        "System Description",
-        "System Status"
-    ]),
-    color="white",
-    shape="box",
-    size=60)
-
-# Add other nodes
-node_ids = {
-    "Criticality Assessment": 3,
-    "Security & Sensitivity Classification": 4,
-    "Risk Materiality Level": 5,
-    "System Resiliency": 6,
-    "Hosting and System Dependencies": 7,
-    "Central Programmes": 8
+# Define entity modules and colors
+entities = {
+    "System Management": {"color": "white", "size": 30, "shape": "box"},
+    "System Overview": {"color": "white", "size": 20, "shape": "box"},
+    "Criticality Assessment": {"color": "green", "size": 20, "shape": "dot"},
+    "Security & Sensitivity Classification": {"color": "green", "size": 20, "shape": "dot"},
+    "Risk Materiality Level": {"color": "green", "size": 20, "shape": "dot"},
+    "System Resiliency": {"color": "green", "size": 20, "shape": "dot"},
+    "Hosting and System Dependencies": {"color": "green", "size": 20, "shape": "dot"},
+    "Central Programmes": {"color": "green", "size": 20, "shape": "dot"}
 }
 
-for name, id in node_ids.items():
-    net.add_node(id, label=name, color="green", size=20)
-
-# Add edges
+# Define edges with PK/FK relationships
 edges = [
-    (1, 2, "PK: System_ID"),
-    (1, 3, "PK: System_ID"),
-    (1, 4, "PK: System_ID"),
-    (1, 5, "PK: System_ID"),
-    (1, 6, "PK: System_ID"),
-    (1, 7, "PK: System_ID"),
-    (1, 8, "PK: System_ID"),
-    (3, 5, "PK: System_ID"),
-    (7, 5, "PK: System_ID"),
-    (4, 5, "PK: System_ID")
+    ("System Management", "System Overview", "PK: System_ID", "both"),
+    ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
+    ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
+    ("System Management", "Risk Materiality Level", "PK: System_ID", "both"),
+    ("System Management", "System Resiliency", "PK: System_ID", "both"),
+    ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
+    ("System Management", "Central Programmes", "PK: System_ID", "both"),
+    ("Criticality Assessment", "Risk Materiality Level", "PK: System_ID", "both"),
+    ("Hosting and System Dependencies", "Risk Materiality Level", "PK: System_ID", "both"),
+    ("Security & Sensitivity Classification", "Risk Materiality Level", "PK: System_ID", "both")
 ]
 
-for source, target, label in edges:
-    net.add_edge(source, target, label=label, arrows='to,from')
+# Create NetworkX graph
+G = nx.DiGraph()
+for node, attributes in entities.items():
+    if node == "System Management":
+        label = "\n".join([
+            "SYSTEM MANAGEMENT",
+            "─────────────",
+            "Agency Code",
+            "Ministry Code",
+            "System ID",
+            "System Name",
+            "System Description",
+            "System Status"
+        ])
+        G.add_node(node, title=label, color=attributes["color"], size=attributes["size"], shape=attributes["shape"], label=label)
+    elif node == "System Overview":
+        label = "\n".join([
+            "SYSTEM OVERVIEW",
+            "─────────────",
+            "Agency",
+            "Ministry Family",
+            "System ID (Primary Key)",
+            "System Name",
+            "System Description",
+            "System Status"
+        ])
+        G.add_node(node, title=label, color=attributes["color"], size=attributes["size"], shape=attributes["shape"], label=label)
+    else:
+        G.add_node(node, title=node, color=attributes["color"], size=attributes["size"], shape=attributes["shape"], label=node)
 
-# Set physics options
-net.set_options("""
-const options = {
-  "physics": {
-    "forceAtlas2Based": {
-      "gravitationalConstant": -50,
-      "centralGravity": 0.01,
-      "springLength": 200,
-      "springConstant": 0.08
-    },
-    "maxVelocity": 50,
-    "solver": "forceAtlas2Based",
-    "timestep": 0.35,
-    "stabilization": {"iterations": 150}
-  }
-}
-""")
+# Add edges with labels and custom arrow directions
+for source, target, label, direction in edges:
+    G.add_edge(source, target, title=label, label=label, arrows=direction)
+
+# Create interactive PyVis network
+net = Network(height="700px", width="100%", directed=True, notebook=True)
+net.from_nx(G)
+net.repulsion(node_distance=200, central_gravity=0.3)
+
+# Customize edge labels and arrows
+for edge in net.edges:
+    edge["label"] = edge["title"]
+    if edge["arrows"] == "both":
+        edge["arrows"] = "to,from"
+    else:
+        edge["arrows"] = edge["arrows"]
 
 # Add JavaScript for highlighting
 combined_js = """
