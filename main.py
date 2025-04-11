@@ -9,25 +9,17 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
+# Add table for System Overview using Streamlit
+st.subheader("System Overview Details")
+system_overview_data = {
+    "Field": ["Agency", "Ministry Family", "System ID (Primary Key)", "System Name", "System Description", "System Status"],
+}
+st.table(system_overview_data)
+
 # Define entity modules and colors
 entities = {
     "System Management": {"color": "green", "size": 30, "shape": "dot"},
-    "System Overview": {
-        "color": "white", 
-        "size": 40, 
-        "shape": "box",
-        "font.size": 12,
-        "label": "\n".join([
-            "SYSTEM OVERVIEW",
-            "─────────────",
-            "Agency",
-            "Ministry Family",
-            "System ID (Primary Key)",
-            "System Name",
-            "System Description",
-            "System Status"
-        ])
-    },
+    "System Overview": {"color": "green", "size": 30, "shape": "dot"},  # Changed to match other nodes
     "Criticality Assessment": {"color": "green", "size": 20, "shape": "dot"},
     "Security & Sensitivity Classification": {"color": "green", "size": 20, "shape": "dot"},
     "Risk Materiality Level": {"color": "green", "size": 20, "shape": "dot"},
@@ -53,23 +45,13 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    if node == "System Overview":
-        G.add_node(
-            node,
-            color=attributes["color"],
-            size=attributes["size"],
-            shape=attributes["shape"],
-            label=attributes["label"],
-            font={'size': attributes["font.size"]}
-        )
-    else:
-        G.add_node(
-            node,
-            color=attributes["color"],
-            size=attributes["size"],
-            shape=attributes["shape"],
-            label=node
-        )
+    G.add_node(
+        node,
+        color=attributes["color"],
+        size=attributes["size"],
+        shape=attributes["shape"],
+        label=node
+    )
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
