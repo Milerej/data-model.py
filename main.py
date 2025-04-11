@@ -9,52 +9,16 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 
 st.title("🧠 Interactive System Management Data Model")
 
-# Define custom CSS for tooltips
-custom_css = """
-<style>
-.custom-tooltip {
-    position: absolute;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    z-index: 1000;
-    max-width: 300px;
-}
-
-.custom-tooltip table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-.custom-tooltip td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-.custom-tooltip td:first-child {
-    font-weight: bold;
-    background-color: #f5f5f5;
-}
-</style>
-"""
-
-# Define tooltip content
-tooltip_data = {
-    "System Overview": {
-        "Agency": "",
-        "Ministry Family": "",
-        "System ID (Primary Key)": "",
-        "System Name": "",
-        "System Description": "",
-        "System Status": ""
-    }
-}
-
-# Convert tooltip data to a format that can be passed to JavaScript
+# Define tooltip content for each node
 tooltip_info = {
-    "System Overview": "TOOLTIP_DATA:" + str(list(tooltip_data["System Overview"].items())),
+    "System Overview": (
+        "Agency\n"
+        "Ministry Family\n"
+        "System ID (Primary Key)\n"
+        "System Name\n"
+        "System Description\n"
+        "System Status"
+    ),
     "System Management": "",
     "Criticality Assessment": "",
     "Security & Sensitivity Classification": "",
@@ -115,58 +79,9 @@ for edge in net.edges:
     else:
         edge["arrows"] = edge["arrows"]
 
-# Add JavaScript for custom tooltips and highlighting
+# Add JavaScript for highlighting
 combined_js = """
 <script>
-// Custom tooltip handling
-function createTooltipContent(data) {
-    if (!data.startsWith('TOOLTIP_DATA:')) return data;
-    
-    try {
-        const tooltipData = eval(data.replace('TOOLTIP_DATA:', ''));
-        let table = '<table>';
-        tooltipData.forEach(([key, value]) => {
-            table += `<tr><td>${key}</td><td>${value || '&nbsp;'}</td></tr>`;
-        });
-        table += '</table>';
-        return table;
-    } catch (e) {
-        console.error('Error parsing tooltip data:', e);
-        return '';
-    }
-}
-
-// Tooltip handling
-network.on("hoverNode", function(params) {
-    var node = params.node;
-    var x = params.event.center.x;
-    var y = params.event.center.y;
-    
-    var existingTooltip = document.getElementById('custom-tooltip');
-    if (existingTooltip) {
-        existingTooltip.parentNode.removeChild(existingTooltip);
-    }
-    
-    if (!node.title) return;
-    
-    var tooltip = document.createElement('div');
-    tooltip.id = 'custom-tooltip';
-    tooltip.className = 'custom-tooltip';
-    tooltip.style.left = (x + 10) + 'px';
-    tooltip.style.top = (y + 10) + 'px';
-    tooltip.innerHTML = createTooltipContent(node.title);
-    
-    document.body.appendChild(tooltip);
-});
-
-network.on("blurNode", function(params) {
-    var tooltip = document.getElementById('custom-tooltip');
-    if (tooltip) {
-        tooltip.parentNode.removeChild(tooltip);
-    }
-});
-
-// Node highlighting
 network.on("click", function(params) {
     if (params.nodes.length > 0) {
         var selectedNode = params.nodes[0];
@@ -205,14 +120,6 @@ network.on("click", function(params) {
     }
     network.redraw();
 });
-
-// Update tooltip position on canvas drag
-network.on("dragging", function(params) {
-    var tooltip = document.getElementById('custom-tooltip');
-    if (tooltip) {
-        tooltip.parentNode.removeChild(tooltip);
-    }
-});
 </script>
 """
 
@@ -224,8 +131,7 @@ with tempfile.TemporaryDirectory() as temp_dir:
     with open(path, "r", encoding="utf-8") as f:
         html_content = f.read()
     
-    # Add custom CSS and JavaScript
-    html_content = html_content.replace('</head>', f'{custom_css}</head>')
+    # Add JavaScript
     html_content = html_content.replace('</body>', f'{combined_js}</body>')
     
     components.html(html_content, height=750, scrolling=True)
