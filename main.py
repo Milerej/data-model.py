@@ -18,16 +18,14 @@ entities = {
         "shape": "box",
         "font.size": 12,
         "label": "\n".join([
-            "┌──────────────────────────┐",
-            "│      System Overview     │",
-            "├──────────────────────────┤",
-            "│ Agency                   │",
-            "│ Ministry Family          │",
-            "│ System ID (Primary Key)  │",
-            "│ System Name              │",
-            "│ System Description       │",
-            "│ System Status            │",
-            "└──────────────────────────┘"
+            "System Overview",
+            "─────────────",
+            "Agency",
+            "Ministry Family",
+            "System ID (Primary Key)",
+            "System Name",
+            "System Description",
+            "System Status"
         ])
     },
     "Criticality Assessment": {"color": "green", "size": 20, "shape": "dot"},
