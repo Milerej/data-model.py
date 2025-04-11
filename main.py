@@ -31,6 +31,24 @@ custom_css = """
 
 # Define tooltip content for each node
 tooltip_info = {
+    "System Overview": "<table style='width:100%;border-collapse:collapse;background:white'>" + 
+                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>Agency</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
+                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>Ministry Family</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
+                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>System ID (Primary Key)</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
+                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>System Name</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
+                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>System Description</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
+                      "<tr><td style='padding:5px;border:1px solid gray;font-weight:bold'>System Status</td><td style='padding:5px;border:1px solid gray'>&nbsp;</td></tr>" + 
+                      "</table>",
+    "System Management": "",
+    "Criticality Assessment": "",
+    "Security & Sensitivity Classification": "",
+    "Risk Materiality Level": "",
+    "System Resiliency": "",
+    "Hosting and System Dependencies": "",
+    "Central Programmes": ""
+}
+
+tooltip_info = {
     "System Overview": '<table style="border-collapse: collapse; width: 100%; background-color: white;">' + \
         '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Agency</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
         '<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; background-color: #f5f5f5;">Ministry Family</td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>' + \
