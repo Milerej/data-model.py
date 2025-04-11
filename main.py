@@ -129,4 +129,69 @@ net.set_options('{' + '''
         }
     },
     "interaction": {
+        "dragNodes": true,
+        "dragView": true,
+        "zoomView": true
+    }
+''' + '}')
+
+# Customize edge labels and arrows
+for edge in net.edges:
+    edge["label"] = edge.get("title", "")
+    if edge.get("arrows") == "both":
+        edge["arrows"] = "to,from"
+
+# Add JavaScript for highlighting
+highlight_js = """
+network.on("click", function(params) {
+    if (params.nodes.length > 0) {
+        var selectedNode = params.nodes[0];
+        var connectedNodes = new Set([selectedNode]);
+        var connectedEdges = new Set();
         
+        network.getConnectedNodes(selectedNode).forEach(function(connectedNode) {
+            connectedNodes.add(connectedNode);
+            network.getConnectedEdges(selectedNode).forEach(function(edgeId) {
+                connectedEdges.add(edgeId);
+            });
+        });
+
+        Object.values(network.body.nodes).forEach(function(node) {
+            if (connectedNodes.has(node.id)) {
+                node.options.opacity = 1.0;
+            } else {
+                node.options.opacity = 0.2;
+            }
+        });
+        
+        Object.values(network.body.edges).forEach(function(edge) {
+            if (connectedEdges.has(edge.id)) {
+                edge.options.opacity = 1.0;
+            } else {
+                edge.options.opacity = 0.2;
+            }
+        });
+    } else {
+        Object.values(network.body.nodes).forEach(node => {
+            node.options.opacity = 1.0;
+        });
+        Object.values(network.body.edges).forEach(edge => {
+            edge.options.opacity = 1.0;
+        });
+    }
+    network.redraw();
+});
+"""
+
+# Create a temporary directory and save the graph
+with tempfile.TemporaryDirectory() as temp_dir:
+    path = os.path.join(temp_dir, "graph.html")
+    net.save_graph(path)
+    
+    with open(path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+    
+    # Add JavaScript
+    html_content = html_content.replace('</body>', f'<script>{highlight_js}</script></body>')
+    
+    components.html(html_content, height=750, scrolling=True)
