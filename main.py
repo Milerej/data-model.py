@@ -15,7 +15,7 @@ entities = {
         "color": "green", 
         "size": 30, 
         "shape": "dot",
-        "title": "Central node managing system relationships"
+        "title": "System Management Module"
     },
     "System Overview": {
         "color": "green", 
