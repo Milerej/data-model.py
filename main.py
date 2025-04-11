@@ -31,7 +31,7 @@ custom_css = """
 
 # Define tooltip content for each node
 tooltip_info = {
-    "System Overview": """
+    "System Overview":
     <table class='tooltip-table'>
         <tr><td class='field-name'>Agency</td><td></td></tr>
         <tr><td class='field-name'>Ministry Family</td><td></td></tr>
@@ -40,7 +40,7 @@ tooltip_info = {
         <tr><td class='field-name'>System Description</td><td></td></tr>
         <tr><td class='field-name'>System Status</td><td></td></tr>
     </table>
-    """,
+    ,
     "System Management": "",
     "Criticality Assessment": "",
     "Security & Sensitivity Classification": "",
