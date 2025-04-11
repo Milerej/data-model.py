@@ -29,9 +29,9 @@ edges = [
     ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
     ("System Management", "Central Programmes", "PK: System_ID", "both"),
     # Added new relationships
-    ("Criticality Assessment", "Risk Materiality Level", "FK: Assessment_ID", "both"),
-    ("Hosting and System Dependencies", "Risk Materiality Level", "FK: Dependency_ID", "both"),
-    ("Security & Sensitivity Classification", "Risk Materiality Level", "FK: Security_ID", "both")
+    ("Criticality Assessment", "Risk Materiality Level", "PK: System_ID", "both"),
+    ("Hosting and System Dependencies", "Risk Materiality Level", "PK: System_ID", "both"),
+    ("Security & Sensitivity Classification", "Risk Materiality Level", "PK: System_ID", "both")
 ]
 
 # Create NetworkX graph
