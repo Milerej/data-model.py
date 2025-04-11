@@ -21,13 +21,13 @@ entities = {
 
 # Define edges with PK/FK relationships
 edges = [
-    ("System Management", "System Overview", "FK: System_ID", "both"),
-    ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
-    ("System Management", "Security & Sensitivity Classification", "FK: System_ID", "both"),
-    ("System Management", "Risk Materiality Level", "FK: System_ID", "both"),
-    ("System Management", "System Resiliency", "FK: System_ID", "both"),
-    ("System Management", "Hosting and System Dependencies", "FK: System_ID", "both"),
-    ("System Management", "Central Programmes", "FK: System_ID", "both"),
+    ("System Management", "System Overview", "PK: System_ID", "both"),
+    ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
+    ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
+    ("System Management", "Risk Materiality Level", "PK: System_ID", "both"),
+    ("System Management", "System Resiliency", "PK: System_ID", "both"),
+    ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
+    ("System Management", "Central Programmes", "PK: System_ID", "both"),
     # Added new relationships
     ("Criticality Assessment", "Risk Materiality Level", "FK: Assessment_ID", "both"),
     ("Hosting and System Dependencies", "Risk Materiality Level", "FK: Dependency_ID", "both"),
