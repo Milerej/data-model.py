@@ -11,8 +11,23 @@ st.title("🧠 Interactive System Management Data Model")
 
 # Define entity modules and colors
 entities = {
-    "System Management": {"color": "white", "size": 30, "shape": "box"},
-    "System Overview": {"color": "white", "size": 20, "shape": "box"},
+    "System Management": {"color": "green", "size": 30, "shape": "dot"},
+    "System Overview": {
+        "color": "white", 
+        "size": 40, 
+        "shape": "box",
+        "font.size": 12,
+        "label": "\n".join([
+            "SYSTEM OVERVIEW",
+            "─────────────",
+            "Agency",
+            "Ministry Family",
+            "System ID (Primary Key)",
+            "System Name",
+            "System Description",
+            "System Status"
+        ])
+    },
     "Criticality Assessment": {"color": "green", "size": 20, "shape": "dot"},
     "Security & Sensitivity Classification": {"color": "green", "size": 20, "shape": "dot"},
     "Risk Materiality Level": {"color": "green", "size": 20, "shape": "dot"},
@@ -38,32 +53,23 @@ edges = [
 # Create NetworkX graph
 G = nx.DiGraph()
 for node, attributes in entities.items():
-    if node == "System Management":
-        label = "\n".join([
-            "SYSTEM MANAGEMENT",
-            "─────────────",
-            "Agency Code",
-            "Ministry Code",
-            "System ID",
-            "System Name",
-            "System Description",
-            "System Status"
-        ])
-        G.add_node(node, title=label, color=attributes["color"], size=attributes["size"], shape=attributes["shape"], label=label)
-    elif node == "System Overview":
-        label = "\n".join([
-            "SYSTEM OVERVIEW",
-            "─────────────",
-            "Agency",
-            "Ministry Family",
-            "System ID (Primary Key)",
-            "System Name",
-            "System Description",
-            "System Status"
-        ])
-        G.add_node(node, title=label, color=attributes["color"], size=attributes["size"], shape=attributes["shape"], label=label)
+    if node == "System Overview":
+        G.add_node(
+            node,
+            color=attributes["color"],
+            size=attributes["size"],
+            shape=attributes["shape"],
+            label=attributes["label"],
+            font={'size': attributes["font.size"]}
+        )
     else:
-        G.add_node(node, title=node, color=attributes["color"], size=attributes["size"], shape=attributes["shape"], label=node)
+        G.add_node(
+            node,
+            color=attributes["color"],
+            size=attributes["size"],
+            shape=attributes["shape"],
+            label=node
+        )
 
 # Add edges with labels and custom arrow directions
 for source, target, label, direction in edges:
