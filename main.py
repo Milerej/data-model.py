@@ -48,7 +48,140 @@ entities = {
         ],
         "type": "Entity"
     },
-    # Add other entities with their fields...
+    "Policy": {
+        "color": "red",
+        "fields": [
+            {"name": "Policy_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    },
+    "Policy Waivers": {
+        "color": "red",
+        "fields": [
+            {"name": "Waiver_ID", "is_key": True},
+            {"name": "Policy_ID", "is_foreign_key": True, "references": "Policy"}
+        ],
+        "type": "Entity"
+    },
+    "Supplier Profile": {
+        "color": "purple",
+        "fields": [
+            {"name": "Supplier_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    },
+    "Supplier Risk Management": {
+        "color": "purple",
+        "fields": [
+            {"name": "Risk_ID", "is_key": True},
+            {"name": "Supplier_ID", "is_foreign_key": True, "references": "Supplier Profile"}
+        ],
+        "type": "Entity"
+    },
+    "Supplier Contracts": {
+        "color": "purple",
+        "fields": [
+            {"name": "Contract_ID", "is_key": True},
+            {"name": "Supplier_ID", "is_foreign_key": True, "references": "Supplier Profile"}
+        ],
+        "type": "Entity"
+    },
+    "Actions Against Errant Supplier": {
+        "color": "purple",
+        "fields": [
+            {"name": "Action_ID", "is_key": True},
+            {"name": "Supplier_ID", "is_foreign_key": True, "references": "Supplier Profile"}
+        ],
+        "type": "Entity"
+    },
+    "Supplier Performance Feedback": {
+        "color": "purple",
+        "fields": [
+            {"name": "Feedback_ID", "is_key": True},
+            {"name": "Supplier_ID", "is_foreign_key": True, "references": "Supplier Profile"}
+        ],
+        "type": "Entity"
+    },
+    "Bulk Tender ECN Details": {
+        "color": "purple",
+        "fields": [
+            {"name": "ECN_ID", "is_key": True},
+            {"name": "Supplier_ID", "is_foreign_key": True, "references": "Supplier Profile"}
+        ],
+        "type": "Entity"
+    },
+    "EDH Agency": {
+        "color": "purple",
+        "fields": [
+            {"name": "EDH_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    },
+    "Risk Assessments": {
+        "color": "orange",
+        "fields": [
+            {"name": "Assessment_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    },
+    "Risk Treatments": {
+        "color": "orange",
+        "fields": [
+            {"name": "Treatment_ID", "is_key": True},
+            {"name": "Assessment_ID", "is_foreign_key": True, "references": "Risk Assessments"}
+        ],
+        "type": "Entity"
+    },
+    "Audit Findings": {
+        "color": "gray",
+        "fields": [
+            {"name": "Finding_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    },
+    "System Management": {
+        "color": "green",
+        "fields": [
+            {"name": "Management_ID", "is_key": True},
+            {"name": "System_ID", "is_foreign_key": True, "references": "System Overview"}
+        ],
+        "type": "Entity"
+    },
+    "Security & Sensitivity Classification": {
+        "color": "green",
+        "fields": [
+            {"name": "Classification_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    },
+    "Risk Materiality Level": {
+        "color": "green",
+        "fields": [
+            {"name": "Materiality_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    },
+    "System Resiliency": {
+        "color": "green",
+        "fields": [
+            {"name": "Resiliency_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    },
+    "Hosting and System Dependencies": {
+        "color": "green",
+        "fields": [
+            {"name": "Dependency_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    },
+    "Central Programmes": {
+        "color": "green",
+        "fields": [
+            {"name": "Programme_ID", "is_key": True}
+        ],
+        "type": "Entity"
+    }
 }
 
 # Define edges with labels for relationships
@@ -56,7 +189,30 @@ edges = [
     ("Agency", "System Overview", "relates to"),
     ("Agency", "Ministry Family", "manages"),
     ("System Overview", "Criticality Assessment", "supports"),
-    # ... rest of your edges ...
+    ("System Overview", "Policy", "defines"),
+    ("Policy", "Policy Waivers", "grants"),
+    ("Supplier Profile", "Supplier Risk Management", "informs"),
+    ("Supplier Profile", "Supplier Contracts", "oversees"),
+    ("Supplier Profile", "Actions Against Errant Supplier", "initiates"),
+    ("Supplier Profile", "Supplier Performance Feedback", "monitors"),
+    ("Supplier Profile", "Bulk Tender ECN Details", "includes"),
+    ("Supplier Profile", "EDH Agency", "collaborates with"),
+    ("Risk Assessments", "Risk Treatments", "leads to"),
+    ("Audit Findings", "Risk Treatments", "triggers"),
+    ("Supplier Risk Management", "Risk Assessments", "feeds into"),
+    ("Supplier Performance Feedback", "Supplier Risk Management", "affects"),
+    ("Actions Against Errant Supplier", "Supplier Contracts", "cancels"),
+    ("System Overview", "Supplier Contracts", "references"),
+    ("System Overview", "Audit Findings", "monitors"),
+    ("System Management", "System Overview", "manages"),
+    ("System Management", "Criticality Assessment", "supports"),
+    ("System Management", "Security & Sensitivity Classification", "evaluates"),
+    ("System Management", "Risk Materiality Level", "determines"),
+    ("System Management", "System Resiliency", "improves"),
+    ("System Management", "Hosting and System Dependencies", "depends on"),
+    ("System Management", "Central Programmes", "aligns with"),
+    ("System Management", "Supplier Contracts", "depends on"),
+    ("Supplier Contracts", "Hosting and System Dependencies", "depends on")
 ]
 
 def create_node_table(node_name, entity_info):
