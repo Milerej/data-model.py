@@ -250,7 +250,7 @@ edges = [
     ("System Management", "System Overview", "PK: System_ID", "both"),
     ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
     ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
-    ("System Management", "Risk Materiality Level", "PK: System_ID", "both"),
+    #("System Management", "Risk Materiality Level", "PK: System_ID", "both"),
     ("System Management", "System Resiliency", "PK: System_ID", "both"),
     ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
     #("System Management", "Central Programmes", "PK: System_ID", "both"),
