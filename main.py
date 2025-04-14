@@ -11,16 +11,106 @@ st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide"
 # Add title
 st.title("⚙️ Data Model : System Management")
 
+# Define entities dictionary
+entities = {
+    "System Management": {
+        "color": "#2E7D32",
+        "size": 35,
+        "shape": "dot",
+        "title": "System Management Module"
+    },
+    "System Overview": {
+        "color": "#4CAF50",
+        "size": 25,
+        "shape": "dot",
+        "title": "System Overview Sub-Module"
+    },
+    "Criticality Assessment": {
+        "color": "#4CAF50",
+        "size": 25,
+        "shape": "dot",
+        "title": "Criticality Assessment Sub-Module"
+    },
+    "Security & Sensitivity Classification": {
+        "color": "#4CAF50",
+        "size": 25,
+        "shape": "dot",
+        "title": "Security & Sensitivity Classification Sub-Module"
+    },
+    "Risk Materiality Level": {
+        "color": "#4CAF50",
+        "size": 25,
+        "shape": "dot",
+        "title": "Risk Materiality Level Sub-Module"
+    },
+    "System Resiliency": {
+        "color": "#4CAF50",
+        "size": 25,
+        "shape": "dot",
+        "title": "System Resiliency Sub-Module"
+    },
+    "Hosting and System Dependencies": {
+        "color": "#4CAF50",
+        "size": 25,
+        "shape": "dot",
+        "title": "Hosting and System Dependencies Sub-Module"
+    }
+}
+
+# Define edges
+edges = [
+    ("System Management", "System Overview", "contains", "to"),
+    ("System Management", "Criticality Assessment", "contains", "to"),
+    ("System Management", "Security & Sensitivity Classification", "contains", "to"),
+    ("System Management", "Risk Materiality Level", "contains", "to"),
+    ("System Management", "System Resiliency", "contains", "to"),
+    ("System Management", "Hosting and System Dependencies", "contains", "to")
+]
+
 # Create columns for layout
 col1, col2 = st.columns(2)
-
-# Define your entities and edges dictionaries here
-# [Previous entities and edges definitions remain the same]
 
 # Column 1 content
 with col1:
     st.header("Interactive Graph")
-    # [Previous col1 code remains the same]
+    
+    # Create NetworkX graph
+    G = nx.DiGraph()
+    for node, attributes in entities.items():
+        G.add_node(node, **attributes)
+
+    # Add edges
+    for source, target, label, direction in edges:
+        G.add_edge(source, target, title=label, arrows=direction)
+
+    # Create PyVis network
+    net = Network(height="700px", width="100%", directed=True, notebook=True)
+    net.from_nx(G)
+    
+    # Set options for better visualization
+    net.set_options('{' + '''
+        "physics": {
+            "enabled": true,
+            "stabilization": {
+                "enabled": true,
+                "iterations": 1000
+            }
+        },
+        "edges": {
+            "smooth": true,
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32"
+            }
+        }
+    ''' + '}')
+
+    # Save and display the graph
+    with tempfile.TemporaryDirectory() as temp_dir:
+        path = os.path.join(temp_dir, "graph.html")
+        net.save_graph(path)
+        with open(path, "r", encoding="utf-8") as f:
+            components.html(f.read(), height=750)
 
 # Column 2 content
 with col2:
