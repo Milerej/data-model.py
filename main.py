@@ -1,149 +1,166 @@
-    # Modify the nodes dictionary to include initial collapsed state
-    for node, attributes in entities.items():
-        # Check if the node is a field (size 15)
-        if attributes["size"] == 15:
-            # Hide fields by default
-            attributes["hidden"] = True
+import streamlit as st
+from pyvis.network import Network
+import networkx as nx
+import streamlit.components.v1 as components
+import tempfile
+import os
 
-    # Create NetworkX graph with modified attributes
-    G = nx.DiGraph()
-    for node, attributes in entities.items():
-        node_attrs = {
-            "color": attributes["color"],
-            "size": attributes["size"],
-            "shape": attributes["shape"],
-            "title": attributes["title"],
-            "label": node,
-            "hidden": attributes.get("hidden", False)  # Fields are hidden by default
-        }
-        G.add_node(node, **node_attrs)
+def check_password():
+    """Returns `True` if the user had the correct password."""
 
-    # Add edges with labels and custom arrow directions
-    for source, target, label, direction in edges:
-        G.add_edge(source, target, title=label, label=label, arrows=direction)
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        if st.session_state["password"] == "Showmethemoney":
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # don't store password
+        else:
+            st.session_state["password_correct"] = False
 
-    # Create interactive PyVis network
-    net = Network(height="900px", width="100%", directed=True, notebook=True)
-    net.from_nx(G)
+    if "password_correct" not in st.session_state:
+        # First run, show input for password.
+        st.text_input(
+            "Password", type="password", on_change=password_entered, key="password"
+        )
+        return False
+    elif not st.session_state["password_correct"]:
+        # Password not correct, show input + error.
+        st.text_input(
+            "Password", type="password", on_change=password_entered, key="password"
+        )
+        st.error("⚠️ Password incorrect")
+        return False
+    else:
+        # Password correct.
+        return True
 
-    # Modify the options to include click handling
-    net.set_options("""
-    {
-        "physics": {
-            "enabled": true,
-            "stabilization": {
-                "enabled": true,
-                "iterations": 2000,
-                "updateInterval": 25,
-                "onlyDynamicEdges": false,
-                "fit": true
-            },
-            "barnesHut": {
-                "gravitationalConstant": -60000,
-                "centralGravity": 0.1,
-                "springLength": 1000,
-                "springConstant": 0.08,
-                "damping": 0.12,
-                "avoidOverlap": 20
-            },
-            "minVelocity": 0.75,
-            "maxVelocity": 30
+if check_password():
+    st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+
+    st.title("⚙️ Data Model : System Management")
+
+    # Define entity modules and colors
+    entities = {
+        "System Management": {
+            "color": "#2E7D32", 
+            "size": 50, 
+            "shape": "dot",
+            "title": "System Management Module"
         },
-        "edges": {
-            "smooth": {
-                "type": "curvedCW",
-                "roundness": 0.2,
-                "forceDirection": "horizontal"
-            },
-            "length": 300,
-            "font": {
-                "size": 11,
-                "strokeWidth": 2,
-                "strokeColor": "#ffffff"
-            },
-            "color": {
-                "inherit": false,
-                "color": "#2E7D32",
-                "opacity": 0.8
-            },
-            "width": 1.5,
-            "hidden": false
+        # Main Modules
+        "System Identity & Classification": {
+            "color": "#4CAF50", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "System Identity & Classification Sub-Module"
         },
-        "nodes": {
-            "font": {
-                "size": 12,
-                "strokeWidth": 2,
-                "strokeColor": "#ffffff"
-            },
-            "margin": 12,
-            "scaling": {
-                "min": 10,
-                "max": 30
-            },
-            "fixed": {
-                "x": false,
-                "y": false
-            }
+        "Criticality & Risk": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "Criticality & Risk Sub-Module"
         },
-        "interaction": {
-            "hover": true,
-            "navigationButtons": true,
-            "keyboard": true,
-            "hideEdgesOnDrag": true
+        "System Resilience": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "System Resilience Sub-Module"
         },
-        "layout": {
-            "improvedLayout": true,
-            "randomSeed": 42,
-            "hierarchical": {
-                "enabled": false,
-                "nodeSpacing": 300,
-                "levelSeparation": 300,
-                "treeSpacing": 300
-            }
-        }
-    }
-    """)
+        "Hosting and System Dependencies": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "Hosting and System Dependencies Sub-Module"
+        },
 
-    # Add click handling JavaScript
-    click_js = """
-    <script>
-        function toggleConnectedNodes(nodeId) {
-            var network = document.getElementsByClassName('vis-network')[0].__vis_network__;
-            var connectedNodes = network.getConnectedNodes(nodeId);
-            var allNodes = network.body.data.nodes.get();
-            var updates = [];
-            
-            connectedNodes.forEach(function(connectedNode) {
-                var node = allNodes.find(n => n.id === connectedNode);
-                if (node && node.size === 15) {  // Only toggle field nodes (size 15)
-                    updates.push({id: connectedNode, hidden: !node.hidden});
-                }
-            });
-            
-            network.body.data.nodes.update(updates);
-        }
+        # Sub-groups
+        "Basic Information": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Basic Information Sub-Group"
+        },
+        "Organizational Context": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Organizational Context Sub-Group"
+        },
+        "Classification": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Classification Sub-Group"
+        },
+        "Impact Assessment": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Impact Assessment Sub-Group"
+        },
+        "Risk Profile": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Risk Profile Sub-Group"
+        },
+        "SCA/RML Approval": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "SCA/RML Approval Sub-Group"
+        },
+        "Availability & Recovery": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Availability & Recovery Sub-Group"
+        },
+        "Dependencies Management": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Dependencies Management Sub-Group"
+        },
 
-        document.getElementsByClassName('vis-network')[0].addEventListener('click', function(e) {
-            var network = this.__vis_network__;
-            var selection = network.getNodeAt(e.pointer.DOM);
-            if (selection !== undefined) {
-                toggleConnectedNodes(selection);
-            }
-        });
-    </script>
-    """
-
-    # Modify the save and display section to include the click handling
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-            net.save_graph(tmp_file.name)
-            with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                html_content = f.read()
-            
-            # Add both fullscreen and click handling scripts
-            modified_html = html_content.replace('</body>', f'{fullscreen_html}{click_js}</body>')
-            
-            components.html(modified_html, height=900)
-            os.unlink(tmp_file.name)
-    except Exception as e:
-        st.error(f"An error occurred while generating the graph: {str(e)}")
+        # Fields
+        "Agency": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Agency field"
+        },
+        "Ministry Family": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Ministry Family field"
+        },
+        "System ID": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System ID (Primary Key)"
+        },
+        "System Name": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Name field"
+        },
+        "System Description": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Description field"
+        },
+        "System Status": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Status field"
+        },
+        "Security Classification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Security Classification field"
+        },
+        "Sensitivity Classification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Sensitivity Classification field"
+        },
+        "Economy": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Economy impact field"
+        },
+        "Public Health and Safety": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Public Health and Safety field"
+        },
+        "National Security": {
