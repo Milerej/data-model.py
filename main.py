@@ -433,15 +433,45 @@ if check_password():
     }
     """)
 
-    # Save and display the network
+      # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
             with open(tmp_file.name, 'r', encoding='utf-8') as f:
                 html_content = f.read()
             
-            # Add fullscreen button HTML and JavaScript
+            # Add fullscreen button HTML and JavaScript with height adjustments
             fullscreen_html = """
+            <style>
+                #graph-container {
+                    width: 100%;
+                    height: 100%;
+                }
+                
+                /* Style for fullscreen mode */
+                #graph-container:fullscreen {
+                    height: 100vh !important;
+                    padding: 20px;
+                }
+                
+                /* Webkit browsers */
+                #graph-container:-webkit-full-screen {
+                    height: 100vh !important;
+                    padding: 20px;
+                }
+                
+                /* Firefox */
+                #graph-container:-moz-full-screen {
+                    height: 100vh !important;
+                    padding: 20px;
+                }
+                
+                /* IE11 */
+                #graph-container:-ms-fullscreen {
+                    height: 100vh !important;
+                    padding: 20px;
+                }
+            </style>
             <button id="fullscreen-btn" style="position: absolute; top: 10px; right: 10px; z-index: 999; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
                 Full Screen
             </button>
@@ -470,10 +500,10 @@ if check_password():
             """
             
             # Wrap the graph in a container and add the fullscreen button
-            modified_html = html_content.replace('<body>', '<body><div id="graph-container" style="width: 100%; height: 100%;">')
+            modified_html = html_content.replace('<body>', '<body><div id="graph-container">')
             modified_html = modified_html.replace('</body>', '</div>' + fullscreen_html + '</body>')
             
-            components.html(modified_html, height=2400)
+            components.html(modified_html, height=900)
             # Clean up the temporary file
             os.unlink(tmp_file.name)
     except Exception as e:
