@@ -377,7 +377,7 @@ if check_password():
             "barnesHut": {
                 "gravitationalConstant": -60000,
                 "centralGravity": 0.1,
-                "springLength": 2000,
+                "springLength": 1000,
                 "springConstant": 0.08,
                 "damping": 0.12,
                 "avoidOverlap": 20
