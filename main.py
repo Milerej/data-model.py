@@ -473,7 +473,7 @@ if check_password():
             modified_html = html_content.replace('<body>', '<body><div id="graph-container" style="width: 100%; height: 100%;">')
             modified_html = modified_html.replace('</body>', '</div>' + fullscreen_html + '</body>')
             
-            components.html(modified_html, height=1200)
+            components.html(modified_html, height=2400)
             # Clean up the temporary file
             os.unlink(tmp_file.name)
     except Exception as e:
