@@ -433,14 +433,14 @@ if check_password():
     }
     """)
 
-    # Save and display the network
+       # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
             with open(tmp_file.name, 'r', encoding='utf-8') as f:
                 html_content = f.read()
             
-            # Add fullscreen button HTML and JavaScript with adjusted padding and background
+            # Add fullscreen button HTML and JavaScript with highlighting functionality
             fullscreen_html = """
             <style>
                 #graph-container {
@@ -449,31 +449,27 @@ if check_password():
                     background-color: white;
                 }
                 
-                /* Style for fullscreen mode */
                 #graph-container:fullscreen {
                     height: 100vh !important;
-                    padding: 20px 20px 20px 20px;
+                    padding: 20px 20px 0px 20px;
                     background-color: white;
                 }
                 
-                /* Webkit browsers */
                 #graph-container:-webkit-full-screen {
                     height: 100vh !important;
-                    padding: 20px 20px 20px 20px;
+                    padding: 20px 20px 0px 20px;
                     background-color: white;
                 }
                 
-                /* Firefox */
                 #graph-container:-moz-full-screen {
                     height: 100vh !important;
-                    padding: 20px 20px 20px 20px;
+                    padding: 20px 20px 0px 20px;
                     background-color: white;
                 }
                 
-                /* IE11 */
                 #graph-container:-ms-fullscreen {
                     height: 100vh !important;
-                    padding: 20px 20px 20px 20px;
+                    padding: 20px 20px 0px 20px;
                     background-color: white;
                 }
             </style>
@@ -481,6 +477,115 @@ if check_password():
                 Full Screen
             </button>
             <script>
+                // Store the original colors and widths
+                let originalNodeColors = new Map();
+                let originalEdgeColors = new Map();
+                let originalEdgeWidths = new Map();
+                let network;
+
+                // Once the network is loaded
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Get the network container
+                    var container = document.getElementById('mynetwork');
+                    network = container.network;
+
+                    // Store original values
+                    var nodes = network.body.data.nodes.get();
+                    var edges = network.body.data.edges.get();
+                    
+                    nodes.forEach(node => {
+                        originalNodeColors.set(node.id, node.color);
+                    });
+                    
+                    edges.forEach(edge => {
+                        originalEdgeColors.set(edge.id, edge.color);
+                        originalEdgeWidths.set(edge.id, edge.width);
+                    });
+
+                    // Add click event
+                    network.on('selectNode', function(params) {
+                        highlightConnections(params.nodes[0]);
+                    });
+
+                    network.on('deselectNode', function(params) {
+                        resetHighlight();
+                    });
+                });
+
+                function highlightConnections(selectedNodeId) {
+                    var connectedNodes = network.getConnectedNodes(selectedNodeId);
+                    var connectedEdges = network.getConnectedEdges(selectedNodeId);
+                    
+                    // Dim all nodes and edges first
+                    var nodes = network.body.data.nodes.get();
+                    var edges = network.body.data.edges.get();
+                    
+                    nodes.forEach(node => {
+                        if (node.id !== selectedNodeId && !connectedNodes.includes(node.id)) {
+                            network.body.data.nodes.update({
+                                id: node.id,
+                                color: { background: '#D3D3D3', border: '#D3D3D3' },
+                                opacity: 0.3
+                            });
+                        }
+                    });
+                    
+                    edges.forEach(edge => {
+                        if (!connectedEdges.includes(edge.id)) {
+                            network.body.data.edges.update({
+                                id: edge.id,
+                                color: { color: '#D3D3D3' },
+                                width: 1,
+                                opacity: 0.3
+                            });
+                        }
+                    });
+
+                    // Highlight selected node and its connections
+                    network.body.data.nodes.update({
+                        id: selectedNodeId,
+                        color: { background: '#ff0000', border: '#ff0000' }
+                    });
+
+                    connectedNodes.forEach(nodeId => {
+                        network.body.data.nodes.update({
+                            id: nodeId,
+                            opacity: 1
+                        });
+                    });
+
+                    connectedEdges.forEach(edgeId => {
+                        network.body.data.edges.update({
+                            id: edgeId,
+                            color: { color: '#ff0000' },
+                            width: 2,
+                            opacity: 1
+                        });
+                    });
+                }
+
+                function resetHighlight() {
+                    var nodes = network.body.data.nodes.get();
+                    var edges = network.body.data.edges.get();
+                    
+                    nodes.forEach(node => {
+                        network.body.data.nodes.update({
+                            id: node.id,
+                            color: originalNodeColors.get(node.id),
+                            opacity: 1
+                        });
+                    });
+                    
+                    edges.forEach(edge => {
+                        network.body.data.edges.update({
+                            id: edge.id,
+                            color: originalEdgeColors.get(edge.id),
+                            width: originalEdgeWidths.get(edge.id),
+                            opacity: 1
+                        });
+                    });
+                }
+
                 document.getElementById('fullscreen-btn').addEventListener('click', function() {
                     var elem = document.querySelector('#graph-container');
                     if (!document.fullscreenElement) {
