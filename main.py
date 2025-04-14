@@ -72,7 +72,57 @@ if check_password():
             "title": "Hosting and System Dependencies Sub-Module"
         },
 
-        # System Identity & Classification Fields
+        # Sub-groups
+        "Basic Information": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Basic Information Sub-Group"
+        },
+        "Organizational Context": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Organizational Context Sub-Group"
+        },
+        "Classification": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Classification Sub-Group"
+        },
+        "Impact Assessment": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Impact Assessment Sub-Group"
+        },
+        "Risk Profile": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Risk Profile Sub-Group"
+        },
+        "SCA/RML Approval": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "SCA/RML Approval Sub-Group"
+        },
+        "Availability & Recovery": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Availability & Recovery Sub-Group"
+        },
+        "Dependencies Management": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Dependencies Management Sub-Group"
+        },
+
+        # Fields (all the existing fields remain the same)
         "Agency": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Agency field"
@@ -105,8 +155,6 @@ if check_password():
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Sensitivity Classification field"
         },
-
-        # Criticality & Risk Fields
         "Economy": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Economy impact field"
@@ -199,8 +247,6 @@ if check_password():
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "SNDGO Comments"
         },
-
-        # System Resilience Fields
         "Service Availability": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Service Availability"
@@ -213,8 +259,6 @@ if check_password():
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Recovery Point Objective"
         },
-
-        # Hosting and System Dependencies Fields
         "Total Dependencies": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Total Dependencies"
@@ -257,7 +301,7 @@ if check_password():
         }
     }
 
-    # Define edges
+    # Define edges with the new hierarchical structure
     edges = [
         # Main module connections
         ("System Management", "System Identity & Classification", "", ""),
@@ -265,57 +309,77 @@ if check_password():
         ("System Management", "System Resilience", "", ""),
         ("System Management", "Hosting and System Dependencies", "", ""),
 
-        # System Identity & Classification field connections
-        ("System Identity & Classification", "Agency", "", ""),
-        ("System Identity & Classification", "Ministry Family", "", ""),
-        ("System Identity & Classification", "System ID", "", ""),
-        ("System Identity & Classification", "System Name", "", ""),
-        ("System Identity & Classification", "System Description", "", ""),
-        ("System Identity & Classification", "System Status", "", ""),
-        ("System Identity & Classification", "Security Classification", "", ""),
-        ("System Identity & Classification", "Sensitivity Classification", "", ""),
+        # System Identity & Classification sub-group connections
+        ("System Identity & Classification", "Basic Information", "", ""),
+        ("System Identity & Classification", "Organizational Context", "", ""),
+        ("System Identity & Classification", "Classification", "", ""),
 
-        # Criticality & Risk field connections
-        ("Criticality & Risk", "Economy", "", ""),
-        ("Criticality & Risk", "Public Health and Safety", "", ""),
-        ("Criticality & Risk", "National Security", "", ""),
-        ("Criticality & Risk", "Social Preparedness", "", ""),
-        ("Criticality & Risk", "Public Service", "", ""),
-        ("Criticality & Risk", "System Criticality", "", ""),
-        ("Criticality & Risk", "Designated CII", "", ""),
-        ("Criticality & Risk", "Computed RML", "", ""),
-        ("Criticality & Risk", "Computed RML Date", "", ""),
-        ("Criticality & Risk", "Agency Proposed RML", "", ""),
-        ("Criticality & Risk", "RML Alignment", "", ""),
-        ("Criticality & Risk", "RML Justification", "", ""),
-        ("Criticality & Risk", "Endorsed RML", "", ""),
-        ("Criticality & Risk", "RML Endorsement Date", "", ""),
-        ("Criticality & Risk", "Endorsement Comments", "", ""),
-        ("Criticality & Risk", "IDSC Approval Date", "", ""),
-        ("Criticality & Risk", "IDSC Approval Attachment", "", ""),
-        ("Criticality & Risk", "MHA Approval", "", ""),
-        ("Criticality & Risk", "CSA Approval", "", ""),
-        ("Criticality & Risk", "SNDGO Approval", "", ""),
-        ("Criticality & Risk", "MHA Comments", "", ""),
-        ("Criticality & Risk", "CSA Comments", "", ""),
-        ("Criticality & Risk", "SNDGO Comments", "", ""),
+        # Basic Information connections
+        ("Basic Information", "System ID", "", ""),
+        ("Basic Information", "System Name", "", ""),
+        ("Basic Information", "System Description", "", ""),
+        ("Basic Information", "System Status", "", ""),
 
-        # System Resilience field connections
-        ("System Resilience", "Service Availability", "", ""),
-        ("System Resilience", "RTO", "", ""),
-        ("System Resilience", "RPO", "", ""),
+        # Organizational Context connections
+        ("Organizational Context", "Agency", "", ""),
+        ("Organizational Context", "Ministry Family", "", ""),
 
-        # Hosting and System Dependencies field connections
-        ("Hosting and System Dependencies", "Total Dependencies", "", ""),
-        ("Hosting and System Dependencies", "Downstream Impact", "", ""),
-        ("Hosting and System Dependencies", "Direct Dependencies Count", "", ""),
-        ("Hosting and System Dependencies", "Dependency ID", "", ""),
-        ("Hosting and System Dependencies", "Dependency Status", "", ""),
-        ("Hosting and System Dependencies", "Dependency Type", "", ""),
-        ("Hosting and System Dependencies", "Upstream System", "", ""),
-        ("Hosting and System Dependencies", "Dependent System", "", ""),
-        ("Hosting and System Dependencies", "Data Exchange Frequency", "", ""),
-        ("Hosting and System Dependencies", "Inferred Dependencies", "", "")
+        # Classification connections
+        ("Classification", "Security Classification", "", ""),
+        ("Classification", "Sensitivity Classification", "", ""),
+
+        # Criticality & Risk sub-group connections
+        ("Criticality & Risk", "Impact Assessment", "", ""),
+        ("Criticality & Risk", "Risk Profile", "", ""),
+        ("Criticality & Risk", "SCA/RML Approval", "", ""),
+
+        # Impact Assessment connections
+        ("Impact Assessment", "Economy", "", ""),
+        ("Impact Assessment", "Public Health and Safety", "", ""),
+        ("Impact Assessment", "National Security", "", ""),
+        ("Impact Assessment", "Social Preparedness", "", ""),
+        ("Impact Assessment", "Public Service", "", ""),
+        ("Impact Assessment", "System Criticality", "", ""),
+        ("Impact Assessment", "Designated CII", "", ""),
+
+        # Risk Profile connections
+        ("Risk Profile", "Computed RML", "", ""),
+        ("Risk Profile", "Computed RML Date", "", ""),
+        ("Risk Profile", "Agency Proposed RML", "", ""),
+        ("Risk Profile", "RML Alignment", "", ""),
+        ("Risk Profile", "RML Justification", "", ""),
+        ("Risk Profile", "Endorsed RML", "", ""),
+        ("Risk Profile", "RML Endorsement Date", "", ""),
+        ("Risk Profile", "Endorsement Comments", "", ""),
+
+        # SCA/RML Approval connections
+        ("SCA/RML Approval", "IDSC Approval Date", "", ""),
+        ("SCA/RML Approval", "IDSC Approval Attachment", "", ""),
+        ("SCA/RML Approval", "MHA Approval", "", ""),
+        ("SCA/RML Approval", "CSA Approval", "", ""),
+        ("SCA/RML Approval", "SNDGO Approval", "", ""),
+        ("SCA/RML Approval", "MHA Comments", "", ""),
+        ("SCA/RML Approval", "CSA Comments", "", ""),
+        ("SCA/RML Approval", "SNDGO Comments", "", ""),
+
+        # System Resilience sub-group connections
+        ("System Resilience", "Availability & Recovery", "", ""),
+        ("Availability & Recovery", "Service Availability", "", ""),
+        ("Availability & Recovery", "RTO", "", ""),
+        ("Availability & Recovery", "RPO", "", ""),
+
+        # Hosting and System Dependencies sub-group connections
+        ("Hosting and System Dependencies", "Dependencies Management", "", ""),
+        ("Dependencies Management", "Total Dependencies", "", ""),
+        ("Dependencies Management", "Downstream Impact", "", ""),
+        ("Dependencies Management", "Direct Dependencies Count", "", ""),
+        ("Dependencies Management", "Dependency ID", "", ""),
+        ("Dependencies Management", "Dependency Status", "", ""),
+        ("Dependencies Management", "Dependency Type", "", ""),
+        ("Dependencies Management", "Upstream System", "", ""),
+        ("Dependencies Management", "Dependent System", "", ""),
+        ("Dependencies Management", "Data Exchange Frequency", "", ""),
+        ("Dependencies Management", "Inferred Dependencies", "", "")
     ]
 
     # Create NetworkX graph
