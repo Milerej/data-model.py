@@ -341,65 +341,64 @@ for source, target, label, direction in edges:
 net = Network(height="700px", width="100%", directed=True, notebook=True)
 net.from_nx(G)
 
-# Set options as a string
+# Set options for better spacing and reduced overlapping
 net.set_options('{' + '''
     "physics": {
         "enabled": true,
         "stabilization": {
             "enabled": true,
-            "iterations": 1000,
-            "updateInterval": 50,
+            "iterations": 2000,
+            "updateInterval": 25,
             "onlyDynamicEdges": false,
             "fit": true
         },
         "barnesHut": {
-            "gravitationalConstant": -8000,
-            "centralGravity": 0.3,
-            "springLength": 200,
-            "springConstant": 0.04,
-            "damping": 0.09,
-            "avoidOverlap": 1
+            "gravitationalConstant": -15000,
+            "centralGravity": 0.1,
+            "springLength": 300,
+            "springConstant": 0.08,
+            "damping": 0.12,
+            "avoidOverlap": 1.5
         },
         "minVelocity": 0.75,
-        "maxVelocity": 45
+        "maxVelocity": 30
     },
     "edges": {
         "smooth": {
             "type": "continuous",
             "forceDirection": "none"
         },
-        "length": 250,
+        "length": 300,
         "font": {
-            "size": 12,
+            "size": 11,
             "strokeWidth": 2,
             "strokeColor": "#ffffff"
         }
     },
     "nodes": {
         "font": {
-            "size": 14,
+            "size": 12,
             "strokeWidth": 2,
             "strokeColor": "#ffffff"
         },
-        "margin": 10,
+        "margin": 12,
+        "scaling": {
+            "min": 10,
+            "max": 30
+        },
         "fixed": {
             "x": false,
             "y": false
         }
-    },
-    "interaction": {
-        "dragNodes": true,
-        "dragView": true,
-        "zoomView": true,
-        "hover": true
     },
     "layout": {
         "improvedLayout": true,
         "randomSeed": 42,
         "hierarchical": {
             "enabled": false,
-            "nodeSpacing": 200,
-            "levelSeparation": 200
+            "nodeSpacing": 300,
+            "levelSeparation": 300,
+            "treeSpacing": 300
         }
     }
 ''' + '}')
