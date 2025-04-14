@@ -345,6 +345,12 @@ net.set_options('{' + '''
             "updateInterval": 25,
             "onlyDynamicEdges": false,
             "fit": true
+            "forceAtlas2Based": {
+                "springLength": 300,
+                "springConstant": 0.01,
+                "avoidOverlap": 1
+            },
+            "solver": "forceAtlas2Based"
         },
         "barnesHut": {
             "gravitationalConstant": -60000,
