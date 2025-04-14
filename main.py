@@ -47,44 +47,32 @@ if check_password():
             "title": "System Management Module"
         },
         # Main Modules
-        "System Overview": {
+        "System Identity & Classification": {
             "color": "#4CAF50", 
             "size": 25, 
             "shape": "dot",
-            "title": "System Overview Sub-Module"
+            "title": "System Identity & Classification Sub-Module"
         },
-        "Criticality Assessment": {
+        "Criticality & Risk": {
             "color": "#4CAF50", 
             "size": 25,
             "shape": "dot",
-            "title": "Criticality Assessment Sub-Module"
+            "title": "Criticality & Risk Sub-Module"
         },
-        "Security & Sensitivity Classification": {
+        "System Resilience": {
             "color": "#4CAF50", 
-            "size": 25, 
+            "size": 25,
             "shape": "dot",
-            "title": "Security & Sensitivity Classification Sub-Module"
-        },
-        "Risk Materiality Level": {
-            "color": "#4CAF50", 
-            "size": 25, 
-            "shape": "dot",
-            "title": "Risk Materiality Level Sub-Module"
-        },
-        "System Resiliency": {
-            "color": "#4CAF50", 
-            "size": 25, 
-            "shape": "dot",
-            "title": "System Resiliency Sub-Module"
+            "title": "System Resilience Sub-Module"
         },
         "Hosting and System Dependencies": {
             "color": "#4CAF50", 
-            "size": 25, 
+            "size": 25,
             "shape": "dot",
             "title": "Hosting and System Dependencies Sub-Module"
         },
 
-            # System Overview Fields
+        # System Identity & Classification Fields
         "Agency": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Agency field"
@@ -109,8 +97,16 @@ if check_password():
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "System Status field"
         },
+        "Security Classification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Security Classification field"
+        },
+        "Sensitivity Classification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Sensitivity Classification field"
+        },
 
-        # Criticality Assessment Fields
+        # Criticality & Risk Fields
         "Economy": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Economy impact field"
@@ -131,58 +127,14 @@ if check_password():
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Public Service field"
         },
-        "Designated CII": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Designated CII under Cybersecurity Act"
-        },
         "System Criticality": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "System Criticality (Auto-generated)"
         },
-        "IDSC Approval Date": {
+        "Designated CII": {
             "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "IDSC's Approval Date (CA)"
+            "title": "Designated CII under Cybersecurity Act"
         },
-        "IDSC Approval Attachment": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "IDSC's Approval Attachment (CA)"
-        },
-        "MHA Approval": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Approved by MHA?"
-        },
-        "CSA Approval": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Approved by CSA?"
-        },
-        "SNDGO Approval": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Approved by SNDGO?"
-        },
-        "MHA Comments": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "MHA Comments"
-        },
-        "CSA Comments": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "CSA Comments"
-        },
-        "SNDGO Comments": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "SNDGO Comments"
-        },
-
-            # Security & Sensitivity Classification Fields
-        "Security Classification": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Security Classification field"
-        },
-        "Sensitivity Classification": {
-            "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Sensitivity Classification field"
-        },
-
-        # Risk Materiality Level Fields
         "Computed RML": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Computed Risk Materiality Level"
@@ -215,8 +167,40 @@ if check_password():
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Endorsed Comments"
         },
+        "IDSC Approval Date": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "IDSC's Approval Date"
+        },
+        "IDSC Approval Attachment": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "IDSC's Approval Attachment"
+        },
+        "MHA Approval": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Approved by MHA?"
+        },
+        "CSA Approval": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Approved by CSA?"
+        },
+        "SNDGO Approval": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Approved by SNDGO?"
+        },
+        "MHA Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "MHA Comments"
+        },
+        "CSA Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "CSA Comments"
+        },
+        "SNDGO Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "SNDGO Comments"
+        },
 
-        # System Resiliency Fields
+        # System Resilience Fields
         "Service Availability": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Service Availability"
@@ -233,15 +217,15 @@ if check_password():
         # Hosting and System Dependencies Fields
         "Total Dependencies": {
             "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Total Downstream Dependencies"
+            "title": "Total Dependencies"
         },
         "Downstream Impact": {
             "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Sub-System Downstream Impact"
+            "title": "Downstream Impact"
         },
         "Direct Dependencies Count": {
             "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Count of Direct Dependencies"
+            "title": "Direct Dependencies Count"
         },
         "Dependency ID": {
             "color": "#81C784", "size": 15, "shape": "dot",
@@ -253,81 +237,73 @@ if check_password():
         },
         "Dependency Type": {
             "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Type of Dependency"
+            "title": "Dependency Type"
         },
         "Upstream System": {
             "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Dependent Sub-System Upstream"
+            "title": "Upstream System"
         },
         "Dependent System": {
             "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Dependent System/Service Name"
+            "title": "Dependent System"
         },
         "Data Exchange Frequency": {
             "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Frequency of Data Exchange"
+            "title": "Data Exchange Frequency"
         },
         "Inferred Dependencies": {
             "color": "#81C784", "size": 15, "shape": "dot",
-            "title": "Count of Inferred Dependencies"
+            "title": "Inferred Dependencies"
         }
     }
 
-    # Define edges with PK/FK relationships
+    # Define edges
     edges = [
         # Main module connections
-        ("System Management", "System Overview", "", ""),
-        ("System Management", "Criticality Assessment", "", ""),
-        ("System Management", "Security & Sensitivity Classification",  "", ""),
-        ("System Management", "System Resiliency", "", ""),
+        ("System Management", "System Identity & Classification", "", ""),
+        ("System Management", "Criticality & Risk", "", ""),
+        ("System Management", "System Resilience", "", ""),
         ("System Management", "Hosting and System Dependencies", "", ""),
-        ("Risk Materiality Level", "Security & Sensitivity Classification", "", ""),
-        ("Risk Materiality Level", "Hosting and System Dependencies", "", ""),
-        ("Risk Materiality Level", "Criticality Assessment", "", ""),
 
-        # System Overview field connections
-        ("System Overview", "Agency", "", ""),
-        ("System Overview", "Ministry Family", "", ""),
-        ("System Overview", "System ID", "", ""),
-        ("System Overview", "System Name", "", ""),
-        ("System Overview", "System Description", "", ""),
-        ("System Overview", "System Status", "", ""),
+        # System Identity & Classification field connections
+        ("System Identity & Classification", "Agency", "", ""),
+        ("System Identity & Classification", "Ministry Family", "", ""),
+        ("System Identity & Classification", "System ID", "", ""),
+        ("System Identity & Classification", "System Name", "", ""),
+        ("System Identity & Classification", "System Description", "", ""),
+        ("System Identity & Classification", "System Status", "", ""),
+        ("System Identity & Classification", "Security Classification", "", ""),
+        ("System Identity & Classification", "Sensitivity Classification", "", ""),
 
-        # Criticality Assessment field connections
-        ("Criticality Assessment", "Economy", "", ""),
-        ("Criticality Assessment", "Public Health and Safety", "", ""),
-        ("Criticality Assessment", "National Security", "", ""),
-        ("Criticality Assessment", "Social Preparedness", "", ""),
-        ("Criticality Assessment", "Public Service", "", ""),
-        ("Criticality Assessment", "Designated CII", "", ""),
-        ("Criticality Assessment", "System Criticality", "", ""),
-        ("Criticality Assessment", "IDSC Approval Date", "", ""),
-        ("Criticality Assessment", "IDSC Approval Attachment", "", ""),
-        ("Criticality Assessment", "MHA Approval", "", ""),
-        ("Criticality Assessment", "CSA Approval", "", ""),
-        ("Criticality Assessment", "SNDGO Approval", "", ""),
-        ("Criticality Assessment", "MHA Comments", "", ""),
-        ("Criticality Assessment", "CSA Comments", "", ""),
-        ("Criticality Assessment", "SNDGO Comments", "", ""),
+        # Criticality & Risk field connections
+        ("Criticality & Risk", "Economy", "", ""),
+        ("Criticality & Risk", "Public Health and Safety", "", ""),
+        ("Criticality & Risk", "National Security", "", ""),
+        ("Criticality & Risk", "Social Preparedness", "", ""),
+        ("Criticality & Risk", "Public Service", "", ""),
+        ("Criticality & Risk", "System Criticality", "", ""),
+        ("Criticality & Risk", "Designated CII", "", ""),
+        ("Criticality & Risk", "Computed RML", "", ""),
+        ("Criticality & Risk", "Computed RML Date", "", ""),
+        ("Criticality & Risk", "Agency Proposed RML", "", ""),
+        ("Criticality & Risk", "RML Alignment", "", ""),
+        ("Criticality & Risk", "RML Justification", "", ""),
+        ("Criticality & Risk", "Endorsed RML", "", ""),
+        ("Criticality & Risk", "RML Endorsement Date", "", ""),
+        ("Criticality & Risk", "Endorsement Comments", "", ""),
+        ("Criticality & Risk", "IDSC Approval Date", "", ""),
+        ("Criticality & Risk", "IDSC Approval Attachment", "", ""),
+        ("Criticality & Risk", "MHA Approval", "", ""),
+        ("Criticality & Risk", "CSA Approval", "", ""),
+        ("Criticality & Risk", "SNDGO Approval", "", ""),
+        ("Criticality & Risk", "MHA Comments", "", ""),
+        ("Criticality & Risk", "CSA Comments", "", ""),
+        ("Criticality & Risk", "SNDGO Comments", "", ""),
 
-        # Security & Sensitivity Classification field connections
-        ("Security & Sensitivity Classification", "Security Classification", "", ""),
-        ("Security & Sensitivity Classification", "Sensitivity Classification", "", ""),
-
-        # Risk Materiality Level field connections
-        ("Risk Materiality Level", "Computed RML", "", ""),
-        ("Risk Materiality Level", "Computed RML Date", "", ""),
-        ("Risk Materiality Level", "Agency Proposed RML", "", ""),
-        ("Risk Materiality Level", "RML Alignment", "", ""),
-        ("Risk Materiality Level", "RML Justification", "", ""),
-        ("Risk Materiality Level", "Endorsed RML", "", ""),
-        ("Risk Materiality Level", "RML Endorsement Date", "", ""),
-        ("Risk Materiality Level", "Endorsement Comments", "", ""),
-
-        # System Resiliency field connections
-        ("System Resiliency", "Service Availability", "", ""),
-        ("System Resiliency", "RTO", "", ""),
-        ("System Resiliency", "RPO", "", ""),
+        # System Resilience field connections
+        ("System Resilience", "Service Availability", "", ""),
+        ("System Resilience", "RTO", "", ""),
+        ("System Resilience", "RPO", "", ""),
 
         # Hosting and System Dependencies field connections
         ("Hosting and System Dependencies", "Total Dependencies", "", ""),
@@ -433,7 +409,7 @@ if check_password():
     }
     """)
 
-       # Save and display the network
+    # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
