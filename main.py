@@ -5,28 +5,6 @@ import streamlit.components.v1 as components
 import tempfile
 import os
 
-# Page config and Streamlit element hiding
-st.set_page_config(
-    page_title="Interactive Interdependency Graph",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
-
-# Hide Streamlit elements
-st.markdown("""
-    <style>
-        #MainMenu {visibility: hidden;}
-        header {visibility: hidden;}
-        footer {visibility: hidden;}
-        .stApp > header {display: none;}
-        .main > .block-container {
-            padding-top: 0;
-            padding-bottom: 0;
-            max-width: 100%;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 def check_password():
     """Returns `True` if the user had the correct password."""
 
@@ -56,6 +34,8 @@ def check_password():
         return True
 
 if check_password():
+    st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+
     st.title("⚙️ Data Model : System Management")
 
     # Define entity modules and colors
@@ -81,25 +61,25 @@ if check_password():
         },
         "Security & Sensitivity Classification": {
             "color": "#4CAF50", 
-            "size": 25,
+            "size": 25, 
             "shape": "dot",
             "title": "Security & Sensitivity Classification Sub-Module"
         },
         "Risk Materiality Level": {
             "color": "#4CAF50", 
-            "size": 25,
+            "size": 25, 
             "shape": "dot",
             "title": "Risk Materiality Level Sub-Module"
         },
         "System Resiliency": {
             "color": "#4CAF50", 
-            "size": 25,
+            "size": 25, 
             "shape": "dot",
             "title": "System Resiliency Sub-Module"
         },
         "Hosting and System Dependencies": {
             "color": "#4CAF50", 
-            "size": 25,
+            "size": 25, 
             "shape": "dot",
             "title": "Hosting and System Dependencies Sub-Module"
         },
@@ -378,8 +358,8 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-    # Create interactive PyVis network with full viewport height
-    net = Network(height="100vh", width="100%", directed=True, notebook=True)
+    # Create interactive PyVis network with increased height
+    net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
 
     # Set options for better spacing and reduced overlapping
@@ -451,6 +431,12 @@ if check_password():
         }
     ''' + '}')
 
+    # Customize edge labels and arrows
+    for edge in net.edges:
+        edge["label"] = edge.get("title", "")
+        if edge.get("arrows") == "both":
+            edge["arrows"] = "to,from"
+
     # Add JavaScript for highlighting
     highlight_js = """
     network.on("click", function(params) {
@@ -493,7 +479,7 @@ if check_password():
     });
     """
 
-    # Add enhanced CSS for fullscreen and layout
+    # Add fullscreen button CSS
     st.markdown("""
         <style>
             .fullscreen-button {
@@ -512,17 +498,7 @@ if check_password():
                 background: #1B5E20;
             }
             .element-container iframe {
-                height: 100vh !important;
-                width: 100vw !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                z-index: 99 !important;
-            }
-            .main > .block-container {
-                padding-top: 0;
-                padding-bottom: 0;
-                max-width: 100%;
+                height: 90vh !important;
             }
         </style>
     """, unsafe_allow_html=True)
@@ -552,8 +528,9 @@ if check_password():
             </script>
             ''' + f'<script>{highlight_js}</script></body>')
         
-        # Display the graph with maximum dimensions
-        components.html(html_content, height=1000, width=1000, scrolling=False)
+        # Display the graph
+        components.html(html_content, height=900, scrolling=True)
 
 else:
     st.stop()  # Don't run the rest of the app
+
