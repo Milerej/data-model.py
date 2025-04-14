@@ -58,7 +58,11 @@ entities = {
         "color": "green", 
         "size": 15, 
         "shape": "dot",
-        "title": "Security and sensitivity classification details"
+       "title": "\n".join([
+            "Fields:",
+                "• Security Classification",
+                "• Sensitivity Classification",
+        ])
     },
     "Risk Materiality Level": {
         "color": "green", 
