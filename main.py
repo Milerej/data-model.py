@@ -54,12 +54,12 @@ entities = {
         "shape": "dot",
         "title": "Hosting and System Dependencies Module"
     },
-    "Central Programmes": {
-        "color": "#4CAF50", 
-        "size": 25, 
-        "shape": "dot",
-        "title": "Central Programmes Module"
-    },
+ #   "Central Programmes": {
+  #      "color": "#4CAF50", 
+   #     "size": 25, 
+    #    "shape": "dot",
+     #   "title": "Central Programmes Module"
+#    },
 
     # System Overview Fields
     "Agency": {
