@@ -433,106 +433,61 @@ if check_password():
     }
     """)
 
-    # Save and display the network
+       # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
             with open(tmp_file.name, 'r', encoding='utf-8') as f:
                 html_content = f.read()
             
-            # Add fullscreen button HTML and JavaScript
+            # Insert the button and script just before the closing body tag
             fullscreen_html = """
-            <style>
-                #graph-container {
-                    width: 100%;
-                    height: 100%;
-                    background-color: white;
-                    position: relative;
-                }
-                
-                #fullscreen-btn {
+            <button 
+                style="
                     position: fixed;
-                    top: 10px;
-                    right: 10px;
-                    z-index: 9999;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
                     padding: 8px 16px;
                     background-color: #4CAF50;
                     color: white;
                     border: none;
                     border-radius: 4px;
                     cursor: pointer;
-                }
-
-                #mynetwork {
-                    width: 100%;
-                    height: 100%;
-                }
-
-                /* Fullscreen styles */
-                #mynetwork.fullscreen {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100vw;
-                    height: 100vh;
-                    z-index: 9998;
-                    background-color: white;
-                    padding: 20px 20px 0px 20px;
-                }
-            </style>
-            <button id="fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                "
+                onclick="toggleFullscreen()"
+            >
+                Full Screen
+            </button>
             <script>
-                function toggleFullScreen() {
-                    var network = document.getElementById('mynetwork');
+                function toggleFullscreen() {
+                    let elem = document.documentElement;
                     
                     if (!document.fullscreenElement) {
-                        if (network.requestFullscreen) {
-                            network.requestFullscreen();
-                        } else if (network.webkitRequestFullscreen) { /* Safari */
-                            network.webkitRequestFullscreen();
-                        } else if (network.msRequestFullscreen) { /* IE11 */
-                            network.msRequestFullscreen();
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) { /* Safari */
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) { /* IE11 */
+                            elem.msRequestFullscreen();
                         }
-                        network.classList.add('fullscreen');
                     } else {
                         if (document.exitFullscreen) {
                             document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) { /* Safari */
+                        } else if (document.webkitExitFullscreen) {
                             document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) { /* IE11 */
+                        } else if (document.msExitFullscreen) {
                             document.msExitFullscreen();
                         }
-                        network.classList.remove('fullscreen');
-                    }
-                }
-
-                // Handle fullscreen change events
-                document.addEventListener('fullscreenchange', handleFullscreenChange);
-                document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-                document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-                document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-
-                function handleFullscreenChange() {
-                    var network = document.getElementById('mynetwork');
-                    if (!document.fullscreenElement && 
-                        !document.webkitFullscreenElement && 
-                        !document.mozFullScreenElement && 
-                        !document.msFullscreenElement) {
-                        network.classList.remove('fullscreen');
                     }
                 }
             </script>
             """
             
-            # Modify the HTML content to include our custom elements
-            modified_html = html_content.replace(
-                '<div id="mynetwork">',
-                '<div id="graph-container"><div id="mynetwork">'
-            )
-            modified_html = modified_html.replace(
-                '</div></body>',
-                '</div>' + fullscreen_html + '</body>'
-            )
+            # Insert the button just before </body>
+            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
             
             components.html(modified_html, height=900)
             # Clean up the temporary file
