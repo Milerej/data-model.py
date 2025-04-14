@@ -475,13 +475,13 @@ if check_password():
                     // Store original node colors
                     const nodes = network.body.data.nodes.get();
                     nodes.forEach(node => {
-                        originalColors.set(node.id, node.color);
+                        originalColors.set(node.id, {...node.color});
                     });
                     
                     // Store original edge colors
                     const edges = network.body.data.edges.get();
                     edges.forEach(edge => {
-                        originalEdgeColors.set(edge.id, edge.color);
+                        originalEdgeColors.set(edge.id, {...edge.color});
                     });
                     
                     // Add selection event
@@ -503,76 +503,72 @@ if check_password():
                     const connectedNodes = network.getConnectedNodes(selectedNodeId);
                     const connectedEdges = network.getConnectedEdges(selectedNodeId);
                     
-                    // Dim all nodes
+                    // Update nodes
                     const allNodes = network.body.data.nodes.get();
-                    const updates = [];
-                    
                     allNodes.forEach(node => {
                         if (node.id === selectedNodeId) {
                             // Highlight selected node in red
-                            updates.push({
+                            network.body.data.nodes.update({
                                 id: node.id,
-                                color: '#ff0000',
-                                opacity: 1
+                                color: {
+                                    background: '#ff0000',
+                                    border: '#ff0000'
+                                }
                             });
-                        } else if (connectedNodes.includes(node.id)) {
-                            // Keep connected nodes visible
-                            updates.push({
+                        } else if (!connectedNodes.includes(node.id)) {
+                            // Dim unconnected nodes
+                            network.body.data.nodes.update({
                                 id: node.id,
-                                opacity: 1
-                            });
-                        } else {
-                            // Dim other nodes
-                            updates.push({
-                                id: node.id,
-                                opacity: 0.2
+                                color: {
+                                    background: '#D3D3D3',
+                                    border: '#D3D3D3'
+                                }
                             });
                         }
                     });
-                    
-                    // Update nodes
-                    network.body.data.nodes.update(updates);
                     
                     // Update edges
                     const allEdges = network.body.data.edges.get();
-                    const edgeUpdates = [];
-                    
                     allEdges.forEach(edge => {
                         if (connectedEdges.includes(edge.id)) {
-                            edgeUpdates.push({
+                            network.body.data.edges.update({
                                 id: edge.id,
-                                color: '#ff0000',
-                                opacity: 1
+                                color: {
+                                    color: '#ff0000',
+                                    highlight: '#ff0000'
+                                },
+                                width: 2
                             });
                         } else {
-                            edgeUpdates.push({
+                            network.body.data.edges.update({
                                 id: edge.id,
-                                opacity: 0.2
+                                color: {
+                                    color: '#D3D3D3'
+                                },
+                                width: 1
                             });
                         }
                     });
-                    
-                    network.body.data.edges.update(edgeUpdates);
                 }
                 
                 function resetHighlight(network) {
                     // Reset nodes to original colors
                     const nodes = network.body.data.nodes.get();
-                    const nodeUpdates = nodes.map(node => ({
-                        id: node.id,
-                        color: originalColors.get(node.id),
-                        opacity: 1
-                    }));
-                    network.body.data.nodes.update(nodeUpdates);
+                    nodes.forEach(node => {
+                        network.body.data.nodes.update({
+                            id: node.id,
+                            color: originalColors.get(node.id)
+                        });
+                    });
                     
                     // Reset edges to original colors
                     const edges = network.body.data.edges.get();
-                    const edgeUpdates = edges.map(edge => ({
-                        id: edge.id,
-                        color: originalEdgeColors.get(edge.id),
-                        opacity: 1
-                    }));
-                    network.body.data.edges.update(edgeUpdates);
+                    edges.forEach(edge => {
+                        network.body.data.edges.update({
+                            id: edge.id,
+                            color: originalEdgeColors.get(edge.id)
+                        });
+                    });
                 }
                 
                 function toggleFullscreen() {
