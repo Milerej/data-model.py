@@ -347,7 +347,7 @@ net.set_options('{' + '''
             "fit": true
         },
         "barnesHut": {
-            "gravitationalConstant": -15000,
+            "gravitationalConstant": -30000,
             "centralGravity": 0.1,
             "springLength": 2000,
             "springConstant": 0.08,
