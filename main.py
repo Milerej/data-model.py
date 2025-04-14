@@ -38,14 +38,20 @@ if check_password():
 
     st.title("⚙️ Data Model : System Management")
 
-    # [Your existing entities dictionary remains the same]
+    # Define entity modules and colors
     entities = {
-        # ... [Keep your existing entities dictionary exactly as is]
+        "System Management": {
+            "color": "#2E7D32", 
+            "size": 35, 
+            "shape": "dot",
+            "title": "System Management Module"
+        },
+        # [Rest of your entities dictionary remains exactly the same]
     }
 
-    # [Your existing edges list remains the same]
+    # Define edges with PK/FK relationships
     edges = [
-        # ... [Keep your existing edges list exactly as is]
+        # [Your edges list remains exactly the same]
     ]
 
     # Create NetworkX graph
@@ -68,7 +74,7 @@ if check_password():
     net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
 
-    # [Your existing network options remain the same]
+    # Set options for better spacing and reduced overlapping
     net.set_options('{' + '''
         "physics": {
             "enabled": true,
@@ -189,24 +195,55 @@ if check_password():
     fullscreen_js = """
     function toggleFullScreen() {
         const container = document.querySelector('.graph-container');
-        if (!document.fullscreenElement) {
+        
+        async function enterFullscreen() {
             if (container.requestFullscreen) {
-                container.requestFullscreen();
+                await container.requestFullscreen();
             } else if (container.webkitRequestFullscreen) {
-                container.webkitRequestFullscreen();
+                await container.webkitRequestFullscreen();
             } else if (container.msRequestFullscreen) {
-                container.msRequestFullscreen();
+                await container.msRequestFullscreen();
             }
-        } else {
+            // Force network redraw after entering fullscreen
+            setTimeout(() => {
+                if (window.network) {
+                    window.network.fit();
+                    window.network.redraw();
+                }
+            }, 100);
+        }
+
+        async function exitFullscreen() {
             if (document.exitFullscreen) {
-                document.exitFullscreen();
+                await document.exitFullscreen();
             } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
+                await document.webkitExitFullscreen();
             } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
+                await document.msExitFullscreen();
             }
+            // Force network redraw after exiting fullscreen
+            setTimeout(() => {
+                if (window.network) {
+                    window.network.fit();
+                    window.network.redraw();
+                }
+            }, 100);
+        }
+
+        if (!document.fullscreenElement) {
+            enterFullscreen();
+        } else {
+            exitFullscreen();
         }
     }
+
+    // Add fullscreen change event listener
+    document.addEventListener('fullscreenchange', function() {
+        if (window.network) {
+            window.network.fit();
+            window.network.redraw();
+        }
+    });
     """
 
     # Add CSS styles
@@ -236,8 +273,16 @@ if check_password():
             }
             .graph-container:fullscreen {
                 background: white;
-                width: 100vw;
-                height: 100vh;
+                width: 100vw !important;
+                height: 100vh !important;
+            }
+            .graph-container:fullscreen canvas {
+                width: 100% !important;
+                height: 100% !important;
+            }
+            .graph-container:fullscreen iframe {
+                width: 100% !important;
+                height: 100% !important;
             }
         </style>
     """, unsafe_allow_html=True)
@@ -249,6 +294,12 @@ if check_password():
         
         with open(path, "r", encoding="utf-8") as f:
             html_content = f.read()
+        
+        # Modify the HTML content to ensure network is globally accessible
+        html_content = html_content.replace(
+            'var network = new vis.Network(container, data, options);',
+            'window.network = new vis.Network(container, data, options);'
+        )
         
         # Wrap the content in a container and add the fullscreen button
         modified_html = f"""
