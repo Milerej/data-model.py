@@ -358,9 +358,9 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-   # Create interactive PyVis network
-net = Network(height="900px", width="100%", directed=True, notebook=True)
-net.from_nx(G)
+ # Create interactive PyVis network
+    net = Network(height="900px", width="100%", directed=True, notebook=True)
+    net.from_nx(G)
 
 # Set options for better visualization
 net.set_options("""
