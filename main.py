@@ -349,10 +349,10 @@ net.set_options('{' + '''
         "barnesHut": {
             "gravitationalConstant": -15000,
             "centralGravity": 0.1,
-            "springLength": 1000,
+            "springLength": 2000,
             "springConstant": 0.08,
             "damping": 0.12,
-            "avoidOverlap": 10
+            "avoidOverlap": 20
         },
         "minVelocity": 0.75,
         "maxVelocity": 30
