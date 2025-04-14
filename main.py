@@ -42,7 +42,7 @@ if check_password():
     entities = {
         "System Management": {
             "color": "#2E7D32", 
-            "size": 35, 
+            "size": 50, 
             "shape": "dot",
             "title": "System Management Module"
         },
@@ -276,14 +276,14 @@ if check_password():
     # Define edges with PK/FK relationships
     edges = [
         # Main module connections
-        ("System Management", "System Overview", "PK: System_ID", "both"),
-        ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
-        ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
-        ("System Management", "System Resiliency", "PK: System_ID", "both"),
-        ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
-        ("Risk Materiality Level", "Security & Sensitivity Classification", "relates to", "both"),
-        ("Risk Materiality Level", "Hosting and System Dependencies", "relates to", "both"),
-        ("Risk Materiality Level", "Criticality Assessment", "relates to", "both"),
+        ("System Management", "System Overview", "PK: System_ID", ""),
+        ("System Management", "Criticality Assessment", "PK: System_ID", ""),
+        ("System Management", "Security & Sensitivity Classification", "PK: System_ID", ""),
+        ("System Management", "System Resiliency", "PK: System_ID", ""),
+        ("System Management", "Hosting and System Dependencies", "PK: System_ID", ""),
+        ("Risk Materiality Level", "Security & Sensitivity Classification", "o", ""),
+        ("Risk Materiality Level", "Hosting and System Dependencies", "o", ""),
+        ("Risk Materiality Level", "Criticality Assessment", "o", ""),
 
         # System Overview field connections
         ("System Overview", "Agency", "", "to"),
