@@ -433,7 +433,7 @@ if check_password():
     }
     """)
 
-    # Save and display the network
+      # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
@@ -462,114 +462,102 @@ if check_password():
                 Full Screen
             </button>
             <script>
-                // Store original colors
-                let originalColors = new Map();
-                let originalEdgeColors = new Map();
-                
-                // Once the network is loaded
                 window.addEventListener('load', function() {
-                    // Get the network instance
                     const container = document.getElementById('mynetwork');
                     const network = container.network;
-                    
-                    // Store original node colors
-                    const nodes = network.body.data.nodes.get();
-                    nodes.forEach(node => {
-                        originalColors.set(node.id, {...node.color});
-                    });
-                    
-                    // Store original edge colors
-                    const edges = network.body.data.edges.get();
-                    edges.forEach(edge => {
-                        originalEdgeColors.set(edge.id, {...edge.color});
-                    });
-                    
+
                     // Add selection event
-                    network.on('selectNode', function(params) {
-                        const selectedNode = params.nodes[0];
-                        if (selectedNode) {
-                            highlightConnections(network, selectedNode);
-                        }
-                    });
-                    
-                    // Add deselection event
-                    network.on('deselectNode', function(params) {
-                        resetHighlight(network);
-                    });
-                });
-                
-                function highlightConnections(network, selectedNodeId) {
-                    // Get connected nodes and edges
-                    const connectedNodes = network.getConnectedNodes(selectedNodeId);
-                    const connectedEdges = network.getConnectedEdges(selectedNodeId);
-                    
-                    // Update nodes
-                    const allNodes = network.body.data.nodes.get();
-                    allNodes.forEach(node => {
-                        if (node.id === selectedNodeId) {
-                            // Highlight selected node in red
-                            network.body.data.nodes.update({
-                                id: node.id,
-                                color: {
-                                    background: '#ff0000',
-                                    border: '#ff0000'
-                                }
+                    network.on("click", function(params) {
+                        if (params.nodes.length > 0) {
+                            const selectedNode = params.nodes[0];
+                            
+                            // Reset all nodes and edges to default appearance
+                            const allNodes = network.body.data.nodes.get();
+                            const allEdges = network.body.data.edges.get();
+                            
+                            allNodes.forEach(node => {
+                                network.body.data.nodes.update({
+                                    id: node.id,
+                                    color: {
+                                        background: '#D3D3D3',
+                                        border: '#D3D3D3'
+                                    },
+                                    opacity: 0.3
+                                });
                             });
-                        } else if (!connectedNodes.includes(node.id)) {
-                            // Dim unconnected nodes
-                            network.body.data.nodes.update({
-                                id: node.id,
-                                color: {
-                                    background: '#D3D3D3',
-                                    border: '#D3D3D3'
-                                }
+                            
+                            allEdges.forEach(edge => {
+                                network.body.data.edges.update({
+                                    id: edge.id,
+                                    color: '#D3D3D3',
+                                    opacity: 0.3
+                                });
                             });
-                        }
-                    });
-                    
-                    // Update edges
-                    const allEdges = network.body.data.edges.get();
-                    allEdges.forEach(edge => {
-                        if (connectedEdges.includes(edge.id)) {
-                            network.body.data.edges.update({
-                                id: edge.id,
+                            
+                            // Get connected nodes and edges
+                            const connectedNodes = network.getConnectedNodes(selectedNode);
+                            const connectedEdges = network.getConnectedEdges(selectedNode);
+                            
+                            // Highlight selected node
+                            network.body.data.nodes.update({
+                                id: selectedNode,
                                 color: {
-                                    color: '#ff0000',
-                                    highlight: '#ff0000'
+                                    background: '#FF0000',
+                                    border: '#FF0000'
                                 },
-                                width: 2
+                                opacity: 1
+                            });
+                            
+                            // Highlight connected nodes
+                            connectedNodes.forEach(nodeId => {
+                                network.body.data.nodes.update({
+                                    id: nodeId,
+                                    opacity: 1
+                                });
+                            });
+                            
+                            // Highlight connected edges
+                            connectedEdges.forEach(edgeId => {
+                                network.body.data.edges.update({
+                                    id: edgeId,
+                                    color: '#FF0000',
+                                    opacity: 1
+                                });
                             });
                         } else {
-                            network.body.data.edges.update({
-                                id: edge.id,
-                                color: {
-                                    color: '#D3D3D3'
-                                },
-                                width: 1
+                            // If clicking on empty space, reset all nodes and edges
+                            const allNodes = network.body.data.nodes.get();
+                            const allEdges = network.body.data.edges.get();
+                            
+                            allNodes.forEach(node => {
+                                network.body.data.nodes.update({
+                                    id: node.id,
+                                    color: node.originalColor,
+                                    opacity: 1
+                                });
+                            });
+                            
+                            allEdges.forEach(edge => {
+                                network.body.data.edges.update({
+                                    id: edge.id,
+                                    color: edge.originalColor,
+                                    opacity: 1
+                                });
                             });
                         }
                     });
-                }
-                
-                function resetHighlight(network) {
-                    // Reset nodes to original colors
+
+                    // Store original colors
                     const nodes = network.body.data.nodes.get();
                     nodes.forEach(node => {
-                        network.body.data.nodes.update({
-                            id: node.id,
-                            color: originalColors.get(node.id)
-                        });
+                        node.originalColor = node.color;
                     });
                     
-                    // Reset edges to original colors
                     const edges = network.body.data.edges.get();
                     edges.forEach(edge => {
-                        network.body.data.edges.update({
-                            id: edge.id,
-                            color: originalEdgeColors.get(edge.id)
-                        });
+                        edge.originalColor = edge.color;
                     });
-                }
+                });
                 
                 function toggleFullscreen() {
                     let elem = document.documentElement;
