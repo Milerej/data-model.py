@@ -22,37 +22,37 @@ entities = {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "System Overview Module"
+        "title": "System Overview Sub-Module"
     },
     "Criticality Assessment": {
         "color": "#4CAF50", 
         "size": 25,
         "shape": "dot",
-        "title": "Criticality Assessment Module"
+        "title": "Criticality Assessment Sub-Module"
     },
     "Security & Sensitivity Classification": {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "Security & Sensitivity Classification Module"
+        "title": "Security & Sensitivity Classification Sub-Module"
     },
     "Risk Materiality Level": {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "Risk Materiality Level Module"
+        "title": "Risk Materiality Level Sub-Module"
     },
     "System Resiliency": {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "System Resiliency Module"
+        "title": "System Resiliency Sub-Module"
     },
     "Hosting and System Dependencies": {
         "color": "#4CAF50", 
         "size": 25, 
         "shape": "dot",
-        "title": "Hosting and System Dependencies Module"
+        "title": "Hosting and System Dependencies Sub-Module"
     },
 
     # System Overview Fields
