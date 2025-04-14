@@ -433,15 +433,15 @@ if check_password():
     }
     """)
 
-       # Save and display the network
+    # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
             with open(tmp_file.name, 'r', encoding='utf-8') as f:
                 html_content = f.read()
             
-            # Insert the button and script just before the closing body tag
-            fullscreen_html = """
+            # Add fullscreen button and highlighting functionality
+            custom_html = """
             <button 
                 style="
                     position: fixed;
@@ -462,15 +462,128 @@ if check_password():
                 Full Screen
             </button>
             <script>
+                // Store original colors
+                let originalColors = new Map();
+                let originalEdgeColors = new Map();
+                
+                // Once the network is loaded
+                window.addEventListener('load', function() {
+                    // Get the network instance
+                    const container = document.getElementById('mynetwork');
+                    const network = container.network;
+                    
+                    // Store original node colors
+                    const nodes = network.body.data.nodes.get();
+                    nodes.forEach(node => {
+                        originalColors.set(node.id, node.color);
+                    });
+                    
+                    // Store original edge colors
+                    const edges = network.body.data.edges.get();
+                    edges.forEach(edge => {
+                        originalEdgeColors.set(edge.id, edge.color);
+                    });
+                    
+                    // Add selection event
+                    network.on('selectNode', function(params) {
+                        const selectedNode = params.nodes[0];
+                        if (selectedNode) {
+                            highlightConnections(network, selectedNode);
+                        }
+                    });
+                    
+                    // Add deselection event
+                    network.on('deselectNode', function(params) {
+                        resetHighlight(network);
+                    });
+                });
+                
+                function highlightConnections(network, selectedNodeId) {
+                    // Get connected nodes and edges
+                    const connectedNodes = network.getConnectedNodes(selectedNodeId);
+                    const connectedEdges = network.getConnectedEdges(selectedNodeId);
+                    
+                    // Dim all nodes
+                    const allNodes = network.body.data.nodes.get();
+                    const updates = [];
+                    
+                    allNodes.forEach(node => {
+                        if (node.id === selectedNodeId) {
+                            // Highlight selected node in red
+                            updates.push({
+                                id: node.id,
+                                color: '#ff0000',
+                                opacity: 1
+                            });
+                        } else if (connectedNodes.includes(node.id)) {
+                            // Keep connected nodes visible
+                            updates.push({
+                                id: node.id,
+                                opacity: 1
+                            });
+                        } else {
+                            // Dim other nodes
+                            updates.push({
+                                id: node.id,
+                                opacity: 0.2
+                            });
+                        }
+                    });
+                    
+                    // Update nodes
+                    network.body.data.nodes.update(updates);
+                    
+                    // Update edges
+                    const allEdges = network.body.data.edges.get();
+                    const edgeUpdates = [];
+                    
+                    allEdges.forEach(edge => {
+                        if (connectedEdges.includes(edge.id)) {
+                            edgeUpdates.push({
+                                id: edge.id,
+                                color: '#ff0000',
+                                opacity: 1
+                            });
+                        } else {
+                            edgeUpdates.push({
+                                id: edge.id,
+                                opacity: 0.2
+                            });
+                        }
+                    });
+                    
+                    network.body.data.edges.update(edgeUpdates);
+                }
+                
+                function resetHighlight(network) {
+                    // Reset nodes to original colors
+                    const nodes = network.body.data.nodes.get();
+                    const nodeUpdates = nodes.map(node => ({
+                        id: node.id,
+                        color: originalColors.get(node.id),
+                        opacity: 1
+                    }));
+                    network.body.data.nodes.update(nodeUpdates);
+                    
+                    // Reset edges to original colors
+                    const edges = network.body.data.edges.get();
+                    const edgeUpdates = edges.map(edge => ({
+                        id: edge.id,
+                        color: originalEdgeColors.get(edge.id),
+                        opacity: 1
+                    }));
+                    network.body.data.edges.update(edgeUpdates);
+                }
+                
                 function toggleFullscreen() {
                     let elem = document.documentElement;
                     
                     if (!document.fullscreenElement) {
                         if (elem.requestFullscreen) {
                             elem.requestFullscreen();
-                        } else if (elem.webkitRequestFullscreen) { /* Safari */
+                        } else if (elem.webkitRequestFullscreen) {
                             elem.webkitRequestFullscreen();
-                        } else if (elem.msRequestFullscreen) { /* IE11 */
+                        } else if (elem.msRequestFullscreen) {
                             elem.msRequestFullscreen();
                         }
                     } else {
@@ -486,8 +599,8 @@ if check_password():
             </script>
             """
             
-            # Insert the button just before </body>
-            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
+            # Insert the custom HTML just before </body>
+            modified_html = html_content.replace('</body>', f'{custom_html}</body>')
             
             components.html(modified_html, height=900)
             # Clean up the temporary file
