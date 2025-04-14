@@ -97,7 +97,23 @@ entities = {
         "color": "green", 
         "size": 15, 
         "shape": "dot",
-        "title": "Hosting environment and system dependency information"
+        "title": "\n".join([
+            "Fields:",
+                "• Service Availability",
+                "• Recovery Time Objective (RTO)",
+                "• Recovery Point Objective (RPO)",
+                "• Total Downstream Dependencies (Direct + Inferred):",
+                "• Does Sub-System have Downstream Impact?",
+                "• Count of Downstream Dependencies (Direct)",
+                "• Dependency ID",
+                "• Dependency Status",
+                "• Type of Dependency",
+                "• Dependent Sub-System Upstream",
+                "• Dependent System/ Service Name",
+                "• Frequency of Data Exchange",
+                "• Count of Downstream Dependencies (Inferred):",
+                "• Dependency ID"
+        ])
     },
     "Central Programmes": {
         "color": "green", 
