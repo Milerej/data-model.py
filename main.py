@@ -358,8 +358,8 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-    # Create interactive PyVis network
-    net = Network(height="700px", width="100%", directed=True, notebook=True)
+    # Create interactive PyVis network with increased height
+    net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
 
     # Set options for better spacing and reduced overlapping
@@ -479,6 +479,30 @@ if check_password():
     });
     """
 
+    # Add fullscreen button CSS
+    st.markdown("""
+        <style>
+            .fullscreen-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                z-index: 1000;
+                padding: 10px;
+                background: #2E7D32;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .fullscreen-button:hover {
+                background: #1B5E20;
+            }
+            .element-container iframe {
+                height: 90vh !important;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
     # Create a temporary directory and save the graph
     with tempfile.TemporaryDirectory() as temp_dir:
         path = os.path.join(temp_dir, "graph.html")
@@ -487,10 +511,25 @@ if check_password():
         with open(path, "r", encoding="utf-8") as f:
             html_content = f.read()
         
-        # Add JavaScript
-        html_content = html_content.replace('</body>', f'<script>{highlight_js}</script></body>')
+        # Add fullscreen button and JavaScript
+        html_content = html_content.replace('</body>', '''
+            <button class="fullscreen-button" onclick="toggleFullScreen()">Toggle Fullscreen</button>
+            <script>
+                function toggleFullScreen() {
+                    const iframe = document.querySelector('iframe');
+                    if (!document.fullscreenElement) {
+                        iframe.requestFullscreen().catch(err => {
+                            alert(`Error attempting to enable fullscreen: ${err.message}`);
+                        });
+                    } else {
+                        document.exitFullscreen();
+                    }
+                }
+            </script>
+            ''' + f'<script>{highlight_js}</script></body>')
         
-        components.html(html_content, height=750, scrolling=True)
+        # Display the graph
+        components.html(html_content, height=900, scrolling=True)
 
 else:
     st.stop()  # Don't run the rest of the app
