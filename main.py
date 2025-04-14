@@ -433,14 +433,14 @@ if check_password():
     }
     """)
 
-      # Save and display the network
+    # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
             with open(tmp_file.name, 'r', encoding='utf-8') as f:
                 html_content = f.read()
             
-            # Add fullscreen button HTML and JavaScript with height adjustments
+            # Add fullscreen button HTML and JavaScript with adjusted padding
             fullscreen_html = """
             <style>
                 #graph-container {
@@ -451,25 +451,25 @@ if check_password():
                 /* Style for fullscreen mode */
                 #graph-container:fullscreen {
                     height: 100vh !important;
-                    padding: 20px;
+                    padding: 20px 20px 0px 20px; /* top right bottom left */
                 }
                 
                 /* Webkit browsers */
                 #graph-container:-webkit-full-screen {
                     height: 100vh !important;
-                    padding: 20px;
+                    padding: 20px 20px 0px 20px;
                 }
                 
                 /* Firefox */
                 #graph-container:-moz-full-screen {
                     height: 100vh !important;
-                    padding: 20px;
+                    padding: 20px 20px 0px 20px;
                 }
                 
                 /* IE11 */
                 #graph-container:-ms-fullscreen {
                     height: 100vh !important;
-                    padding: 20px;
+                    padding: 20px 20px 0px 20px;
                 }
             </style>
             <button id="fullscreen-btn" style="position: absolute; top: 10px; right: 10px; z-index: 999; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
@@ -498,13 +498,3 @@ if check_password():
                 });
             </script>
             """
-            
-            # Wrap the graph in a container and add the fullscreen button
-            modified_html = html_content.replace('<body>', '<body><div id="graph-container">')
-            modified_html = modified_html.replace('</body>', '</div>' + fullscreen_html + '</body>')
-            
-            components.html(modified_html, height=900)
-            # Clean up the temporary file
-            os.unlink(tmp_file.name)
-    except Exception as e:
-        st.error(f"An error occurred while generating the graph: {str(e)}")
