@@ -1,217 +1,213 @@
 import streamlit as st
-import networkx as nx
 from pyvis.network import Network
+import networkx as nx
 import streamlit.components.v1 as components
 import tempfile
 import os
 
-# Define the mock data with clear dependencies
-systems_data = {
-    "SYS1001": {
-        "System_Name": "Payment Gateway System",
-        "System_Description": "Core payment processing system",
-        "System_Status": "Active",
-        "Agency": "MOF",
-        "Security_Classification": "Restricted",
-        "Sensitivity_Classification": "Sensitive High",
-        "System_Criticality": "High",
-        "Computed_RML": "L2",
-        "Service_Availability": "99.999%",
-        "RTO": "4 hours",
-        "RPO": "15 mins",
-        "Dependencies": {
-            "Upstream": [
-                {
-                    "System_ID": "SYS1002",
-                    "Dependency_Type": "Service",
-                    "Data_Exchange_Frequency": "Real-time",
-                    "Dependency_Status": "Active",
-                    "Dependency_Description": "Requires authentication services"
-                }
-            ],
-            "Downstream": [
-                {
-                    "System_ID": "SYS1003",
-                    "Dependency_Type": "Service",
-                    "Data_Exchange_Frequency": "Real-time",
-                    "Dependency_Status": "Active",
-                    "Dependency_Description": "Provides payment processing services"
-                },
-                {
-                    "System_ID": "SYS1004",
-                    "Dependency_Type": "Service",
-                    "Data_Exchange_Frequency": "Daily",
-                    "Dependency_Status": "Active",
-                    "Dependency_Description": "Provides transaction reports"
-                }
-            ]
-        }
-    },
-    "SYS1002": {
-        "System_Name": "User Authentication System",
-        "System_Description": "Central authentication service",
-        "System_Status": "Active",
-        "Agency": "GovTech",
-        "Security_Classification": "Restricted",
-        "Sensitivity_Classification": "Sensitive High",
-        "System_Criticality": "Critical",
-        "Computed_RML": "L3",
-        "Service_Availability": "99.999%",
-        "RTO": "2 hours",
-        "RPO": "5 mins",
-        "Dependencies": {
-            "Upstream": [],  # No upstream dependencies
-            "Downstream": [
-                {
-                    "System_ID": "SYS1001",
-                    "Dependency_Type": "Service",
-                    "Data_Exchange_Frequency": "Real-time",
-                    "Dependency_Status": "Active",
-                    "Dependency_Description": "Provides authentication services"
-                },
-                {
-                    "System_ID": "SYS1003",
-                    "Dependency_Type": "Service",
-                    "Data_Exchange_Frequency": "Real-time",
-                    "Dependency_Status": "Active",
-                    "Dependency_Description": "Provides authentication services"
-                }
-            ]
-        }
-    }
-}
+def show_data_model():
+    st.title("⚙️ Data Model : System Management")
 
-def create_dependency_network(systems_data):
+    # Define entity modules and colors
+    entities = {
+        "System Management": {
+            "color": "#2E7D32", 
+            "size": 50, 
+            "shape": "dot",
+            "title": "System Management Module"
+        },
+        # Main Modules
+        "System Identity & Classification": {
+            "color": "#4CAF50", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "System Identity & Classification Sub-Module"
+        },
+        "Criticality & Risk": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "Criticality & Risk Sub-Module"
+        },
+        "System Resilience": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "System Resilience Sub-Module"
+        },
+        "Hosting and System Dependencies": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "Hosting and System Dependencies Sub-Module"
+        },
+
+        # Sub-groups
+        "Basic Information": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Basic Information Sub-Group"
+        },
+        "Organizational Context": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Organizational Context Sub-Group"
+        },
+        "Classification": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Classification Sub-Group"
+        },
+        "Impact Assessment": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Impact Assessment Sub-Group"
+        },
+        "Risk Profile": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Risk Profile Sub-Group"
+        },
+        "SCA/RML Approval": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "SCA/RML Approval Sub-Group"
+        },
+        "Availability & Recovery": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Availability & Recovery Sub-Group"
+        },
+        "Dependencies Management": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Dependencies Management Sub-Group"
+        },
+
+        # Fields
+        "Agency": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Agency field"
+        },
+        "Ministry Family": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Ministry Family field"
+        },
+        # ... [continuing with all your existing fields]
+        # Add all other fields from your original code here
+    }
+
+    # Define edges with the hierarchical structure
+    edges = [
+        # Main module connections
+        ("System Management", "System Identity & Classification", "", ""),
+        ("System Management", "Criticality & Risk", "", ""),
+        ("System Management", "System Resilience", "", ""),
+        ("System Management", "Hosting and System Dependencies", "", ""),
+        # ... [continuing with all your existing edges]
+        # Add all other edges from your original code here
+    ]
+
     # Create NetworkX graph
     G = nx.DiGraph()
-    
-    # Color mapping based on criticality
-    color_map = {
-        "Critical": "#FF0000",
-        "High": "#FFA500",
-        "Medium": "#FFFF00",
-        "Low": "#90EE90"
-    }
-    
-    # Add all systems as nodes (including referenced systems that aren't fully detailed)
-    all_systems = set()
-    for sys_id, sys_info in systems_data.items():
-        all_systems.add(sys_id)
-        for dep in sys_info["Dependencies"]["Upstream"]:
-            all_systems.add(dep["System_ID"])
-        for dep in sys_info["Dependencies"]["Downstream"]:
-            all_systems.add(dep["System_ID"])
-    
-    # Add nodes
-    for sys_id in all_systems:
-        if sys_id in systems_data:
-            # Detailed system info available
-            sys_info = systems_data[sys_id]
-            node_color = color_map.get(sys_info["System_Criticality"], "#808080")
-            tooltip = f"""
-            System: {sys_info['System_Name']}
-            Description: {sys_info['System_Description']}
-            Agency: {sys_info['Agency']}
-            Criticality: {sys_info['System_Criticality']}
-            RML: {sys_info['Computed_RML']}
-            Availability: {sys_info['Service_Availability']}
-            RTO: {sys_info['RTO']}
-            RPO: {sys_info['RPO']}
-            """
-            G.add_node(sys_id, 
-                      title=tooltip,
-                      color=node_color,
-                      label=sys_info['System_Name'])
-        else:
-            # Referenced system without details
-            G.add_node(sys_id,
-                      title=f"System ID: {sys_id}\n(Referenced System)",
-                      color="#808080",
-                      label=f"System {sys_id}")
-    
+    for node, attributes in entities.items():
+        node_attrs = {
+            "color": attributes["color"],
+            "size": attributes["size"],
+            "shape": attributes["shape"],
+            "title": attributes["title"],
+            "label": node
+        }
+        G.add_node(node, **node_attrs)
+
     # Add edges
-    for sys_id, sys_info in systems_data.items():
-        # Add upstream dependencies
-        for dep in sys_info["Dependencies"]["Upstream"]:
-            G.add_edge(dep["System_ID"], 
-                      sys_id,
-                      title=f"""
-                      Type: {dep['Dependency_Type']}
-                      Frequency: {dep['Data_Exchange_Frequency']}
-                      Status: {dep['Dependency_Status']}
-                      Description: {dep['Dependency_Description']}
-                      """,
-                      arrows="to",
-                      color="#2E7D32")
-    
-    # Create PyVis network
-    net = Network(height="600px", width="100%", directed=True, notebook=True)
-    
-    # Transfer the NetworkX graph to PyVis
+    for source, target, label, direction in edges:
+        G.add_edge(source, target, title=label, label=label, arrows=direction)
+
+    # Create interactive PyVis network
+    net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
-    
-    # Set options for better visualization
+
+    # Set visualization options
     net.set_options("""
     {
         "physics": {
             "enabled": true,
-            "forceAtlas2Based": {
-                "gravitationalConstant": -50,
-                "centralGravity": 0.01,
-                "springLength": 200,
-                "springConstant": 0.08
+            "stabilization": {
+                "enabled": true,
+                "iterations": 2000,
+                "updateInterval": 25,
+                "onlyDynamicEdges": false,
+                "fit": true
             },
-            "maxVelocity": 50,
-            "solver": "forceAtlas2Based",
-            "timestep": 0.35,
-            "stabilization": {"iterations": 150}
+            "barnesHut": {
+                "gravitationalConstant": -60000,
+                "centralGravity": 0.1,
+                "springLength": 1000,
+                "springConstant": 0.08,
+                "damping": 0.12,
+                "avoidOverlap": 20
+            },
+            "minVelocity": 0.75,
+            "maxVelocity": 30
         },
         "edges": {
             "smooth": {
-                "type": "continuous",
-                "forceDirection": "none"
+                "type": "curvedCW",
+                "roundness": 0.2,
+                "forceDirection": "horizontal"
             },
-            "color": {"inherit": false},
-            "width": 2,
-            "arrows": {
-                "to": {
-                    "enabled": true,
-                    "scaleFactor": 0.5
-                }
-            }
+            "length": 300,
+            "font": {
+                "size": 11,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            },
+            "width": 1.5
         },
         "nodes": {
             "font": {
-                "size": 14,
-                "face": "arial"
+                "size": 12,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
             },
-            "borderWidth": 2,
-            "borderWidthSelected": 4,
-            "size": 30
+            "margin": 12,
+            "scaling": {
+                "min": 10,
+                "max": 30
+            },
+            "fixed": {
+                "x": false,
+                "y": false
+            }
         },
-        "interaction": {
-            "hover": true,
-            "tooltipDelay": 200
+        "layout": {
+            "improvedLayout": true,
+            "randomSeed": 42,
+            "hierarchical": {
+                "enabled": false,
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
+            }
         }
     }
     """)
-    
-    return net
 
-# Streamlit app
-st.set_page_config(page_title="System Dependencies Visualization", layout="wide")
-
-st.title("System Dependencies Visualization")
-
-# Create tabs for different views
-tab1, tab2 = st.tabs(["Network Visualization", "System Details"])
-
-with tab1:
-    st.subheader("System Dependency Network")
-    
-    # Create and display network visualization
-    net = create_dependency_network(systems_data)
-    
+    # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
@@ -264,54 +260,7 @@ with tab1:
             """
             
             modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
-            components.html(modified_html, height=600)
+            components.html(modified_html, height=900)
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
-
-    st.markdown("""
-    **Legend:**
-    - Red nodes: Critical systems
-    - Orange nodes: High criticality systems
-    - Gray nodes: Referenced systems (details not available)
-    - Arrows indicate dependency direction (points from provider to dependent)
-    """)
-
-with tab2:
-    st.subheader("Detailed System Information")
-    
-    # Display detailed system information
-    for sys_id, sys_info in systems_data.items():
-        with st.expander(f"{sys_info['System_Name']} ({sys_id})"):
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.markdown("**Basic Information**")
-                st.write(f"Description: {sys_info['System_Description']}")
-                st.write(f"Agency: {sys_info['Agency']}")
-                st.write(f"Status: {sys_info['System_Status']}")
-                
-                st.markdown("**Classification**")
-                st.write(f"Security: {sys_info['Security_Classification']}")
-                st.write(f"Sensitivity: {sys_info['Sensitivity_Classification']}")
-                st.write(f"Criticality: {sys_info['System_Criticality']}")
-                st.write(f"RML: {sys_info['Computed_RML']}")
-            
-            with col2:
-                st.markdown("**Availability Metrics**")
-                st.write(f"Service Availability: {sys_info['Service_Availability']}")
-                st.write(f"RTO: {sys_info['RTO']}")
-                st.write(f"RPO: {sys_info['RPO']}")
-                
-                st.markdown("**Dependencies**")
-                if sys_info['Dependencies']['Upstream']:
-                    st.write("Upstream:")
-                    for dep in sys_info['Dependencies']['Upstream']:
-                        st.write(f"- {dep['System_ID']}: {dep['Dependency_Description']}")
-                else:
-                    st.write("No upstream dependencies")
-                
-                if sys_info['Dependencies']['Downstream']:
-                    st.write("Downstream:")
-                    for dep in sys_info['Dependencies']['Downstream']:
-                        st.write(f"- {dep['System_ID']}: {dep['Dependency_Description']}")
