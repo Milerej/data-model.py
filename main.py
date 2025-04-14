@@ -441,148 +441,137 @@ if check_password():
                 html_content = f.read()
             
             # Add fullscreen button and highlighting functionality
-            custom_html = """
-            <button 
-                style="
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 10000;
-                    padding: 8px 16px;
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-family: Arial, sans-serif;
-                    font-size: 14px;
-                "
-                onclick="toggleFullscreen()"
-            >
-                Full Screen
-            </button>
-            <script>
-                window.addEventListener('load', function() {
-                    const container = document.getElementById('mynetwork');
-                    const network = container.network;
-
-                    // Add selection event
-                    network.on("click", function(params) {
-                        if (params.nodes.length > 0) {
-                            const selectedNode = params.nodes[0];
-                            
-                            // Reset all nodes and edges to default appearance
-                            const allNodes = network.body.data.nodes.get();
-                            const allEdges = network.body.data.edges.get();
-                            
-                            allNodes.forEach(node => {
-                                network.body.data.nodes.update({
-                                    id: node.id,
-                                    color: {
-                                        background: '#D3D3D3',
-                                        border: '#D3D3D3'
-                                    },
-                                    opacity: 0.3
-                                });
-                            });
-                            
-                            allEdges.forEach(edge => {
-                                network.body.data.edges.update({
-                                    id: edge.id,
-                                    color: '#D3D3D3',
-                                    opacity: 0.3
-                                });
-                            });
-                            
-                            // Get connected nodes and edges
-                            const connectedNodes = network.getConnectedNodes(selectedNode);
-                            const connectedEdges = network.getConnectedEdges(selectedNode);
-                            
-                            // Highlight selected node
-                            network.body.data.nodes.update({
-                                id: selectedNode,
-                                color: {
-                                    background: '#FF0000',
-                                    border: '#FF0000'
-                                },
-                                opacity: 1
-                            });
-                            
-                            // Highlight connected nodes
-                            connectedNodes.forEach(nodeId => {
-                                network.body.data.nodes.update({
-                                    id: nodeId,
-                                    opacity: 1
-                                });
-                            });
-                            
-                            // Highlight connected edges
-                            connectedEdges.forEach(edgeId => {
-                                network.body.data.edges.update({
-                                    id: edgeId,
-                                    color: '#FF0000',
-                                    opacity: 1
-                                });
-                            });
-                        } else {
-                            // If clicking on empty space, reset all nodes and edges
-                            const allNodes = network.body.data.nodes.get();
-                            const allEdges = network.body.data.edges.get();
-                            
-                            allNodes.forEach(node => {
-                                network.body.data.nodes.update({
-                                    id: node.id,
-                                    color: node.originalColor,
-                                    opacity: 1
-                                });
-                            });
-                            
-                            allEdges.forEach(edge => {
-                                network.body.data.edges.update({
-                                    id: edge.id,
-                                    color: edge.originalColor,
-                                    opacity: 1
-                                });
-                            });
-                        }
-                    });
-
-                    // Store original colors
-                    const nodes = network.body.data.nodes.get();
+custom_html = """
+<button 
+    style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        padding: 8px 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    "
+    onclick="toggleFullscreen()"
+>
+    Full Screen
+</button>
+<script>
+    window.addEventListener('load', function() {
+        // Wait for network to be available
+        setTimeout(function() {
+            const container = document.getElementsByClassName('vis-network')[0];
+            const network = new vis.Network(container, container.network.body.data, container.network.options);
+            
+            network.on("selectNode", function(params) {
+                const selectedNode = params.nodes[0];
+                
+                // Reset all nodes and edges
+                const nodes = network.body.data.nodes.get();
+                const edges = network.body.data.edges.get();
+                
+                // Store original colors if not already stored
+                if (!window.originalColors) {
+                    window.originalColors = new Map();
                     nodes.forEach(node => {
-                        node.originalColor = node.color;
+                        window.originalColors.set(node.id, {...node.color});
                     });
-                    
-                    const edges = network.body.data.edges.get();
-                    edges.forEach(edge => {
-                        edge.originalColor = edge.color;
+                }
+                
+                // Dim all nodes and edges first
+                nodes.forEach(node => {
+                    network.body.data.nodes.update({
+                        id: node.id,
+                        color: {background: '#D3D3D3', border: '#D3D3D3'},
+                        opacity: 0.3
                     });
                 });
                 
-                function toggleFullscreen() {
-                    let elem = document.documentElement;
-                    
-                    if (!document.fullscreenElement) {
-                        if (elem.requestFullscreen) {
-                            elem.requestFullscreen();
-                        } else if (elem.webkitRequestFullscreen) {
-                            elem.webkitRequestFullscreen();
-                        } else if (elem.msRequestFullscreen) {
-                            elem.msRequestFullscreen();
-                        }
-                    } else {
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) {
-                            document.msExitFullscreen();
-                        }
-                    }
-                }
-            </script>
-            """
+                edges.forEach(edge => {
+                    network.body.data.edges.update({
+                        id: edge.id,
+                        color: {color: '#D3D3D3', opacity: 0.3}
+                    });
+                });
+                
+                // Get connected elements
+                const connectedNodes = network.getConnectedNodes(selectedNode);
+                const connectedEdges = network.getConnectedEdges(selectedNode);
+                
+                // Highlight selected node in red
+                network.body.data.nodes.update({
+                    id: selectedNode,
+                    color: {background: '#FF0000', border: '#FF0000'},
+                    opacity: 1
+                });
+                
+                // Highlight connected nodes and edges
+                connectedNodes.forEach(nodeId => {
+                    network.body.data.nodes.update({
+                        id: nodeId,
+                        opacity: 1
+                    });
+                });
+                
+                connectedEdges.forEach(edgeId => {
+                    network.body.data.edges.update({
+                        id: edgeId,
+                        color: {color: '#FF0000', opacity: 1}
+                    });
+                });
+            });
             
+            network.on("deselectNode", function(params) {
+                // Reset to original colors
+                const nodes = network.body.data.nodes.get();
+                const edges = network.body.data.edges.get();
+                
+                nodes.forEach(node => {
+                    network.body.data.nodes.update({
+                        id: node.id,
+                        color: window.originalColors.get(node.id),
+                        opacity: 1
+                    });
+                });
+                
+                edges.forEach(edge => {
+                    network.body.data.edges.update({
+                        id: edge.id,
+                        color: {color: '#2E7D32', opacity: 0.8}
+                    });
+                });
+            });
+        }, 1000); // Wait 1 second for network to initialize
+    });
+    
+    function toggleFullscreen() {
+        let elem = document.documentElement;
+        if (!document.fullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    }
+</script>
+"""
+
             # Insert the custom HTML just before </body>
             modified_html = html_content.replace('</body>', f'{custom_html}</body>')
             
