@@ -250,10 +250,8 @@ edges = [
     ("System Management", "System Overview", "PK: System_ID", "both"),
     ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
     ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
-    #("System Management", "Risk Materiality Level", "PK: System_ID", "both"),
     ("System Management", "System Resiliency", "PK: System_ID", "both"),
     ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
-    #("System Management", "Central Programmes", "PK: System_ID", "both"),
     ("Risk Materiality Level", "Security & Sensitivity Classification", "relates to", "both"),
     ("Risk Materiality Level", "Hosting and System Dependencies", "relates to", "both"),
     ("Risk Materiality Level", "Criticality Assessment", "relates to", "both"),
@@ -315,152 +313,186 @@ edges = [
     ("Hosting and System Dependencies", "Inferred Dependencies", "contains", "to")
 ]
 
-# Create NetworkX graph
-G = nx.DiGraph()
-for node, attributes in entities.items():
-    node_attrs = {
-        "color": attributes["color"],
-        "size": attributes["size"],
-        "shape": attributes["shape"],
-        "title": attributes["title"],
-        "label": node
-    }
-    G.add_node(node, **node_attrs)
+# Create columns for the layout
+col1, col2 = st.columns(2)
 
-# Add edges with labels and custom arrow directions
-for source, target, label, direction in edges:
-    G.add_edge(source, target, title=label, label=label, arrows=direction)
+with col1:
+    st.header("Interactive Graph")
+    
+    # Create NetworkX graph
+    G = nx.DiGraph()
+    for node, attributes in entities.items():
+        node_attrs = {
+            "color": attributes["color"],
+            "size": attributes["size"],
+            "shape": attributes["shape"],
+            "title": attributes["title"],
+            "label": node
+        }
+        G.add_node(node, **node_attrs)
 
-# Create interactive PyVis network
-net = Network(height="700px", width="100%", directed=True, notebook=True)
-net.from_nx(G)
+    # Add edges with labels and custom arrow directions
+    for source, target, label, direction in edges:
+        G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-# Set options for better spacing and reduced overlapping
-net.set_options('{' + '''
-    "physics": {
-        "enabled": true,
-        "stabilization": {
+    # Create interactive PyVis network
+    net = Network(height="700px", width="100%", directed=True, notebook=True)
+    net.from_nx(G)
+
+    # Set options for better spacing and reduced overlapping
+    net.set_options('{' + '''
+        "physics": {
             "enabled": true,
-            "iterations": 2000,
-            "updateInterval": 25,
-            "onlyDynamicEdges": false,
-            "fit": true
+            "stabilization": {
+                "enabled": true,
+                "iterations": 2000,
+                "updateInterval": 25,
+                "onlyDynamicEdges": false,
+                "fit": true
+            },
+            "barnesHut": {
+                "gravitationalConstant": -60000,
+                "centralGravity": 0.1,
+                "springLength": 2000,
+                "springConstant": 0.08,
+                "damping": 0.12,
+                "avoidOverlap": 20
+            },
+            "minVelocity": 0.75,
+            "maxVelocity": 30
         },
-        "barnesHut": {
-            "gravitationalConstant": -60000,
-            "centralGravity": 0.1,
-            "springLength": 2000,
-            "springConstant": 0.08,
-            "damping": 0.12,
-            "avoidOverlap": 20
+        "edges": {
+            "smooth": {
+                "type": "curvedCW",
+                "roundness": 0.2,
+                "forceDirection": "horizontal"
+            },
+            "length": 300,
+            "font": {
+                "size": 11,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            },
+            "width": 1.5
         },
-        "minVelocity": 0.75,
-        "maxVelocity": 30
-    },
-    "edges": {
-        "smooth": {
-            "type": "curvedCW",
-            "roundness": 0.2,
-            "forceDirection": "horizontal"
+        "nodes": {
+            "font": {
+                "size": 12,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "margin": 12,
+            "scaling": {
+                "min": 10,
+                "max": 30
+            },
+            "fixed": {
+                "x": false,
+                "y": false
+            }
         },
-        "length": 300,
-        "font": {
-            "size": 11,
-            "strokeWidth": 2,
-            "strokeColor": "#ffffff"
-        },
-        "color": {
-            "inherit": false,
-            "color": "#2E7D32",
-            "opacity": 0.8
-        },
-        "width": 1.5
-    },
-    "nodes": {
-        "font": {
-            "size": 12,
-            "strokeWidth": 2,
-            "strokeColor": "#ffffff"
-        },
-        "margin": 12,
-        "scaling": {
-            "min": 10,
-            "max": 30
-        },
-        "fixed": {
-            "x": false,
-            "y": false
+        "layout": {
+            "improvedLayout": true,
+            "randomSeed": 42,
+            "hierarchical": {
+                "enabled": false,
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
+            }
         }
-    },
-    "layout": {
-        "improvedLayout": true,
-        "randomSeed": 42,
-        "hierarchical": {
-            "enabled": false,
-            "nodeSpacing": 300,
-            "levelSeparation": 300,
-            "treeSpacing": 300
-        }
-    }
-''' + '}')
+    ''' + '}')
 
-# Customize edge labels and arrows
-for edge in net.edges:
-    edge["label"] = edge.get("title", "")
-    if edge.get("arrows") == "both":
-        edge["arrows"] = "to,from"
+    # Customize edge labels and arrows
+    for edge in net.edges:
+        edge["label"] = edge.get("title", "")
+        if edge.get("arrows") == "both":
+            edge["arrows"] = "to,from"
 
-# Add JavaScript for highlighting
-highlight_js = """
-network.on("click", function(params) {
-    if (params.nodes.length > 0) {
-        var selectedNode = params.nodes[0];
-        var connectedNodes = new Set([selectedNode]);
-        var connectedEdges = new Set();
-        
-        network.getConnectedNodes(selectedNode).forEach(function(connectedNode) {
-            connectedNodes.add(connectedNode);
-            network.getConnectedEdges(selectedNode).forEach(function(edgeId) {
-                connectedEdges.add(edgeId);
+    # Add JavaScript for highlighting
+    highlight_js = """
+    network.on("click", function(params) {
+        if (params.nodes.length > 0) {
+            var selectedNode = params.nodes[0];
+            var connectedNodes = new Set([selectedNode]);
+            var connectedEdges = new Set();
+            
+            network.getConnectedNodes(selectedNode).forEach(function(connectedNode) {
+                connectedNodes.add(connectedNode);
+                network.getConnectedEdges(selectedNode).forEach(function(edgeId) {
+                    connectedEdges.add(edgeId);
+                });
             });
-        });
 
-        Object.values(network.body.nodes).forEach(function(node) {
-            if (connectedNodes.has(node.id)) {
+            Object.values(network.body.nodes).forEach(function(node) {
+                if (connectedNodes.has(node.id)) {
+                    node.options.opacity = 1.0;
+                } else {
+                    node.options.opacity = 0.2;
+                }
+            });
+            
+            Object.values(network.body.edges).forEach(function(edge) {
+                if (connectedEdges.has(edge.id)) {
+                    edge.options.opacity = 1.0;
+                } else {
+                    edge.options.opacity = 0.2;
+                }
+            });
+        } else {
+            Object.values(network.body.nodes).forEach(node => {
                 node.options.opacity = 1.0;
-            } else {
-                node.options.opacity = 0.2;
-            }
-        });
-        
-        Object.values(network.body.edges).forEach(function(edge) {
-            if (connectedEdges.has(edge.id)) {
+            });
+            Object.values(network.body.edges).forEach(edge => {
                 edge.options.opacity = 1.0;
-            } else {
-                edge.options.opacity = 0.2;
-            }
-        });
-    } else {
-        Object.values(network.body.nodes).forEach(node => {
-            node.options.opacity = 1.0;
-        });
-        Object.values(network.body.edges).forEach(edge => {
-            edge.options.opacity = 1.0;
-        });
-    }
-    network.redraw();
-});
-"""
+            });
+        }
+        network.redraw();
+    });
+    """
 
-# Create a temporary directory and save the graph
-with tempfile.TemporaryDirectory() as temp_dir:
-    path = os.path.join(temp_dir, "graph.html")
-    net.save_graph(path)
+    # Create a temporary directory and save the graph
+    with tempfile.TemporaryDirectory() as temp_dir:
+        path = os.path.join(temp_dir, "graph.html")
+        net.save_graph(path)
+        
+        with open(path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+        
+        # Add JavaScript
+        html_content = html_content.replace('</body>', f'<script>{highlight_js}</script></body>')
+        
+        components.html(html_content, height=750, scrolling=True)
+
+with col2:
+    st.header("Sub-modules and Fields")
     
-    with open(path, "r", encoding="utf-8") as f:
-        html_content = f.read()
-    
-    # Add JavaScript
-    html_content = html_content.replace('</body>', f'<script>{highlight_js}</script></body>')
-    
-    components.html(html_content, height=750, scrolling=True)
+    # Group fields by sub-module
+    sub_modules = {
+        "System Overview": [],
+        "Criticality Assessment": [],
+        "Security & Sensitivity Classification": [],
+        "Risk Materiality Level": [],
+        "System Resiliency": [],
+        "Hosting and System Dependencies": []
+    }
+
+    # Populate fields for each sub-module based on edges
+    for source, target, label, _ in edges:
+        if source in sub_modules and label == "contains":
+            sub_modules[source].append(target)
+
+    # Display each sub-module and its fields
+    for module, fields in sub_modules.items():
+        st.subheader(module)
+        if fields:
+            for field in fields:
+                st.markdown(f"- {field}: {entities[field]['title']}")
+        else:
+            st.markdown("*No fields defined*")
+        st.markdown("---")
