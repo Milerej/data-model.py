@@ -86,7 +86,10 @@ entities = {
         "color": "green", 
         "size": 15, 
         "shape": "dot",
-        "title": "System resiliency metrics and details"
+          "title": "\n".join([
+            "Fields:",
+                "• Service Availability"
+        ])
     },
     "Hosting and System Dependencies": {
         "color": "green", 
