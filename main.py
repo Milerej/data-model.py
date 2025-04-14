@@ -452,28 +452,28 @@ if check_password():
                 /* Style for fullscreen mode */
                 #graph-container:fullscreen {
                     height: 100vh !important;
-                    padding: 20px 20px 0px 20px;
+                    padding: 20px 20px 20px 20px;
                     background-color: white;
                 }
                 
                 /* Webkit browsers */
                 #graph-container:-webkit-full-screen {
                     height: 100vh !important;
-                    padding: 20px 20px 0px 20px;
+                    padding: 20px 20px 20px 20px;
                     background-color: white;
                 }
                 
                 /* Firefox */
                 #graph-container:-moz-full-screen {
                     height: 100vh !important;
-                    padding: 20px 20px 0px 20px;
+                    padding: 20px 20px 20px 20px;
                     background-color: white;
                 }
                 
                 /* IE11 */
                 #graph-container:-ms-fullscreen {
                     height: 100vh !important;
-                    padding: 20px 20px 0px 20px;
+                    padding: 20px 20px 20px 20px;
                     background-color: white;
                 }
             </style>
