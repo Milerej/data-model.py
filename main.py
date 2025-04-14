@@ -88,7 +88,9 @@ entities = {
         "shape": "dot",
         "title": "\n".join([
             "Fields:",
-                "• Service Availability"
+                "• Service Availability",
+                "• Recovery Time Objective (RTO)",
+                "• Recovery Point Objective (RPO)"    
         ])
     },
     "Hosting and System Dependencies": {
