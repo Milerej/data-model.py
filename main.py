@@ -439,30 +439,42 @@ if check_password():
             net.save_graph(tmp_file.name)
             with open(tmp_file.name, 'r', encoding='utf-8') as f:
                 html_content = f.read()
-            components.html(html_content, height=900)
+            
+            # Add fullscreen button HTML and JavaScript
+            fullscreen_html = """
+            <button id="fullscreen-btn" style="position: absolute; top: 10px; right: 10px; z-index: 999; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Full Screen
+            </button>
+            <script>
+                document.getElementById('fullscreen-btn').addEventListener('click', function() {
+                    var elem = document.querySelector('#graph-container');
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) {
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) {
+                            elem.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                    }
+                });
+            </script>
+            """
+            
+            # Wrap the graph in a container and add the fullscreen button
+            modified_html = html_content.replace('<body>', '<body><div id="graph-container" style="width: 100%; height: 100%;">')
+            modified_html = modified_html.replace('</body>', '</div>' + fullscreen_html + '</body>')
+            
+            components.html(modified_html, height=900)
             # Clean up the temporary file
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
-
-    # Add description below the graph
-    st.markdown("""
-    ### Graph Description
-    This interactive graph represents the System Management data model structure:
-
-    - **Green Circle (Large)**: Main System Management module
-    - **Green Circles (Medium)**: Major sub-modules
-    - **Light Green Circles (Small)**: Individual fields within each sub-module
-    - **Arrows**: Show relationships and data flow between components
-    - **Labels on Arrows**: Describe the type of relationship
-
-    You can:
-    - Drag nodes to rearrange the view
-    - Zoom in/out using mouse wheel
-    - Hover over nodes for additional information
-    - Click and drag the background to pan
-    """)
-
-    # Add footer
-    st.markdown("---")
-    st.markdown("*© 2024 Government Technology Agency (GovTech)*")
