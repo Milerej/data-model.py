@@ -359,15 +359,22 @@ net.set_options('{' + '''
     },
     "edges": {
         "smooth": {
-            "type": "continuous",
-            "forceDirection": "none"
+            "type": "curvedCW",
+            "roundness": 0.2,
+            "forceDirection": "horizontal"
         },
         "length": 300,
         "font": {
             "size": 11,
             "strokeWidth": 2,
             "strokeColor": "#ffffff"
-        }
+        },
+        "color": {
+            "inherit": false,
+            "color": "#2E7D32",
+            "opacity": 0.8
+        },
+        "width": 1.5
     },
     "nodes": {
         "font": {
