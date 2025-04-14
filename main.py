@@ -358,199 +358,139 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
- # Create interactive PyVis network
+    # Create interactive PyVis network
     net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
 
-# Set options for better visualization
-net.set_options("""
-{
-    "physics": {
-        "enabled": true,
-        "stabilization": {
+    # Set options for better spacing and reduced overlapping
+    net.set_options("""
+    {
+        "physics": {
             "enabled": true,
-            "iterations": 2000,
-            "updateInterval": 25,
-            "onlyDynamicEdges": false,
-            "fit": true
+            "stabilization": {
+                "enabled": true,
+                "iterations": 2000,
+                "updateInterval": 25,
+                "onlyDynamicEdges": false,
+                "fit": true
+            },
+            "barnesHut": {
+                "gravitationalConstant": -60000,
+                "centralGravity": 0.1,
+                "springLength": 1000,
+                "springConstant": 0.08,
+                "damping": 0.12,
+                "avoidOverlap": 20
+            },
+            "minVelocity": 0.75,
+            "maxVelocity": 30
         },
-        "barnesHut": {
-            "gravitationalConstant": -60000,
-            "centralGravity": 0.1,
-            "springLength": 1000,
-            "springConstant": 0.08,
-            "damping": 0.12,
-            "avoidOverlap": 20
+        "edges": {
+            "smooth": {
+                "type": "curvedCW",
+                "roundness": 0.2,
+                "forceDirection": "horizontal"
+            },
+            "length": 300,
+            "font": {
+                "size": 11,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            },
+            "width": 1.5
         },
-        "minVelocity": 0.75,
-        "maxVelocity": 30
-    },
-    "edges": {
-        "smooth": {
-            "type": "curvedCW",
-            "roundness": 0.2,
-            "forceDirection": "horizontal"
+        "nodes": {
+            "font": {
+                "size": 12,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "margin": 12,
+            "scaling": {
+                "min": 10,
+                "max": 30
+            },
+            "fixed": {
+                "x": false,
+                "y": false
+            }
         },
-        "length": 300,
-        "font": {
-            "size": 11,
-            "strokeWidth": 2,
-            "strokeColor": "#ffffff"
-        },
-        "color": {
-            "inherit": false,
-            "color": "#2E7D32",
-            "opacity": 0.8
-        },
-        "width": 1.5
-    },
-    "nodes": {
-        "font": {
-            "size": 12,
-            "strokeWidth": 2,
-            "strokeColor": "#ffffff"
-        },
-        "margin": 12,
-        "scaling": {
-            "min": 10,
-            "max": 30
-        },
-        "fixed": {
-            "x": false,
-            "y": false
-        }
-    },
-    "layout": {
-        "improvedLayout": true,
-        "randomSeed": 42,
-        "hierarchical": {
-            "enabled": false,
-            "nodeSpacing": 300,
-            "levelSeparation": 300,
-            "treeSpacing": 300
+        "layout": {
+            "improvedLayout": true,
+            "randomSeed": 42,
+            "hierarchical": {
+                "enabled": false,
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
+            }
         }
     }
-}
-""")
+    """)
 
-# Save and display the network
-try:
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-        net.save_graph(tmp_file.name)
-        with open(tmp_file.name, 'r', encoding='utf-8') as f:
-            html_content = f.read()
-        
-        custom_html = """
-        <button 
-            style="position: fixed; top: 20px; right: 20px; z-index: 10000; padding: 8px 16px;
-                   background-color: #4CAF50; color: white; border: none; border-radius: 4px;
-                   cursor: pointer; font-family: Arial, sans-serif; font-size: 14px;"
-            onclick="toggleFullscreen()">
-            Full Screen
-        </button>
-        <script>
-            window.addEventListener('load', function() {
-                const container = document.getElementsByClassName('vis-network')[0];
-                const network = container.network;
-                
-                network.on("selectNode", function(params) {
-                    const selectedNode = params.nodes[0];
-                    const nodes = network.body.data.nodes.get();
-                    const edges = network.body.data.edges.get();
-                    
-                    // Dim all nodes and edges
-                    nodes.forEach(node => {
-                        network.body.data.nodes.update({
-                            id: node.id,
-                            color: {background: '#D3D3D3', border: '#D3D3D3'},
-                            opacity: 0.3
-                        });
-                    });
-                    
-                    edges.forEach(edge => {
-                        network.body.data.edges.update({
-                            id: edge.id,
-                            color: {color: '#D3D3D3', opacity: 0.3}
-                        });
-                    });
-                    
-                    // Get connected elements
-                    const connectedNodes = network.getConnectedNodes(selectedNode);
-                    const connectedEdges = network.getConnectedEdges(selectedNode);
-                    
-                    // Highlight selected node in red
-                    network.body.data.nodes.update({
-                        id: selectedNode,
-                        color: {background: '#FF0000', border: '#FF0000'},
-                        opacity: 1
-                    });
-                    
-                    // Highlight connected nodes and edges
-                    connectedNodes.forEach(nodeId => {
-                        network.body.data.nodes.update({
-                            id: nodeId,
-                            opacity: 1
-                        });
-                    });
-                    
-                    connectedEdges.forEach(edgeId => {
-                        network.body.data.edges.update({
-                            id: edgeId,
-                            color: {color: '#FF0000', opacity: 1}
-                        });
-                    });
-                });
-                
-                network.on("deselectNode", function() {
-                    const nodes = network.body.data.nodes.get();
-                    const edges = network.body.data.edges.get();
-                    
-                    // Reset all nodes and edges to original colors
-                    nodes.forEach(node => {
-                        network.body.data.nodes.update({
-                            id: node.id,
-                            color: node.originalColor || {background: '#2E7D32', border: '#2E7D32'},
-                            opacity: 1
-                        });
-                    });
-                    
-                    edges.forEach(edge => {
-                        network.body.data.edges.update({
-                            id: edge.id,
-                            color: {color: '#2E7D32', opacity: 0.8}
-                        });
-                    });
-                });
-            });
+       # Save and display the network
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net.save_graph(tmp_file.name)
+            with open(tmp_file.name, 'r', encoding='utf-8') as f:
+                html_content = f.read()
             
-            function toggleFullscreen() {
-                let elem = document.documentElement;
-                if (!document.fullscreenElement) {
-                    if (elem.requestFullscreen) {
-                        elem.requestFullscreen();
-                    } else if (elem.webkitRequestFullscreen) {
-                        elem.webkitRequestFullscreen();
-                    } else if (elem.msRequestFullscreen) {
-                        elem.msRequestFullscreen();
-                    }
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
+            # Insert the button and script just before the closing body tag
+            fullscreen_html = """
+            <button 
+                style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    padding: 8px 16px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                "
+                onclick="toggleFullscreen()"
+            >
+                Full Screen
+            </button>
+            <script>
+                function toggleFullscreen() {
+                    let elem = document.documentElement;
+                    
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) { /* Safari */
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) { /* IE11 */
+                            elem.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
                     }
                 }
-            }
-        </script>
-        """
-        
-        # Insert the custom HTML just before </body>
-        modified_html = html_content.replace('</body>', f'{custom_html}</body>')
-        
-        components.html(modified_html, height=900)
-        # Clean up the temporary file
-        os.unlink(tmp_file.name)
-except Exception as e:
-    st.error(f"An error occurred while generating the graph: {str(e)}")
+            </script>
+            """
+            
+            # Insert the button just before </body>
+            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
+            
+            components.html(modified_html, height=900)
+            # Clean up the temporary file
+            os.unlink(tmp_file.name)
+    except Exception as e:
+        st.error(f"An error occurred while generating the graph: {str(e)}")
