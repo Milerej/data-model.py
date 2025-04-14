@@ -84,7 +84,7 @@ if check_password():
             "title": "Hosting and System Dependencies Sub-Module"
         },
 
-        # System Overview Fields
+            # System Overview Fields
         "Agency": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Agency field"
@@ -172,7 +172,7 @@ if check_password():
             "title": "SNDGO Comments"
         },
 
-        # Security & Sensitivity Classification Fields
+            # Security & Sensitivity Classification Fields
         "Security Classification": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Security Classification field"
@@ -363,7 +363,8 @@ if check_password():
     net.from_nx(G)
 
     # Set options for better spacing and reduced overlapping
-    net.set_options('{' + '''
+    net.set_options("""
+    {
         "physics": {
             "enabled": true,
             "stabilization": {
@@ -388,4 +389,80 @@ if check_password():
             "smooth": {
                 "type": "curvedCW",
                 "roundness": 0.2,
-                "forceDirection": "
+                "forceDirection": "horizontal"
+            },
+            "length": 300,
+            "font": {
+                "size": 11,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            },
+            "width": 1.5
+        },
+        "nodes": {
+            "font": {
+                "size": 12,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "margin": 12,
+            "scaling": {
+                "min": 10,
+                "max": 30
+            },
+            "fixed": {
+                "x": false,
+                "y": false
+            }
+        },
+        "layout": {
+            "improvedLayout": true,
+            "randomSeed": 42,
+            "hierarchical": {
+                "enabled": false,
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
+            }
+        }
+    }
+    """)
+
+    # Save and display the network
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net.save_graph(tmp_file.name)
+            with open(tmp_file.name, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            components.html(html_content, height=900)
+            # Clean up the temporary file
+            os.unlink(tmp_file.name)
+    except Exception as e:
+        st.error(f"An error occurred while generating the graph: {str(e)}")
+
+    # Add description below the graph
+    st.markdown("""
+    ### Graph Description
+    This interactive graph represents the System Management data model structure:
+
+    - **Green Circle (Large)**: Main System Management module
+    - **Green Circles (Medium)**: Major sub-modules
+    - **Light Green Circles (Small)**: Individual fields within each sub-module
+    - **Arrows**: Show relationships and data flow between components
+    - **Labels on Arrows**: Describe the type of relationship
+
+    You can:
+    - Drag nodes to rearrange the view
+    - Zoom in/out using mouse wheel
+    - Hover over nodes for additional information
+    - Click and drag the background to pan
+    """)
+
+    # Add footer
+    st.markdown("---")
+    st.markdown("*© 2024 Government Technology Agency (GovTech)*")
