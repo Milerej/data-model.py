@@ -433,43 +433,48 @@ if check_password():
     }
     """)
 
-       # Save and display the network
+    # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
             with open(tmp_file.name, 'r', encoding='utf-8') as f:
                 html_content = f.read()
             
-            # Add fullscreen button HTML and JavaScript with adjusted padding
+            # Add fullscreen button HTML and JavaScript with adjusted padding and background
             fullscreen_html = """
             <style>
                 #graph-container {
                     width: 100%;
                     height: 100%;
+                    background-color: white;
                 }
                 
                 /* Style for fullscreen mode */
                 #graph-container:fullscreen {
                     height: 100vh !important;
                     padding: 20px 20px 0px 20px;
+                    background-color: white;
                 }
                 
                 /* Webkit browsers */
                 #graph-container:-webkit-full-screen {
                     height: 100vh !important;
                     padding: 20px 20px 0px 20px;
+                    background-color: white;
                 }
                 
                 /* Firefox */
                 #graph-container:-moz-full-screen {
                     height: 100vh !important;
                     padding: 20px 20px 0px 20px;
+                    background-color: white;
                 }
                 
                 /* IE11 */
                 #graph-container:-ms-fullscreen {
                     height: 100vh !important;
                     padding: 20px 20px 0px 20px;
+                    background-color: white;
                 }
             </style>
             <button id="fullscreen-btn" style="position: absolute; top: 10px; right: 10px; z-index: 999; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
