@@ -1,3 +1,28 @@
+import streamlit as st
+from pyvis.network import Network
+import networkx as nx
+import streamlit.components.v1 as components
+import tempfile
+import os
+
+# Set page config
+st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+
+# Add title
+st.title("⚙️ Data Model : System Management")
+
+# Create columns for layout
+col1, col2 = st.columns(2)
+
+# Define your entities and edges dictionaries here
+# [Previous entities and edges definitions remain the same]
+
+# Column 1 content
+with col1:
+    st.header("Interactive Graph")
+    # [Previous col1 code remains the same]
+
+# Column 2 content
 with col2:
     st.header("Sub-modules and Fields (List View)")
     
