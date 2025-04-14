@@ -433,7 +433,7 @@ if check_password():
     }
     """)
 
-    # Save and display the network
+       # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
@@ -451,7 +451,7 @@ if check_password():
                 /* Style for fullscreen mode */
                 #graph-container:fullscreen {
                     height: 100vh !important;
-                    padding: 20px 20px 0px 20px; /* top right bottom left */
+                    padding: 20px 20px 0px 20px;
                 }
                 
                 /* Webkit browsers */
@@ -498,3 +498,13 @@ if check_password():
                 });
             </script>
             """
+            
+            # Wrap the graph in a container and add the fullscreen button
+            modified_html = html_content.replace('<body>', '<body><div id="graph-container">')
+            modified_html = modified_html.replace('</body>', '</div>' + fullscreen_html + '</body>')
+            
+            components.html(modified_html, height=900)
+            # Clean up the temporary file
+            os.unlink(tmp_file.name)
+    except Exception as e:
+        st.error(f"An error occurred while generating the graph: {str(e)}")
