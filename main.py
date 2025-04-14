@@ -68,7 +68,19 @@ entities = {
         "color": "green", 
         "size": 15, 
         "shape": "dot",
-        "title": "Risk materiality assessment details"
+        "title": "\n".join([
+            "Fields:",
+                "• Computed Risk Materiality level (System Auto-generated)",
+                "• Computed RML",
+                "• Computed RML Date",
+                "• Agency Proposed Risk Materiality level",
+                "• In line with Computed Risk Materiality Level? (System Auto-generated)",
+                "• Justification (if not in line with computed",
+                "• Endorsed Risk Materiality level:",
+                "• Endorsed Risk Materiality level:",
+                "• Date Endorsed:",
+                "• Endorsed Comments"
+        ])
     },
     "System Resiliency": {
         "color": "green", 
