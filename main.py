@@ -43,7 +43,15 @@ entities = {
             "• Social Preparedness",
             "• Public Service",
             "• Designated CII under the Cybersecurity Act",
-            "• System Criticality (System Auto-generated)"
+            "• System Criticality (System Auto-generated) ",
+            "• IDSC's Approval Date (CA) ",
+            "• IDSC's Approval Attachment (CA) ",
+            "• Approved by MHA? ",
+            "• Approved by CSA? ",
+            "• Approved by SNDGO? ",
+            "• MHA Comments",
+            "• CSA Comments",
+            "• SNDGO Comments"
         ])
     },
     "Security & Sensitivity Classification": {
