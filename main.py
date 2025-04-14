@@ -86,7 +86,7 @@ entities = {
         "color": "green", 
         "size": 15, 
         "shape": "dot",
-          "title": "\n".join([
+        "title": "\n".join([
             "Fields:",
                 "• Service Availability"
         ])
