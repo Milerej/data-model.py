@@ -122,7 +122,7 @@ if check_password():
             "title": "Dependencies Management Sub-Group"
         },
 
-        # Fields
+            # Fields
         "Agency": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Agency field"
@@ -386,253 +386,177 @@ if check_password():
         ("Dependencies Management", "Inferred Dependencies", "", "")
     ]
 
-    # Create NetworkX graph
-    G = nx.DiGraph()
-    
-    # First, add all non-field nodes
-    for node, attributes in entities.items():
-        if attributes["size"] != 15:  # Only add modules and sub-modules first
-            node_attrs = {
-                "color": attributes["color"],
-                "size": attributes["size"],
-                "shape": attributes["shape"],
-                "title": attributes["title"],
-                "label": node,
-                "hidden": False
-            }
-            G.add_node(node, **node_attrs)
-    
-    # Then add all field nodes (hidden by default)
-    for node, attributes in entities.items():
-        if attributes["size"] == 15:  # Add fields (hidden)
-            node_attrs = {
-                "color": attributes["color"],
-                "size": attributes["size"],
-                "shape": attributes["shape"],
-                "title": attributes["title"],
-                "label": node,
-                "hidden": True
-            }
-            G.add_node(node, **node_attrs)
+    # Create network
+    net = Network(height='750px', width='100%', bgcolor='#ffffff', font_color='black')
+    net.force_atlas_2based()
+
+    # Add nodes
+    for entity, attributes in entities.items():
+        net.add_node(
+            entity, 
+            color=attributes["color"], 
+            size=attributes["size"],
+            title=attributes["title"],
+            shape=attributes["shape"]
+        )
 
     # Add edges
-    visible_edges = []
-    hidden_edges = []
-    for source, target, label, direction in edges:
-        # If either node is a field (size 15), add to hidden edges
-        if entities[source]["size"] == 15 or entities[target]["size"] == 15:
-            hidden_edges.append((source, target, label, direction))
-        else:
-            visible_edges.append((source, target, label, direction))
+    for edge in edges:
+        net.add_edge(edge[0], edge[1])
 
-    # Add visible edges first
-    for source, target, label, direction in visible_edges:
-        G.add_edge(source, target, title=label, label=label, arrows=direction, hidden=False)
+    # Generate HTML file
+    html_file = "network.html"
 
-    # Add hidden edges
-    for source, target, label, direction in hidden_edges:
-        G.add_edge(source, target, title=label, label=label, arrows=direction, hidden=True)
+    click_js = """
+    <div style="position: fixed; top: 20px; right: 180px; z-index: 10000;">
+        <button 
+            style="
+                padding: 8px 16px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+                margin-right: 10px;
+            "
+            onclick="expandAll()"
+        >
+            Expand All
+        </button>
+        <button 
+            style="
+                padding: 8px 16px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+            "
+            onclick="collapseAll()"
+        >
+            Collapse All
+        </button>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            collapseAll();
+        }, 1000);
+    });
 
-    # Create interactive PyVis network
-    net = Network(height="900px", width="100%", directed=True, notebook=True)
-    net.from_nx(G)
-
-    # Set options
-    net.set_options("""
-    {
-        "physics": {
-            "enabled": true,
-            "stabilization": {
-                "enabled": true,
-                "iterations": 2000,
-                "updateInterval": 25,
-                "onlyDynamicEdges": false,
-                "fit": true
-            },
-            "barnesHut": {
-                "gravitationalConstant": -60000,
-                "centralGravity": 0.1,
-                "springLength": 1000,
-                "springConstant": 0.08,
-                "damping": 0.12,
-                "avoidOverlap": 20
-            },
-            "minVelocity": 0.75,
-            "maxVelocity": 30
-        },
-        "edges": {
-            "smooth": {
-                "type": "curvedCW",
-                "roundness": 0.2,
-                "forceDirection": "horizontal"
-            },
-            "length": 300,
-            "font": {
-                "size": 11,
-                "strokeWidth": 2,
-                "strokeColor": "#ffffff"
-            },
-            "color": {
-                "inherit": false,
-                "color": "#2E7D32",
-                "opacity": 0.8
-            },
-            "width": 1.5
-        },
-        "nodes": {
-            "font": {
-                "size": 12,
-                "strokeWidth": 2,
-                "strokeColor": "#ffffff"
-            },
-            "margin": 12,
-            "scaling": {
-                "min": 10,
-                "max": 30
-            },
-            "fixed": {
-                "x": false,
-                "y": false
+    function collapseAll() {
+        var network = document.getElementsByClassName('vis-network')[0].__vis_network__;
+        var nodes = network.body.data.nodes.get();
+        var edges = network.body.data.edges.get();
+        
+        var nodeUpdates = [];
+        var edgeUpdates = [];
+        
+        nodes.forEach(function(node) {
+            if (node.size === 15) {
+                nodeUpdates.push({id: node.id, hidden: true});
             }
-        },
-        "interaction": {
-            "hover": true,
-            "navigationButtons": true,
-            "keyboard": true,
-            "hideEdgesOnDrag": true
-        },
-        "layout": {
-            "improvedLayout": true,
-            "randomSeed": 42,
-            "hierarchical": {
-                "enabled": false,
-                "nodeSpacing": 300,
-                "levelSeparation": 300,
-                "treeSpacing": 300
+        });
+        
+        edges.forEach(function(edge) {
+            var fromNode = nodes.find(n => n.id === edge.from);
+            var toNode = nodes.find(n => n.id === edge.to);
+            if ((fromNode && fromNode.size === 15) || (toNode && toNode.size === 15)) {
+                edgeUpdates.push({id: edge.id, hidden: true});
             }
-        }
+        });
+        
+        network.body.data.nodes.update(nodeUpdates);
+        network.body.data.edges.update(edgeUpdates);
     }
-    """)
 
-    # Save and display
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-            net.save_graph(tmp_file.name)
-            with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                html_content = f.read()
-            
-            # Add both fullscreen and click handling scripts
-            fullscreen_html = """
-            <button 
-                style="
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 10000;
-                    padding: 8px 16px;
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-family: Arial, sans-serif;
-                    font-size: 14px;
-                "
-                onclick="toggleFullscreen()"
-            >
-                Full Screen
-            </button>
-            <script>
-                function toggleFullscreen() {
-                    let elem = document.documentElement;
-                    if (!document.fullscreenElement) {
-                        if (elem.requestFullscreen) {
-                            elem.requestFullscreen();
-                        } else if (elem.webkitRequestFullscreen) {
-                            elem.webkitRequestFullscreen();
-                        } else if (elem.msRequestFullscreen) {
-                            elem.msRequestFullscreen();
-                        }
-                    } else {
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) {
-                            document.msExitFullscreen();
-                        }
-                    }
-                }
-            </script>
-            """
-
-            click_js = """
-            <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Hide all field nodes and their edges on initial load
-                var network = document.getElementsByClassName('vis-network')[0].__vis_network__;
-                var nodes = network.body.data.nodes.get();
-                var edges = network.body.data.edges.get();
-                
-                nodes.forEach(function(node) {
-                    if (node.size === 15) {
-                        network.body.data.nodes.update({id: node.id, hidden: true});
-                    }
-                });
-                
-                edges.forEach(function(edge) {
-                    var fromNode = nodes.find(n => n.id === edge.from);
-                    var toNode = nodes.find(n => n.id === edge.to);
-                    if ((fromNode && fromNode.size === 15) || (toNode && toNode.size === 15)) {
-                        network.body.data.edges.update({id: edge.id, hidden: true});
-                    }
-                });
-            });
-
-            function toggleConnectedNodes(nodeId) {
-                var network = document.getElementsByClassName('vis-network')[0].__vis_network__;
-                var connectedNodes = network.getConnectedNodes(nodeId);
-                var connectedEdges = network.getConnectedEdges(nodeId);
-                var allNodes = network.body.data.nodes.get();
-                var nodeUpdates = [];
-                var edgeUpdates = [];
-                
-                // Find the clicked node
-                var clickedNode = allNodes.find(n => n.id === nodeId);
-                if (clickedNode.size === 15) return; // Don't toggle if clicking on a field node
-                
-                connectedNodes.forEach(function(connectedNodeId) {
-                    var node = allNodes.find(n => n.id === connectedNodeId);
-                    if (node && node.size === 15) {
-                        nodeUpdates.push({id: connectedNodeId, hidden: !node.hidden});
-                    }
-                });
-                
-                connectedEdges.forEach(function(edgeId) {
-                    var edge = network.body.data.edges.get(edgeId);
-                    var fromNode = allNodes.find(n => n.id === edge.from);
-                    var toNode = allNodes.find(n => n.id === edge.to);
-                    if ((fromNode && fromNode.size === 15) || (toNode && toNode.size === 15)) {
-                        edgeUpdates.push({id: edgeId, hidden: !edge.hidden});
-                    }
-                });
-                
-                network.body.data.nodes.update(nodeUpdates);
-                network.body.data.edges.update(edgeUpdates);
+    function expandAll() {
+        var network = document.getElementsByClassName('vis-network')[0].__vis_network__;
+        var nodes = network.body.data.nodes.get();
+        var edges = network.body.data.edges.get();
+        
+        var nodeUpdates = [];
+        var edgeUpdates = [];
+        
+        nodes.forEach(function(node) {
+            if (node.size === 15) {
+                nodeUpdates.push({id: node.id, hidden: false});
             }
+        });
+        
+        edges.forEach(function(edge) {
+            var fromNode = nodes.find(n => n.id === edge.from);
+            var toNode = nodes.find(n => n.id === edge.to);
+            if ((fromNode && fromNode.size === 15) || (toNode && toNode.size === 15)) {
+                edgeUpdates.push({id: edge.id, hidden: false});
+            }
+        });
+        
+        network.body.data.nodes.update(nodeUpdates);
+        network.body.data.edges.update(edgeUpdates);
+    }
 
-            document.getElementsByClassName('vis-network')[0].addEventListener('click', function(e) {
-                var network = this.__vis_network__;
-                var selection = network.getNodeAt(e.pointer.DOM);
-                if (selection !== undefined) {
-                    toggleConnectedNodes(selection);
-                }
-            });
-            </script>
-            """
-            
-            modified_html = html_content.replace('</body>', f'{fullscreen_html}{click_js}</body>')
-            components.html(modified_html, height=900)
-            os.unlink(tmp_file.name)
-    except Exception as e:
-        st.error(f"An error occurred while generating the graph: {str(e)}")
+    function toggleConnectedNodes(nodeId) {
+        var network = document.getElementsByClassName('vis-network')[0].__vis_network__;
+        var connectedNodes = network.getConnectedNodes(nodeId);
+        var connectedEdges = network.getConnectedEdges(nodeId);
+        var allNodes = network.body.data.nodes.get();
+        var nodeUpdates = [];
+        var edgeUpdates = [];
+        
+        // Find the clicked node
+        var clickedNode = allNodes.find(n => n.id === nodeId);
+        if (clickedNode.size === 15) return; // Don't toggle if clicking on a field node
+        
+        connectedNodes.forEach(function(connectedNodeId) {
+            var node = allNodes.find(n => n.id === connectedNodeId);
+            if (node && node.size === 15) {
+                nodeUpdates.push({id: connectedNodeId, hidden: !node.hidden});
+            }
+        });
+        
+        connectedEdges.forEach(function(edgeId) {
+            var edge = network.body.data.edges.get(edgeId);
+            var fromNode = allNodes.find(n => n.id === edge.from);
+            var toNode = allNodes.find(n => n.id === edge.to);
+            if ((fromNode && fromNode.size === 15) || (toNode && toNode.size === 15)) {
+                edgeUpdates.push({id: edgeId, hidden: !edge.hidden});
+            }
+        });
+        
+        network.body.data.nodes.update(nodeUpdates);
+        network.body.data.edges.update(edgeUpdates);
+    }
+
+    document.getElementsByClassName('vis-network')[0].addEventListener('click', function(e) {
+        var network = this.__vis_network__;
+        var selection = network.getNodeAt(e.pointer.DOM);
+        if (selection !== undefined) {
+            toggleConnectedNodes(selection);
+        }
+    });
+    </script>
+    """
+
+    # Save and read the network
+    net.save_graph(html_file)
+    
+    with open(html_file, 'r', encoding='utf-8') as f:
+        html_content = f.read()
+        
+    # Insert the click handling JavaScript just before the </body> tag
+    modified_html = html_content.replace('</body>', f'{click_js}</body>')
+    
+    with open(html_file, 'w', encoding='utf-8') as f:
+        f.write(modified_html)
+
+    # Display the network in Streamlit
+    with open(html_file, 'r', encoding='utf-8') as f:
+        components.html(f.read(), height=800)
+
+    # Clean up the temporary file
+    os.remove(html_file)
