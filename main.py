@@ -5,9 +5,6 @@ import streamlit.components.v1 as components
 import tempfile
 import os
 
-# Clear cache at start
-st.cache_data.clear()
-st.cache_resource.clear()
 
 def check_password():
     """Returns `True` if the user had the correct password."""
@@ -37,8 +34,11 @@ def check_password():
         # Password correct.
         return True
 
-@st.cache_data
-def create_network_data():
+if check_password():
+    st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+
+    st.title("⚙️ Data Model : System Management")
+
     # Define entity modules and colors
     entities = {
         "System Management": {
@@ -72,22 +72,322 @@ def create_network_data():
             "shape": "dot",
             "title": "Hosting and System Dependencies Sub-Module"
         },
-        # [Rest of your entities dictionary...]
+
+        # Sub-groups
+        "Basic Information": {
+            "color": "Light Green", 
+            "size": 12, 
+            "shape": "dot",
+            "title": "Basic Information Sub-Group"
+        },
+        "Organizational Context": {
+            "color": "Light Green", 
+            "size": 12, 
+            "shape": "dot",
+            "title": "Organizational Context Sub-Group"
+        },
+        "Classification": {
+            "color": "Light Green", 
+            "size": 12, 
+            "shape": "dot",
+            "title": "Classification Sub-Group"
+        },
+        "Impact Assessment": {
+            "color": "Light Green", 
+            "size": 12, 
+            "shape": "dot",
+            "title": "Impact Assessment Sub-Group"
+        },
+        "Risk Profile": {
+            "color": "Light Green", 
+            "size": 12, 
+            "shape": "dot",
+            "title": "Risk Profile Sub-Group"
+        },
+        "SCA/RML Approval": {
+            "color": "Light Green", 
+            "size": 12, 
+            "shape": "dot",
+            "title": "SCA/RML Approval Sub-Group"
+        },
+        "Availability & Recovery": {
+            "color": "Light Green", 
+            "size": 12, 
+            "shape": "dot",
+            "title": "Availability & Recovery Sub-Group"
+        },
+        "Dependencies Management": {
+            "color": "Light Green", 
+            "size": 12, 
+            "shape": "dot",
+            "title": "Dependencies Management Sub-Group"
+        },
+
+        # Fields (all the existing fields remain the same)
+        "Agency": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Agency field"
+        },
+        "Ministry Family": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Ministry Family field"
+        },
+        "System ID": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "System ID (Primary Key)"
+        },
+        "System Name": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "System Name field"
+        },
+        "System Description": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "System Description field"
+        },
+        "System Status": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "System Status field"
+        },
+        "Security Classification": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Security Classification field"
+        },
+        "Sensitivity Classification": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Sensitivity Classification field"
+        },
+        "Economy": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Economy impact field"
+        },
+        "Public Health and Safety": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Public Health and Safety field"
+        },
+        "National Security": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "National Security field"
+        },
+        "Social Preparedness": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Social Preparedness field"
+        },
+        "Public Service": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Public Service field"
+        },
+        "System Criticality": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "System Criticality (Auto-generated)"
+        },
+        "Designated CII": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Designated CII under Cybersecurity Act"
+        },
+        "Computed RML": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Computed Risk Materiality Level"
+        },
+        "Computed RML Date": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Computed RML Date"
+        },
+        "Agency Proposed RML": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "Agency Proposed Risk Materiality Level"
+        },
+        "RML Alignment": {
+            "color": "Light Green", "size": 6, "shape": "dot",
+            "title": "In line with Computed RML?"
+        },
+        "RML Justification": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Justification if not in line"
+        },
+        "Endorsed RML": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Endorsed Risk Materiality Level"
+        },
+        "RML Endorsement Date": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Date Endorsed"
+        },
+        "Endorsement Comments": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Endorsed Comments"
+        },
+        "IDSC Approval Date": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "IDSC's Approval Date"
+        },
+        "IDSC Approval Attachment": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "IDSC's Approval Attachment"
+        },
+        "MHA Approval": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Approved by MHA?"
+        },
+        "CSA Approval": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Approved by CSA?"
+        },
+        "SNDGO Approval": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Approved by SNDGO?"
+        },
+        "MHA Comments": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "MHA Comments"
+        },
+        "CSA Comments": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "CSA Comments"
+        },
+        "SNDGO Comments": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "SNDGO Comments"
+        },
+        "Service Availability": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Service Availability"
+        },
+        "RTO": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Recovery Time Objective"
+        },
+        "RPO": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Recovery Point Objective"
+        },
+        "Total Dependencies": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Total Dependencies"
+        },
+        "Downstream Impact": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Downstream Impact"
+        },
+        "Direct Dependencies Count": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Direct Dependencies Count"
+        },
+        "Dependency ID": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Dependency ID"
+        },
+        "Dependency Status": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Dependency Status"
+        },
+        "Dependency Type": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Dependency Type"
+        },
+        "Upstream System": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Upstream System"
+        },
+        "Dependent System": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Dependent System"
+        },
+        "Data Exchange Frequency": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Data Exchange Frequency"
+        },
+        "Inferred Dependencies": {
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
+            "title": "Inferred Dependencies"
+        }
     }
 
-    # Define edges with the hierarchical structure
+    # Define edges with the new hierarchical structure
     edges = [
         # Main module connections
         ("System Management", "System Identity & Classification", "", ""),
         ("System Management", "Criticality & Risk", "", ""),
         ("System Management", "System Resilience", "", ""),
         ("System Management", "Hosting and System Dependencies", "", ""),
-        # [Rest of your edges list...]
+
+        # System Identity & Classification sub-group connections
+        ("System Identity & Classification", "Basic Information", "", ""),
+        ("System Identity & Classification", "Organizational Context", "", ""),
+        ("System Identity & Classification", "Classification", "", ""),
+
+        # Basic Information connections
+        ("Basic Information", "System ID", "", ""),
+        ("Basic Information", "System Name", "", ""),
+        ("Basic Information", "System Description", "", ""),
+        ("Basic Information", "System Status", "", ""),
+
+        # Organizational Context connections
+        ("Organizational Context", "Agency", "", ""),
+        ("Organizational Context", "Ministry Family", "", ""),
+
+        # Classification connections
+        ("Classification", "Security Classification", "", ""),
+        ("Classification", "Sensitivity Classification", "", ""),
+
+        # Criticality & Risk sub-group connections
+        ("Criticality & Risk", "Impact Assessment", "", ""),
+        ("Criticality & Risk", "Risk Profile", "", ""),
+        ("Criticality & Risk", "SCA/RML Approval", "", ""),
+
+        # Impact Assessment connections
+        ("Impact Assessment", "Economy", "", ""),
+        ("Impact Assessment", "Public Health and Safety", "", ""),
+        ("Impact Assessment", "National Security", "", ""),
+        ("Impact Assessment", "Social Preparedness", "", ""),
+        ("Impact Assessment", "Public Service", "", ""),
+        ("Impact Assessment", "System Criticality", "", ""),
+        ("Impact Assessment", "Designated CII", "", ""),
+
+        # Risk Profile connections
+        ("Risk Profile", "Computed RML", "", ""),
+        ("Risk Profile", "Computed RML Date", "", ""),
+        ("Risk Profile", "Agency Proposed RML", "", ""),
+        ("Risk Profile", "RML Alignment", "", ""),
+        ("Risk Profile", "RML Justification", "", ""),
+        ("Risk Profile", "Endorsed RML", "", ""),
+        ("Risk Profile", "RML Endorsement Date", "", ""),
+        ("Risk Profile", "Endorsement Comments", "", ""),
+        ("Computed RML", "System Criticality", "", ""),
+        ("Computed RML", "Security Classification", "", ""),
+        ("Computed RML", "Sensitivity Classification", "", ""),
+        ("Computed RML", "Inferred Dependencies", "", ""),
+
+        
+        # SCA/RML Approval connections
+        ("SCA/RML Approval", "IDSC Approval Date", "", ""),
+        ("SCA/RML Approval", "IDSC Approval Attachment", "", ""),
+        ("SCA/RML Approval", "MHA Approval", "", ""),
+        ("SCA/RML Approval", "CSA Approval", "", ""),
+        ("SCA/RML Approval", "SNDGO Approval", "", ""),
+        ("SCA/RML Approval", "MHA Comments", "", ""),
+        ("SCA/RML Approval", "CSA Comments", "", ""),
+        ("SCA/RML Approval", "SNDGO Comments", "", ""),
+
+        # System Resilience sub-group connections
+        ("System Resilience", "Availability & Recovery", "", ""),
+        ("Availability & Recovery", "Service Availability", "", ""),
+        ("Availability & Recovery", "RTO", "", ""),
+        ("Availability & Recovery", "RPO", "", ""),
+
+        # Hosting and System Dependencies sub-group connections
+        ("Hosting and System Dependencies", "Dependencies Management", "", ""),
+        ("Dependencies Management", "Total Dependencies", "", ""),
+        ("Dependencies Management", "Downstream Impact", "", ""),
+        ("Dependencies Management", "Direct Dependencies Count", "", ""),
+        ("Dependencies Management", "Dependency ID", "", ""),
+        ("Dependencies Management", "Dependency Status", "", ""),
+        ("Dependencies Management", "Dependency Type", "", ""),
+        ("Dependencies Management", "Upstream System", "", ""),
+        ("Dependencies Management", "Dependent System", "", ""),
+        ("Dependencies Management", "Data Exchange Frequency", "", ""),
+        ("Dependencies Management", "Inferred Dependencies", "", "")
     ]
 
-    return entities, edges
-
-def create_network_graph(entities, edges):
     # Create NetworkX graph
     G = nx.DiGraph()
     for node, attributes in entities.items():
@@ -100,7 +400,7 @@ def create_network_graph(entities, edges):
         }
         G.add_node(node, **node_attrs)
 
-    # Add edges
+    # Add edges with labels and custom arrow directions
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
@@ -108,7 +408,7 @@ def create_network_graph(entities, edges):
     net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
 
-    # Set options
+    # Set options for better spacing and reduced overlapping
     net.set_options("""
     {
         "physics": {
@@ -179,93 +479,64 @@ def create_network_graph(entities, edges):
     }
     """)
 
-    return net
-
-def display_network(net):
-    """Function to display the network with fullscreen capability"""
-    with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.html', encoding='utf-8') as tmp_file:
-        net.save_graph(tmp_file.name)
-        with open(tmp_file.name, 'r', encoding='utf-8') as f:
-            html_content = f.read()
-        
-        fullscreen_html = """
-        <button 
-            style="
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 10000;
-                padding: 8px 16px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-family: Arial, sans-serif;
-                font-size: 14px;
-            "
-            onclick="toggleFullscreen()"
-        >
-            Full Screen
-        </button>
-        <script>
-            function toggleFullscreen() {
-                let elem = document.documentElement;
-                if (!document.fullscreenElement) {
-                    if (elem.requestFullscreen) {
-                        elem.requestFullscreen();
-                    } else if (elem.webkitRequestFullscreen) {
-                        elem.webkitRequestFullscreen();
-                    } else if (elem.msRequestFullscreen) {
-                        elem.msRequestFullscreen();
-                    }
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
+    # Save and display the network
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net.save_graph(tmp_file.name)
+            with open(tmp_file.name, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            
+            # Insert the button and script just before the closing body tag
+            fullscreen_html = """
+            <button 
+                style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    padding: 8px 16px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                "
+                onclick="toggleFullscreen()"
+            >
+                Full Screen
+            </button>
+            <script>
+                function toggleFullscreen() {
+                    let elem = document.documentElement;
+                    
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) { /* Safari */
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) { /* IE11 */
+                            elem.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
                     }
                 }
-            }
-        </script>
-        """
-        
-        modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
-        
-    try:
-        components.html(modified_html, height=900)
-    finally:
-        # Clean up the temporary file
-        try:
+            </script>
+            """
+            
+            # Insert the button just before </body>
+            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
+            
+            components.html(modified_html, height=900)
+            # Clean up the temporary file
             os.unlink(tmp_file.name)
-        except:
-            pass
-
-def main():
-    if 'graph_version' not in st.session_state:
-        st.session_state.graph_version = 0
-
-    if check_password():
-        st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
-        
-        # Add title and refresh button in the same row
-        col1, col2 = st.columns([6, 1])
-        with col1:
-            st.title("⚙️ Data Model : System Management (V2.1)")
-        with col2:
-            if st.button('Refresh Graph'):
-                st.session_state.graph_version += 1
-                st.experimental_rerun()
-
-        # Create and display the network
-        try:
-            entities, edges = create_network_data()
-            net = create_network_graph(entities, edges)
-            display_network(net)
-        except Exception as e:
-            st.error(f"An error occurred while generating the graph: {str(e)}")
-
-if __name__ == "__main__":
-    main()
+    except Exception as e:
+        st.error(f"An error occurred while generating the graph: {str(e)}
