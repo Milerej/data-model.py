@@ -41,32 +41,32 @@ if check_password():
     # Define entity modules and colors
     entities = {
         "System Management": {
-            "color": "#2E7D32", 
+            "color": "Dark Green", 
             "size": 50, 
             "shape": "dot",
             "title": "System Management Module"
         },
         # Main Modules
         "System Identity & Classification": {
-            "color": "#4CAF50", 
+            "color": "Green", 
             "size": 25, 
             "shape": "dot",
             "title": "System Identity & Classification Sub-Module"
         },
         "Criticality & Risk": {
-            "color": "#4CAF50", 
+            "color": "Green", 
             "size": 25,
             "shape": "dot",
             "title": "Criticality & Risk Sub-Module"
         },
         "System Resilience": {
-            "color": "#4CAF50", 
+            "color": "Green", 
             "size": 25,
             "shape": "dot",
             "title": "System Resilience Sub-Module"
         },
         "Hosting and System Dependencies": {
-            "color": "#4CAF50", 
+            "color": "Green", 
             "size": 25,
             "shape": "dot",
             "title": "Hosting and System Dependencies Sub-Module"
@@ -74,229 +74,229 @@ if check_password():
 
         # Sub-groups
         "Basic Information": {
-            "color": "#66BB6A", 
-            "size": 20, 
+            "color": "Light Green", 
+            "size": 12, 
             "shape": "dot",
             "title": "Basic Information Sub-Group"
         },
         "Organizational Context": {
-            "color": "#66BB6A", 
-            "size": 20, 
+            "color": "Light Green", 
+            "size": 12, 
             "shape": "dot",
             "title": "Organizational Context Sub-Group"
         },
         "Classification": {
-            "color": "#66BB6A", 
-            "size": 20, 
+            "color": "Light Green", 
+            "size": 12, 
             "shape": "dot",
             "title": "Classification Sub-Group"
         },
         "Impact Assessment": {
-            "color": "#66BB6A", 
-            "size": 20, 
+            "color": "Light Green", 
+            "size": 12, 
             "shape": "dot",
             "title": "Impact Assessment Sub-Group"
         },
         "Risk Profile": {
-            "color": "#66BB6A", 
-            "size": 20, 
+            "color": "Light Green", 
+            "size": 12, 
             "shape": "dot",
             "title": "Risk Profile Sub-Group"
         },
         "SCA/RML Approval": {
-            "color": "#66BB6A", 
-            "size": 20, 
+            "color": "Light Green", 
+            "size": 12, 
             "shape": "dot",
             "title": "SCA/RML Approval Sub-Group"
         },
         "Availability & Recovery": {
-            "color": "#66BB6A", 
-            "size": 20, 
+            "color": "Light Green", 
+            "size": 12, 
             "shape": "dot",
             "title": "Availability & Recovery Sub-Group"
         },
         "Dependencies Management": {
-            "color": "#66BB6A", 
-            "size": 20, 
+            "color": "Light Green", 
+            "size": 12, 
             "shape": "dot",
             "title": "Dependencies Management Sub-Group"
         },
 
         # Fields (all the existing fields remain the same)
         "Agency": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Agency field"
         },
         "Ministry Family": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Ministry Family field"
         },
         "System ID": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "System ID (Primary Key)"
         },
         "System Name": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "System Name field"
         },
         "System Description": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "System Description field"
         },
         "System Status": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "System Status field"
         },
         "Security Classification": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Security Classification field"
         },
         "Sensitivity Classification": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Sensitivity Classification field"
         },
         "Economy": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Economy impact field"
         },
         "Public Health and Safety": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Public Health and Safety field"
         },
         "National Security": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "National Security field"
         },
         "Social Preparedness": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Social Preparedness field"
         },
         "Public Service": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Public Service field"
         },
         "System Criticality": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "System Criticality (Auto-generated)"
         },
         "Designated CII": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Designated CII under Cybersecurity Act"
         },
         "Computed RML": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Computed Risk Materiality Level"
         },
         "Computed RML Date": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Computed RML Date"
         },
         "Agency Proposed RML": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "Agency Proposed Risk Materiality Level"
         },
         "RML Alignment": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            "color": "Light Green", "size": 6, "shape": "dot",
             "title": "In line with Computed RML?"
         },
         "RML Justification": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Justification if not in line"
         },
         "Endorsed RML": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Endorsed Risk Materiality Level"
         },
         "RML Endorsement Date": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Date Endorsed"
         },
         "Endorsement Comments": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Endorsed Comments"
         },
         "IDSC Approval Date": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "IDSC's Approval Date"
         },
         "IDSC Approval Attachment": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "IDSC's Approval Attachment"
         },
         "MHA Approval": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Approved by MHA?"
         },
         "CSA Approval": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Approved by CSA?"
         },
         "SNDGO Approval": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Approved by SNDGO?"
         },
         "MHA Comments": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "MHA Comments"
         },
         "CSA Comments": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "CSA Comments"
         },
         "SNDGO Comments": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "SNDGO Comments"
         },
         "Service Availability": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Service Availability"
         },
         "RTO": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Recovery Time Objective"
         },
         "RPO": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Recovery Point Objective"
         },
         "Total Dependencies": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Total Dependencies"
         },
         "Downstream Impact": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Downstream Impact"
         },
         "Direct Dependencies Count": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Direct Dependencies Count"
         },
         "Dependency ID": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Dependency ID"
         },
         "Dependency Status": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Dependency Status"
         },
         "Dependency Type": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Dependency Type"
         },
         "Upstream System": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Upstream System"
         },
         "Dependent System": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Dependent System"
         },
         "Data Exchange Frequency": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Data Exchange Frequency"
         },
         "Inferred Dependencies": {
-            "color": "#81C784", "size": 15, "shape": "dot",
+            “color”: “Light Green”, “size”: 6, “shape”: “dot”,
             "title": "Inferred Dependencies"
         }
     }
