@@ -253,7 +253,7 @@ def main():
         # Add title and refresh button in the same row
         col1, col2 = st.columns([6, 1])
         with col1:
-            st.title("⚙️ Data Model : System Management")
+            st.title("⚙️ Data Model : System Management (V2.1)")
         with col2:
             if st.button('Refresh Graph'):
                 st.session_state.graph_version += 1
