@@ -351,6 +351,11 @@ if check_password():
         ("Risk Profile", "Endorsed RML", "", ""),
         ("Risk Profile", "RML Endorsement Date", "", ""),
         ("Risk Profile", "Endorsement Comments", "", ""),
+        ("Computed RML", "System Criticality", "", ""),
+        ("Computed RML", "Security Classification", "", ""),
+        ("Computed RML", "Sensitivity Classification", "", ""),
+        ("Computed RML", "Inferred Dependencies", "", ""),
+
         
         # SCA/RML Approval connections
         ("SCA/RML Approval", "IDSC Approval Date", "", ""),
