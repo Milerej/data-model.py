@@ -5,7 +5,6 @@ import streamlit.components.v1 as components
 import tempfile
 import os
 
-
 def check_password():
     """Returns `True` if the user had the correct password."""
 
@@ -539,4 +538,4 @@ if check_password():
             # Clean up the temporary file
             os.unlink(tmp_file.name)
     except Exception as e:
-        st.error(f"An error occurred while generating the graph: {str(e)}
+        st.error(f"An error occurred while generating the graph: {str(e)}")
