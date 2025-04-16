@@ -27,7 +27,7 @@ def check_password():
         st.text_input(
             "Password", type="password", on_change=password_entered, key="password"
         )
-        st.error("⚠️ Password incorrect")
+        st.error("😕 Password incorrect")
         return False
     else:
         # Password correct.
@@ -42,7 +42,7 @@ if check_password():
     entities = {
         "System Management": {
             "color": "#2E7D32", 
-            "size": 50, 
+            "size": 35, 
             "shape": "dot",
             "title": "System Management Module"
         },
@@ -84,7 +84,7 @@ if check_password():
             "title": "Hosting and System Dependencies Sub-Module"
         },
 
-            # System Overview Fields
+        # System Overview Fields
         "Agency": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Agency field"
@@ -172,7 +172,7 @@ if check_password():
             "title": "SNDGO Comments"
         },
 
-            # Security & Sensitivity Classification Fields
+        # Security & Sensitivity Classification Fields
         "Security Classification": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Security Classification field"
@@ -276,70 +276,70 @@ if check_password():
     # Define edges with PK/FK relationships
     edges = [
         # Main module connections
-        ("System Management", "System Overview", "", ""),
-        ("System Management", "Criticality Assessment", "", ""),
-        ("System Management", "Security & Sensitivity Classification",  "", ""),
-        ("System Management", "System Resiliency", "", ""),
-        ("System Management", "Hosting and System Dependencies", "", ""),
-        ("Risk Materiality Level", "Security & Sensitivity Classification", "", ""),
-        ("Risk Materiality Level", "Hosting and System Dependencies", "", ""),
-        ("Risk Materiality Level", "Criticality Assessment", "", ""),
+        ("System Management", "System Overview", "PK: System_ID", "both"),
+        ("System Management", "Criticality Assessment", "PK: System_ID", "both"),
+        ("System Management", "Security & Sensitivity Classification", "PK: System_ID", "both"),
+        ("System Management", "System Resiliency", "PK: System_ID", "both"),
+        ("System Management", "Hosting and System Dependencies", "PK: System_ID", "both"),
+        ("Risk Materiality Level", "Security & Sensitivity Classification", "relates to", "both"),
+        ("Risk Materiality Level", "Hosting and System Dependencies", "relates to", "both"),
+        ("Risk Materiality Level", "Criticality Assessment", "relates to", "both"),
 
         # System Overview field connections
-        ("System Overview", "Agency", "", ""),
-        ("System Overview", "Ministry Family", "", ""),
-        ("System Overview", "System ID", "", ""),
-        ("System Overview", "System Name", "", ""),
-        ("System Overview", "System Description", "", ""),
-        ("System Overview", "System Status", "", ""),
+        ("System Overview", "Agency", "contains", "to"),
+        ("System Overview", "Ministry Family", "contains", "to"),
+        ("System Overview", "System ID", "contains", "to"),
+        ("System Overview", "System Name", "contains", "to"),
+        ("System Overview", "System Description", "contains", "to"),
+        ("System Overview", "System Status", "contains", "to"),
 
         # Criticality Assessment field connections
-        ("Criticality Assessment", "Economy", "", ""),
-        ("Criticality Assessment", "Public Health and Safety", "", ""),
-        ("Criticality Assessment", "National Security", "", ""),
-        ("Criticality Assessment", "Social Preparedness", "", ""),
-        ("Criticality Assessment", "Public Service", "", ""),
-        ("Criticality Assessment", "Designated CII", "", ""),
-        ("Criticality Assessment", "System Criticality", "", ""),
-        ("Criticality Assessment", "IDSC Approval Date", "", ""),
-        ("Criticality Assessment", "IDSC Approval Attachment", "", ""),
-        ("Criticality Assessment", "MHA Approval", "", ""),
-        ("Criticality Assessment", "CSA Approval", "", ""),
-        ("Criticality Assessment", "SNDGO Approval", "", ""),
-        ("Criticality Assessment", "MHA Comments", "", ""),
-        ("Criticality Assessment", "CSA Comments", "", ""),
-        ("Criticality Assessment", "SNDGO Comments", "", ""),
+        ("Criticality Assessment", "Economy", "contains", "to"),
+        ("Criticality Assessment", "Public Health and Safety", "contains", "to"),
+        ("Criticality Assessment", "National Security", "contains", "to"),
+        ("Criticality Assessment", "Social Preparedness", "contains", "to"),
+        ("Criticality Assessment", "Public Service", "contains", "to"),
+        ("Criticality Assessment", "Designated CII", "contains", "to"),
+        ("Criticality Assessment", "System Criticality", "contains", "to"),
+        ("Criticality Assessment", "IDSC Approval Date", "contains", "to"),
+        ("Criticality Assessment", "IDSC Approval Attachment", "contains", "to"),
+        ("Criticality Assessment", "MHA Approval", "contains", "to"),
+        ("Criticality Assessment", "CSA Approval", "contains", "to"),
+        ("Criticality Assessment", "SNDGO Approval", "contains", "to"),
+        ("Criticality Assessment", "MHA Comments", "contains", "to"),
+        ("Criticality Assessment", "CSA Comments", "contains", "to"),
+        ("Criticality Assessment", "SNDGO Comments", "contains", "to"),
 
         # Security & Sensitivity Classification field connections
-        ("Security & Sensitivity Classification", "Security Classification", "", ""),
-        ("Security & Sensitivity Classification", "Sensitivity Classification", "", ""),
+        ("Security & Sensitivity Classification", "Security Classification", "contains", "to"),
+        ("Security & Sensitivity Classification", "Sensitivity Classification", "contains", "to"),
 
         # Risk Materiality Level field connections
-        ("Risk Materiality Level", "Computed RML", "", ""),
-        ("Risk Materiality Level", "Computed RML Date", "", ""),
-        ("Risk Materiality Level", "Agency Proposed RML", "", ""),
-        ("Risk Materiality Level", "RML Alignment", "", ""),
-        ("Risk Materiality Level", "RML Justification", "", ""),
-        ("Risk Materiality Level", "Endorsed RML", "", ""),
-        ("Risk Materiality Level", "RML Endorsement Date", "", ""),
-        ("Risk Materiality Level", "Endorsement Comments", "", ""),
+        ("Risk Materiality Level", "Computed RML", "contains", "to"),
+        ("Risk Materiality Level", "Computed RML Date", "contains", "to"),
+        ("Risk Materiality Level", "Agency Proposed RML", "contains", "to"),
+        ("Risk Materiality Level", "RML Alignment", "contains", "to"),
+        ("Risk Materiality Level", "RML Justification", "contains", "to"),
+        ("Risk Materiality Level", "Endorsed RML", "contains", "to"),
+        ("Risk Materiality Level", "RML Endorsement Date", "contains", "to"),
+        ("Risk Materiality Level", "Endorsement Comments", "contains", "to"),
 
         # System Resiliency field connections
-        ("System Resiliency", "Service Availability", "", ""),
-        ("System Resiliency", "RTO", "", ""),
-        ("System Resiliency", "RPO", "", ""),
+        ("System Resiliency", "Service Availability", "contains", "to"),
+        ("System Resiliency", "RTO", "contains", "to"),
+        ("System Resiliency", "RPO", "contains", "to"),
 
         # Hosting and System Dependencies field connections
-        ("Hosting and System Dependencies", "Total Dependencies", "", ""),
-        ("Hosting and System Dependencies", "Downstream Impact", "", ""),
-        ("Hosting and System Dependencies", "Direct Dependencies Count", "", ""),
-        ("Hosting and System Dependencies", "Dependency ID", "", ""),
-        ("Hosting and System Dependencies", "Dependency Status", "", ""),
-        ("Hosting and System Dependencies", "Dependency Type", "", ""),
-        ("Hosting and System Dependencies", "Upstream System", "", ""),
-        ("Hosting and System Dependencies", "Dependent System", "", ""),
-        ("Hosting and System Dependencies", "Data Exchange Frequency", "", ""),
-        ("Hosting and System Dependencies", "Inferred Dependencies", "", "")
+        ("Hosting and System Dependencies", "Total Dependencies", "contains", "to"),
+        ("Hosting and System Dependencies", "Downstream Impact", "contains", "to"),
+        ("Hosting and System Dependencies", "Direct Dependencies Count", "contains", "to"),
+        ("Hosting and System Dependencies", "Dependency ID", "contains", "to"),
+        ("Hosting and System Dependencies", "Dependency Status", "contains", "to"),
+        ("Hosting and System Dependencies", "Dependency Type", "contains", "to"),
+        ("Hosting and System Dependencies", "Upstream System", "contains", "to"),
+        ("Hosting and System Dependencies", "Dependent System", "contains", "to"),
+        ("Hosting and System Dependencies", "Data Exchange Frequency", "contains", "to"),
+        ("Hosting and System Dependencies", "Inferred Dependencies", "contains", "to")
     ]
 
     # Create NetworkX graph
@@ -358,13 +358,12 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-    # Create interactive PyVis network
+    # Create interactive PyVis network with increased height
     net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
 
     # Set options for better spacing and reduced overlapping
-    net.set_options("""
-    {
+    net.set_options('{' + '''
         "physics": {
             "enabled": true,
             "stabilization": {
@@ -377,7 +376,7 @@ if check_password():
             "barnesHut": {
                 "gravitationalConstant": -60000,
                 "centralGravity": 0.1,
-                "springLength": 1000,
+                "springLength": 2000,
                 "springConstant": 0.08,
                 "damping": 0.12,
                 "avoidOverlap": 20
@@ -430,67 +429,108 @@ if check_password():
                 "treeSpacing": 300
             }
         }
-    }
-    """)
+    ''' + '}')
 
-       # Save and display the network
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-            net.save_graph(tmp_file.name)
-            with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                html_content = f.read()
+    # Customize edge labels and arrows
+    for edge in net.edges:
+        edge["label"] = edge.get("title", "")
+        if edge.get("arrows") == "both":
+            edge["arrows"] = "to,from"
+
+    # Add JavaScript for highlighting
+    highlight_js = """
+    network.on("click", function(params) {
+        if (params.nodes.length > 0) {
+            var selectedNode = params.nodes[0];
+            var connectedNodes = new Set([selectedNode]);
+            var connectedEdges = new Set();
             
-            # Insert the button and script just before the closing body tag
-            fullscreen_html = """
-            <button 
-                style="
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 10000;
-                    padding: 8px 16px;
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-family: Arial, sans-serif;
-                    font-size: 14px;
-                "
-                onclick="toggleFullscreen()"
-            >
-                Full Screen
-            </button>
+            network.getConnectedNodes(selectedNode).forEach(function(connectedNode) {
+                connectedNodes.add(connectedNode);
+                network.getConnectedEdges(selectedNode).forEach(function(edgeId) {
+                    connectedEdges.add(edgeId);
+                });
+            });
+
+            Object.values(network.body.nodes).forEach(function(node) {
+                if (connectedNodes.has(node.id)) {
+                    node.options.opacity = 1.0;
+                } else {
+                    node.options.opacity = 0.2;
+                }
+            });
+            
+            Object.values(network.body.edges).forEach(function(edge) {
+                if (connectedEdges.has(edge.id)) {
+                    edge.options.opacity = 1.0;
+                } else {
+                    edge.options.opacity = 0.2;
+                }
+            });
+        } else {
+            Object.values(network.body.nodes).forEach(node => {
+                node.options.opacity = 1.0;
+            });
+            Object.values(network.body.edges).forEach(edge => {
+                edge.options.opacity = 1.0;
+            });
+        }
+        network.redraw();
+    });
+    """
+
+    # Add fullscreen button CSS
+    st.markdown("""
+        <style>
+            .fullscreen-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                z-index: 1000;
+                padding: 10px;
+                background: #2E7D32;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .fullscreen-button:hover {
+                background: #1B5E20;
+            }
+            .element-container iframe {
+                height: 90vh !important;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Create a temporary directory and save the graph
+    with tempfile.TemporaryDirectory() as temp_dir:
+        path = os.path.join(temp_dir, "graph.html")
+        net.save_graph(path)
+        
+        with open(path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+        
+        # Add fullscreen button and JavaScript
+        html_content = html_content.replace('</body>', '''
+            <button class="fullscreen-button" onclick="toggleFullScreen()">Toggle Fullscreen</button>
             <script>
-                function toggleFullscreen() {
-                    let elem = document.documentElement;
-                    
+                function toggleFullScreen() {
+                    const iframe = document.querySelector('iframe');
                     if (!document.fullscreenElement) {
-                        if (elem.requestFullscreen) {
-                            elem.requestFullscreen();
-                        } else if (elem.webkitRequestFullscreen) { /* Safari */
-                            elem.webkitRequestFullscreen();
-                        } else if (elem.msRequestFullscreen) { /* IE11 */
-                            elem.msRequestFullscreen();
-                        }
+                        iframe.requestFullscreen().catch(err => {
+                            alert(`Error attempting to enable fullscreen: ${err.message}`);
+                        });
                     } else {
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) {
-                            document.msExitFullscreen();
-                        }
+                        document.exitFullscreen();
                     }
                 }
             </script>
-            """
-            
-            # Insert the button just before </body>
-            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
-            
-            components.html(modified_html, height=900)
-            # Clean up the temporary file
-            os.unlink(tmp_file.name)
-    except Exception as e:
-        st.error(f"An error occurred while generating the graph: {str(e)}")
+            ''' + f'<script>{highlight_js}</script></body>')
+        
+        # Display the graph
+        components.html(html_content, height=900, scrolling=True)
+
+else:
+    st.stop()  # Don't run the rest of the app
+
