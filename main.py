@@ -1,4 +1,5 @@
-import streamlit as st
+import streamlit as stimport streamlit as st
+st.cache_data.clear()
 from pyvis.network import Network
 import networkx as nx
 import streamlit.components.v1 as components
@@ -18,6 +19,8 @@ def check_password():
 
     if "password_correct" not in st.session_state:
         # First run, show input for password.
+        st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+        st.title("⚙️ Data Model : System Management (V2.1)")
         st.text_input(
             "Password", type="password", on_change=password_entered, key="password"
         )
