@@ -1,4 +1,3 @@
-import time
 import streamlit as st
 from pyvis.network import Network
 import networkx as nx
@@ -6,16 +5,9 @@ import streamlit.components.v1 as components
 import tempfile
 import os
 
-# Clear cache at start
-st.cache_data.clear()
-st.cache_resource.clear()
-
-# Add timestamp to session state
-if 'last_update' not in st.session_state:
-    st.session_state['last_update'] = time.time()
-
 def check_password():
     """Returns `True` if the user had the correct password."""
+
     def password_entered():
         """Checks whether a password entered by the user is correct."""
         if st.session_state["password"] == "Showmethemoney":
@@ -41,9 +33,12 @@ def check_password():
         # Password correct.
         return True
 
-@st.cache_data(ttl=1)  # Cache expires after 1 second
-def create_network_data():
-    # Your first chart entities and edges
+if check_password():
+    st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+
+    st.title("⚙️ Data Model : System Management")
+
+    # Define entity modules and colors
     entities = {
         "System Management": {
             "color": "#2E7D32", 
@@ -51,276 +46,451 @@ def create_network_data():
             "shape": "dot",
             "title": "System Management Module"
         },
-        # ... [rest of your entities dictionary]
+        # Main Modules
+        "System Overview": {
+            "color": "#4CAF50", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "System Overview Sub-Module"
+        },
+        "Criticality Assessment": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "Criticality Assessment Sub-Module"
+        },
+        "Security & Sensitivity Classification": {
+            "color": "#4CAF50", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "Security & Sensitivity Classification Sub-Module"
+        },
+        "Risk Materiality Level": {
+            "color": "#4CAF50", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "Risk Materiality Level Sub-Module"
+        },
+        "System Resiliency": {
+            "color": "#4CAF50", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "System Resiliency Sub-Module"
+        },
+        "Hosting and System Dependencies": {
+            "color": "#4CAF50", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "Hosting and System Dependencies Sub-Module"
+        },
+
+            # System Overview Fields
+        "Agency": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Agency field"
+        },
+        "Ministry Family": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Ministry Family field"
+        },
+        "System ID": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System ID (Primary Key)"
+        },
+        "System Name": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Name field"
+        },
+        "System Description": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Description field"
+        },
+        "System Status": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Status field"
+        },
+
+        # Criticality Assessment Fields
+        "Economy": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Economy impact field"
+        },
+        "Public Health and Safety": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Public Health and Safety field"
+        },
+        "National Security": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "National Security field"
+        },
+        "Social Preparedness": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Social Preparedness field"
+        },
+        "Public Service": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Public Service field"
+        },
+        "Designated CII": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Designated CII under Cybersecurity Act"
+        },
+        "System Criticality": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Criticality (Auto-generated)"
+        },
+        "IDSC Approval Date": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "IDSC's Approval Date (CA)"
+        },
+        "IDSC Approval Attachment": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "IDSC's Approval Attachment (CA)"
+        },
+        "MHA Approval": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Approved by MHA?"
+        },
+        "CSA Approval": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Approved by CSA?"
+        },
+        "SNDGO Approval": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Approved by SNDGO?"
+        },
+        "MHA Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "MHA Comments"
+        },
+        "CSA Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "CSA Comments"
+        },
+        "SNDGO Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "SNDGO Comments"
+        },
+
+            # Security & Sensitivity Classification Fields
+        "Security Classification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Security Classification field"
+        },
+        "Sensitivity Classification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Sensitivity Classification field"
+        },
+
+        # Risk Materiality Level Fields
+        "Computed RML": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Computed Risk Materiality Level"
+        },
+        "Computed RML Date": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Computed RML Date"
+        },
+        "Agency Proposed RML": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Agency Proposed Risk Materiality Level"
+        },
+        "RML Alignment": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "In line with Computed RML?"
+        },
+        "RML Justification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Justification if not in line"
+        },
+        "Endorsed RML": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Endorsed Risk Materiality Level"
+        },
+        "RML Endorsement Date": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Date Endorsed"
+        },
+        "Endorsement Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Endorsed Comments"
+        },
+
+        # System Resiliency Fields
+        "Service Availability": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Service Availability"
+        },
+        "RTO": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Recovery Time Objective"
+        },
+        "RPO": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Recovery Point Objective"
+        },
+
+        # Hosting and System Dependencies Fields
+        "Total Dependencies": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Total Downstream Dependencies"
+        },
+        "Downstream Impact": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Sub-System Downstream Impact"
+        },
+        "Direct Dependencies Count": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Count of Direct Dependencies"
+        },
+        "Dependency ID": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Dependency ID"
+        },
+        "Dependency Status": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Dependency Status"
+        },
+        "Dependency Type": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Type of Dependency"
+        },
+        "Upstream System": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Dependent Sub-System Upstream"
+        },
+        "Dependent System": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Dependent System/Service Name"
+        },
+        "Data Exchange Frequency": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Frequency of Data Exchange"
+        },
+        "Inferred Dependencies": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Count of Inferred Dependencies"
+        }
     }
-    
+
+    # Define edges with PK/FK relationships
     edges = [
-        # ... [your edges list]
-    ]
-    
-    return entities, edges, time.time()
+        # Main module connections
+        ("System Management", "System Overview", "", ""),
+        ("System Management", "Criticality Assessment", "", ""),
+        ("System Management", "Security & Sensitivity Classification",  "", ""),
+        ("System Management", "System Resiliency", "", ""),
+        ("System Management", "Hosting and System Dependencies", "", ""),
+        ("Risk Materiality Level", "Security & Sensitivity Classification", "", ""),
+        ("Risk Materiality Level", "Hosting and System Dependencies", "", ""),
+        ("Risk Materiality Level", "Criticality Assessment", "", ""),
 
-@st.cache_data(ttl=1)
-def create_network_data_2():
-    # Your second chart entities and edges
-    entities_2 = {
-        "Ministry Family": {"color": "blue", "size": 25, "shape": "dot", "title": "Ministry Family"},
-        # ... [rest of your entities_2 dictionary]
+        # System Overview field connections
+        ("System Overview", "Agency", "", ""),
+        ("System Overview", "Ministry Family", "", ""),
+        ("System Overview", "System ID", "", ""),
+        ("System Overview", "System Name", "", ""),
+        ("System Overview", "System Description", "", ""),
+        ("System Overview", "System Status", "", ""),
+
+        # Criticality Assessment field connections
+        ("Criticality Assessment", "Economy", "", ""),
+        ("Criticality Assessment", "Public Health and Safety", "", ""),
+        ("Criticality Assessment", "National Security", "", ""),
+        ("Criticality Assessment", "Social Preparedness", "", ""),
+        ("Criticality Assessment", "Public Service", "", ""),
+        ("Criticality Assessment", "Designated CII", "", ""),
+        ("Criticality Assessment", "System Criticality", "", ""),
+        ("Criticality Assessment", "IDSC Approval Date", "", ""),
+        ("Criticality Assessment", "IDSC Approval Attachment", "", ""),
+        ("Criticality Assessment", "MHA Approval", "", ""),
+        ("Criticality Assessment", "CSA Approval", "", ""),
+        ("Criticality Assessment", "SNDGO Approval", "", ""),
+        ("Criticality Assessment", "MHA Comments", "", ""),
+        ("Criticality Assessment", "CSA Comments", "", ""),
+        ("Criticality Assessment", "SNDGO Comments", "", ""),
+
+        # Security & Sensitivity Classification field connections
+        ("Security & Sensitivity Classification", "Security Classification", "", ""),
+        ("Security & Sensitivity Classification", "Sensitivity Classification", "", ""),
+
+        # Risk Materiality Level field connections
+        ("Risk Materiality Level", "Computed RML", "", ""),
+        ("Risk Materiality Level", "Computed RML Date", "", ""),
+        ("Risk Materiality Level", "Agency Proposed RML", "", ""),
+        ("Risk Materiality Level", "RML Alignment", "", ""),
+        ("Risk Materiality Level", "RML Justification", "", ""),
+        ("Risk Materiality Level", "Endorsed RML", "", ""),
+        ("Risk Materiality Level", "RML Endorsement Date", "", ""),
+        ("Risk Materiality Level", "Endorsement Comments", "", ""),
+
+        # System Resiliency field connections
+        ("System Resiliency", "Service Availability", "", ""),
+        ("System Resiliency", "RTO", "", ""),
+        ("System Resiliency", "RPO", "", ""),
+
+        # Hosting and System Dependencies field connections
+        ("Hosting and System Dependencies", "Total Dependencies", "", ""),
+        ("Hosting and System Dependencies", "Downstream Impact", "", ""),
+        ("Hosting and System Dependencies", "Direct Dependencies Count", "", ""),
+        ("Hosting and System Dependencies", "Dependency ID", "", ""),
+        ("Hosting and System Dependencies", "Dependency Status", "", ""),
+        ("Hosting and System Dependencies", "Dependency Type", "", ""),
+        ("Hosting and System Dependencies", "Upstream System", "", ""),
+        ("Hosting and System Dependencies", "Dependent System", "", ""),
+        ("Hosting and System Dependencies", "Data Exchange Frequency", "", ""),
+        ("Hosting and System Dependencies", "Inferred Dependencies", "", "")
+    ]
+
+    # Create NetworkX graph
+    G = nx.DiGraph()
+    for node, attributes in entities.items():
+        node_attrs = {
+            "color": attributes["color"],
+            "size": attributes["size"],
+            "shape": attributes["shape"],
+            "title": attributes["title"],
+            "label": node
+        }
+        G.add_node(node, **node_attrs)
+
+    # Add edges with labels and custom arrow directions
+    for source, target, label, direction in edges:
+        G.add_edge(source, target, title=label, label=label, arrows=direction)
+
+    # Create interactive PyVis network
+    net = Network(height="900px", width="100%", directed=True, notebook=True)
+    net.from_nx(G)
+
+    # Set options for better spacing and reduced overlapping
+    net.set_options("""
+    {
+        "physics": {
+            "enabled": true,
+            "stabilization": {
+                "enabled": true,
+                "iterations": 2000,
+                "updateInterval": 25,
+                "onlyDynamicEdges": false,
+                "fit": true
+            },
+            "barnesHut": {
+                "gravitationalConstant": -60000,
+                "centralGravity": 0.1,
+                "springLength": 1000,
+                "springConstant": 0.08,
+                "damping": 0.12,
+                "avoidOverlap": 20
+            },
+            "minVelocity": 0.75,
+            "maxVelocity": 30
+        },
+        "edges": {
+            "smooth": {
+                "type": "curvedCW",
+                "roundness": 0.2,
+                "forceDirection": "horizontal"
+            },
+            "length": 300,
+            "font": {
+                "size": 11,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            },
+            "width": 1.5
+        },
+        "nodes": {
+            "font": {
+                "size": 12,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "margin": 12,
+            "scaling": {
+                "min": 10,
+                "max": 30
+            },
+            "fixed": {
+                "x": false,
+                "y": false
+            }
+        },
+        "layout": {
+            "improvedLayout": true,
+            "randomSeed": 42,
+            "hierarchical": {
+                "enabled": false,
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
+            }
+        }
     }
-    
-    edges_2 = [
-        # ... [your edges_2 list]
-    ]
-    
-    return entities_2, edges_2, time.time()
+    """)
 
-def display_network(net, height=900, position="top"):
-    """Function to display the network with fullscreen capability"""
-    timestamp = str(time.time()).replace('.', '')
-    
-    with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix=f'_{timestamp}.html', encoding='utf-8') as tmp_file:
-        net.save_graph(tmp_file.name)
-        with open(tmp_file.name, 'r', encoding='utf-8') as f:
-            html_content = f.read()
-        
-        button_position = "top: 20px;" if position == "top" else "bottom: 20px;"
-        
-        fullscreen_html = f"""
-        <button 
-            style="
-                position: fixed;
-                {button_position}
-                right: 20px;
-                z-index: 10000;
-                padding: 8px 16px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-family: Arial, sans-serif;
-                font-size: 14px;
-            "
-            onclick="toggleFullscreen_{timestamp}()"
-        >
-            Full Screen
-        </button>
-        <script>
-            function toggleFullscreen_{timestamp}() {{
-                let elem = document.documentElement;
-                if (!document.fullscreenElement) {{
-                    if (elem.requestFullscreen) {{
-                        elem.requestFullscreen();
-                    }} else if (elem.webkitRequestFullscreen) {{
-                        elem.webkitRequestFullscreen();
-                    }} else if (elem.msRequestFullscreen) {{
-                        elem.msRequestFullscreen();
-                    }}
-                }} else {{
-                    if (document.exitFullscreen) {{
-                        document.exitFullscreen();
-                    }} else if (document.webkitExitFullscreen) {{
-                        document.webkitExitFullscreen();
-                    }} else if (document.msExitFullscreen) {{
-                        document.msExitFullscreen();
-                    }}
-                }}
-            }}
-        </script>
-        """
-        
-        modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
-        
-        components.html(modified_html, height=height, key=f"graph_{timestamp}")
-        
+       # Save and display the network
     try:
-        os.unlink(tmp_file.name)
-    except:
-        pass
-
-# Main code
-if check_password():
-    st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
-    
-    # Add refresh button in the same row as title
-    col1, col2 = st.columns([6, 1])
-    with col1:
-        st.title("⚙️ Data Model : System Management")
-    with col2:
-        if st.button('Refresh Graphs', key=f"refresh_{time.time()}"):
-            st.session_state['last_update'] = time.time()
-            st.experimental_rerun()
-
-    # FIRST CHART
-    try:
-        # Get data from cached function
-        entities, edges, timestamp = create_network_data()
-        
-        # Create NetworkX graph
-        G = nx.DiGraph()
-        for node, attributes in entities.items():
-            node_attrs = {
-                "color": attributes["color"],
-                "size": attributes["size"],
-                "shape": attributes["shape"],
-                "title": attributes["title"],
-                "label": node
-            }
-            G.add_node(node, **node_attrs)
-
-             # Add edges with labels and custom arrow directions
-        for source, target, label, direction in edges:
-            G.add_edge(source, target, title=label, label=label, arrows=direction)
-
-        # Create interactive PyVis network
-        net = Network(height="900px", width="100%", directed=True, notebook=True)
-        net.from_nx(G)
-
-        # Set options for better spacing and reduced overlapping
-        net.set_options("""
-        {
-            "physics": {
-                "enabled": true,
-                "stabilization": {
-                    "enabled": true,
-                    "iterations": 2000,
-                    "updateInterval": 25,
-                    "onlyDynamicEdges": false,
-                    "fit": true
-                },
-                "barnesHut": {
-                    "gravitationalConstant": -60000,
-                    "centralGravity": 0.1,
-                    "springLength": 1000,
-                    "springConstant": 0.08,
-                    "damping": 0.12,
-                    "avoidOverlap": 20
-                },
-                "minVelocity": 0.75,
-                "maxVelocity": 30
-            },
-            "edges": {
-                "smooth": {
-                    "type": "curvedCW",
-                    "roundness": 0.2,
-                    "forceDirection": "horizontal"
-                },
-                "length": 300,
-                "font": {
-                    "size": 11,
-                    "strokeWidth": 2,
-                    "strokeColor": "#ffffff"
-                },
-                "color": {
-                    "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.8
-                },
-                "width": 1.5
-            },
-            "nodes": {
-                "font": {
-                    "size": 12,
-                    "strokeWidth": 2,
-                    "strokeColor": "#ffffff"
-                },
-                "margin": 12,
-                "scaling": {
-                    "min": 10,
-                    "max": 30
-                },
-                "fixed": {
-                    "x": false,
-                    "y": false
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net.save_graph(tmp_file.name)
+            with open(tmp_file.name, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            
+            # Insert the button and script just before the closing body tag
+            fullscreen_html = """
+            <button 
+                style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    padding: 8px 16px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                "
+                onclick="toggleFullscreen()"
+            >
+                Full Screen
+            </button>
+            <script>
+                function toggleFullscreen() {
+                    let elem = document.documentElement;
+                    
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) { /* Safari */
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) { /* IE11 */
+                            elem.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                    }
                 }
-            },
-            "layout": {
-                "improvedLayout": true,
-                "randomSeed": 42,
-                "hierarchical": {
-                    "enabled": false,
-                    "nodeSpacing": 300,
-                    "levelSeparation": 300,
-                    "treeSpacing": 300
-                }
-            }
-        }
-        """)
-
-        # Display the first network
-        display_network(net, height=900, position="top")
-
+            </script>
+            """
+            
+            # Insert the button just before </body>
+            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
+            
+            components.html(modified_html, height=900)
+            # Clean up the temporary file
+            os.unlink(tmp_file.name)
     except Exception as e:
-        st.error(f"An error occurred while generating the first graph: {str(e)}")
-
-    # Add divider between charts
-    st.markdown("---")
-
-    # SECOND CHART
-    st.title("🧠 Interactive Data Model Interdependency Chart")
-
-    try:
-        # Get data from cached function
-        entities_2, edges_2, timestamp_2 = create_network_data_2()
-
-        # Create NetworkX graph for second chart
-        G2 = nx.DiGraph()
-        for node, attributes in entities_2.items():
-            G2.add_node(node, **attributes)
-
-        # Add edges for second chart
-        for source, target, label, direction in edges_2:
-            G2.add_edge(source, target, title=label, label=label, arrows=direction)
-
-        # Create interactive PyVis network for second chart
-        net2 = Network(height="700px", width="100%", directed=True, notebook=True)
-        net2.from_nx(G2)
-
-        # Set options for second chart
-        net2.set_options("""
-        {
-            "physics": {
-                "enabled": true,
-                "stabilization": {
-                    "enabled": true,
-                    "iterations": 2000,
-                    "updateInterval": 25
-                },
-                "barnesHut": {
-                    "gravitationalConstant": -2000,
-                    "centralGravity": 0.3,
-                    "springLength": 200,
-                    "springConstant": 0.04,
-                    "damping": 0.09,
-                    "avoidOverlap": 1
-                }
-            },
-            "edges": {
-                "smooth": {
-                    "type": "continuous",
-                    "forceDirection": "none"
-                },
-                "color": {
-                    "inherit": "both"
-                },
-                "width": 1.5
-            }
-        }
-        """)
-
-        # Display the second network
-        display_network(net2, height=700, position="bottom")
-
-    except Exception as e:
-        st.error(f"An error occurred while generating the second graph: {str(e)}")
-
-    # Add auto-refresh using JavaScript
-    auto_refresh_script = """
-    <script>
-        function autoRefresh() {
-            window.location.reload();
-        }
-        setTimeout(autoRefresh, 60000); // Refresh every 60 seconds
-    </script>
-    """
-    components.html(auto_refresh_script, height=0)
+        st.error(f"An error occurred while generating the graph: {str(e)}")
