@@ -7,10 +7,10 @@ import os
 
 # Define standard colours and sizes
 AGENCY_COLOR = "#0066CC"     # Standard blue for Agency-related items
-MINISTRY_COLOR = "#000000"   # Black for Ministry-related items
+MINISTRY_COLOR = "#0066CC"   # Standard blue for Ministry-related items
 SYSTEM_COLOR = "#2E7D32"     # Green for System-related items
-SUBGROUP_COLOR = "#66BB6A"   # Light green for subgroups
-FIELD_COLOR = "#81C784"      # Pale green for fields
+SUBGROUP_COLOR = "#2E7D32"   # Green for subgroups
+FIELD_COLOR = "#2E7D32"      # Green for fields
 
 # Standard sizes
 MODULE_SIZE = 50      # For main modules
