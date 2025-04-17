@@ -386,7 +386,7 @@ if check_password():
         ("Key Appointment Holder", "Full Name", "", ""),
         ("Key Appointment Holder", "Designation", "", ""),
         ("Key Appointment Holder", "Email", "", ""),
-        ("Agency", "Agency Name", "", "")
+        #("Agency", "Agency Name", "", "")
         ("Ministry Family", "Ministry Family Name", "", ""),
          
         # System Identity & Classification sub-group connections
