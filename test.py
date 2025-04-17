@@ -69,7 +69,7 @@ if check_password():
         }
     }
 
-    # Define entities with standardised styling
+    # Complete entities dictionary with all nodes
     entities = {
         # System Management Module and related nodes
         "System Management": {
@@ -123,37 +123,253 @@ if check_password():
             "title": "Key Appointment Holder Sub-Module"
         },
 
-        # Subgroups for System Management
+        # System Management Subgroups
         "Basic Information": {
             "color": COLOR_SCHEMES["system_management"]["subgroup"],
             "size": NODE_SETTINGS["subgroup"]["size"],
             "shape": NODE_SETTINGS["subgroup"]["shape"],
             "title": "Basic Information Sub-Group"
         },
-        # ... [Continue with all your existing subgroups using the same pattern]
-
-        # Fields for System Management
-        "System ID": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "System ID (Primary Key)"
+        "Organizational Context": {
+            "color": COLOR_SCHEMES["system_management"]["subgroup"],
+            "size": NODE_SETTINGS["subgroup"]["size"],
+            "shape": NODE_SETTINGS["subgroup"]["shape"],
+            "title": "Organizational Context Sub-Group"
         },
-        # ... [Continue with all your existing fields using the same pattern]
+        "Classification": {
+            "color": COLOR_SCHEMES["system_management"]["subgroup"],
+            "size": NODE_SETTINGS["subgroup"]["size"],
+            "shape": NODE_SETTINGS["subgroup"]["shape"],
+            "title": "Classification Sub-Group"
+        },
+        "Impact Assessment": {
+            "color": COLOR_SCHEMES["system_management"]["subgroup"],
+            "size": NODE_SETTINGS["subgroup"]["size"],
+            "shape": NODE_SETTINGS["subgroup"]["shape"],
+            "title": "Impact Assessment Sub-Group"
+        },
+        "Risk Profile": {
+            "color": COLOR_SCHEMES["system_management"]["subgroup"],
+            "size": NODE_SETTINGS["subgroup"]["size"],
+            "shape": NODE_SETTINGS["subgroup"]["shape"],
+            "title": "Risk Profile Sub-Group"
+        },
+        "SCA/RML Approval": {
+            "color": COLOR_SCHEMES["system_management"]["subgroup"],
+            "size": NODE_SETTINGS["subgroup"]["size"],
+            "shape": NODE_SETTINGS["subgroup"]["shape"],
+            "title": "SCA/RML Approval Sub-Group"
+        },
+        "Availability & Recovery": {
+            "color": COLOR_SCHEMES["system_management"]["subgroup"],
+            "size": NODE_SETTINGS["subgroup"]["size"],
+            "shape": NODE_SETTINGS["subgroup"]["shape"],
+            "title": "Availability & Recovery Sub-Group"
+        },
+        "Dependencies Management": {
+            "color": COLOR_SCHEMES["system_management"]["subgroup"],
+            "size": NODE_SETTINGS["subgroup"]["size"],
+            "shape": NODE_SETTINGS["subgroup"]["shape"],
+            "title": "Dependencies Management Sub-Group"
+        },
 
-        # Fields for Agency Management
+        # Fields for both modules
+        # Agency Management Fields
         "Agency Name": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Agency Name field"
         },
-        # ... [Continue with all your existing fields using the same pattern]
+        "Agency Abbreviation (Short Form)": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Agency Abbreviation field"
+        },
+        "Agency Operational Status": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Agency Operational Status field"
+        },
+        "Ministry Family": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Ministry Family field"
+        },
+        "Full Name": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Full Name field"
+        },
+        "Designation": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Designation field"
+        },
+        "Email": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Email field"
+        },
+
+            # System Management Fields
+        "System ID": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System ID field"
+        },
+        "System Name": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Name field"
+        },
+        "System Description": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Description field"
+        },
+        "System Status": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Status field"
+        },
+        "System Owner": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Owner field"
+        },
+        "System Classification": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Classification field"
+        },
+        "Impact Level": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Impact Level field"
+        },
+        "Risk Level": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Risk Level field"
+        },
+        "SCA Status": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "SCA Status field"
+        },
+        "RML Status": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "RML Status field"
+        },
+        "System Availability": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Availability field"
+        },
+        "Recovery Time": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Recovery Time field"
+        },
+        "Dependencies": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Dependencies field"
+        }
     }
 
-    # Your existing edges definition remains the same
+    # Complete edges list
     edges = [
-        # ... [Your existing edges list]
+        # System Management Module relationships
+        ("System Management", "System Identity & Classification", "Contains", "to"),
+        ("System Management", "Criticality & Risk", "Contains", "to"),
+        ("System Management", "System Resilience", "Contains", "to"),
+        ("System Management", "Hosting and System Dependencies", "Contains", "to"),
+
+        # System Identity & Classification relationships
+        ("System Identity & Classification", "Basic Information", "Contains", "to"),
+        ("System Identity & Classification", "Organizational Context", "Contains", "to"),
+        ("System Identity & Classification", "Classification", "Contains", "to"),
+
+        # Criticality & Risk relationships
+        ("Criticality & Risk", "Impact Assessment", "Contains", "to"),
+        ("Criticality & Risk", "Risk Profile", "Contains", "to"),
+        ("Criticality & Risk", "SCA/RML Approval", "Contains", "to"),
+
+        # System Resilience relationships
+        ("System Resilience", "Availability & Recovery", "Contains", "to"),
+
+        # Hosting and System Dependencies relationships
+        ("Hosting and System Dependencies", "Dependencies Management", "Contains", "to"),
+
+        # Agency Management Module relationships
+        ("Agency Management", "Agency", "Contains", "to"),
+        ("Agency Management", "Key Appointment Holder", "Contains", "to"),
+
+        # Field relationships for Basic Information
+        ("Basic Information", "System ID", "Contains", "to"),
+        ("Basic Information", "System Name", "Contains", "to"),
+        ("Basic Information", "System Description", "Contains", "to"),
+        ("Basic Information", "System Status", "Contains", "to"),
+
+        # Field relationships for Organizational Context
+        ("Organizational Context", "System Owner", "Contains", "to"),
+
+        # Field relationships for Classification
+        ("Classification", "System Classification", "Contains", "to"),
+
+        # Field relationships for Impact Assessment
+        ("Impact Assessment", "Impact Level", "Contains", "to"),
+
+        # Field relationships for Risk Profile
+        ("Risk Profile", "Risk Level", "Contains", "to"),
+
+        # Field relationships for SCA/RML Approval
+        ("SCA/RML Approval", "SCA Status", "Contains", "to"),
+        ("SCA/RML Approval", "RML Status", "Contains", "to"),
+
+        # Field relationships for Availability & Recovery
+        ("Availability & Recovery", "System Availability", "Contains", "to"),
+        ("Availability & Recovery", "Recovery Time", "Contains", "to"),
+
+        # Field relationships for Dependencies Management
+        ("Dependencies Management", "Dependencies", "Contains", "to"),
+
+        # Field relationships for Agency
+        ("Agency", "Agency Name", "Contains", "to"),
+        ("Agency", "Agency Abbreviation (Short Form)", "Contains", "to"),
+        ("Agency", "Agency Operational Status", "Contains", "to"),
+        ("Agency", "Ministry Family", "Contains", "to"),
+
+        # Field relationships for Key Appointment Holder
+        ("Key Appointment Holder", "Full Name", "Contains", "to"),
+        ("Key Appointment Holder", "Designation", "Contains", "to"),
+        ("Key Appointment Holder", "Email", "Contains", "to"),
+
+        # Cross-module relationships
+        ("System Owner", "Agency", "References", "to"),
+        ("Dependencies", "System ID", "References", "to")
     ]
 
     # Create NetworkX graph
@@ -176,7 +392,7 @@ if check_password():
     net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
 
-    # Your existing options
+    # Network visualization options
     net.set_options("""
     {
         "physics": {
