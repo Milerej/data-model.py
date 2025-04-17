@@ -74,6 +74,14 @@ if check_password():
 
     # Complete entities dictionary with all nodes
     entities = {
+        # Root node
+        "DGP 2.0": {
+            "color": "#1A237E",  # Dark blue color
+            "size": 60,  # Larger than module size
+            "shape": NODE_SETTINGS["module"]["shape"],
+            "title": "DGP 2.0 Root"
+        },
+    
         # System Management Module and related nodes
         "System Management": {
             "color": COLOR_SCHEMES["system_management"]["module"],
@@ -298,6 +306,10 @@ if check_password():
 
     # Complete edges list
     edges = [
+        # Root node connections
+        ("DGP 2.0", "System Management", "", ""),
+        ("DGP 2.0", "Agency Management", "", ""),
+    
         # System Management Module relationships
         ("System Management", "System Identity & Classification", "", ""),
         ("System Management", "Criticality & Risk", "", ""),
