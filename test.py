@@ -385,7 +385,7 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
- # Create PyVis network
+    # Create PyVis network
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
@@ -394,7 +394,54 @@ if check_password():
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             net.save_graph(tmp_file.name)
             with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                components.html(f.read(), height=900)
+                html_content = f.read()
+            
+            fullscreen_html = """
+            <button 
+                style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    padding: 8px 16px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                "
+                onclick="toggleFullscreen()"
+            >
+                Full Screen
+            </button>
+            <script>
+                function toggleFullscreen() {
+                    let elem = document.documentElement;
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) {
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) {
+                            elem.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                    }
+                }
+            </script>
+            """
+            
+            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
+            components.html(modified_html, height=900)
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
