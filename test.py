@@ -5,9 +5,6 @@ import streamlit.components.v1 as components
 import tempfile
 import os
 
-# This MUST be the first Streamlit command
-st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
-
 def check_password():
     """Returns `True` if the user had the correct password."""
 
@@ -34,6 +31,7 @@ def check_password():
         return True
 
 if check_password():
+    st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
     st.title("⚙️ Entity Relationship Diagram : System Management and Agency Management Data Model (V2.2)")
     
     # Add the view toggle
@@ -556,100 +554,3 @@ if check_password():
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
-
-
-import streamlit as st
-from pyvis.network import Network
-import networkx as nx
-import streamlit.components.v1 as components
-
-st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
-
-st.title("🧠 Interactive Data Model Interdependency Chart")
-
-# Define entity modules and colors
-entities = {
-    "Ministry Family": "blue",
-    "Agency": "blue",
-    "System Overview": "teal",
-    "Criticality Assessment": "teal",
-    "Policy": "red",
-    "Policy Waivers": "red",
-    "Supplier Profile": "purple",
-    "Supplier Risk Management": "purple",
-    "Supplier Contracts": "purple",
-    "Actions Against Errant Supplier": "purple",
-    "Supplier Performance Feedback": "purple",
-    "Bulk Tender ECN Details": "purple",
-    "EDH Agency": "purple",
-    "Risk Assessments": "orange",
-    "Risk Treatments": "orange",
-    "Audit Findings": "gray",
-    "System Management": "green",
-    "Security & Sensitivity Classification": "green",
-    "Risk Materiality Level": "green",
-    "System Resiliency": "green",
-    "Hosting and System Dependencies": "green",
-    "Central Programmes": "green"
-}
-
-# Define edges with PK/FK relationships - all with bidirectional arrows
-edges = [
-    ("Agency", "System Overview", "FK: Agency_ID", "both"),
-    ("Agency", "Ministry Family", "FK: Ministry_ID", "both"),
-    ("System Overview", "Criticality Assessment", "FK: System_ID", "both"),
-    ("System Overview", "Policy", "FK: Policy_ID", "both"),
-    ("Policy", "Policy Waivers", "FK: Policy_ID", "both"),
-    ("Supplier Profile", "Supplier Risk Management", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "Supplier Contracts", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "Actions Against Errant Supplier", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "Supplier Performance Feedback", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "Bulk Tender ECN Details", "FK: Supplier_ID", "both"),
-    ("Supplier Profile", "EDH Agency", "FK: Supplier_ID", "both"),
-    ("Risk Assessments", "Risk Treatments", "FK: Assessment_ID", "both"),
-    ("Audit Findings", "Risk Treatments", "FK: Finding_ID", "both"),
-    ("Supplier Risk Management", "Risk Assessments", "FK: Risk_ID", "both"),
-    ("Supplier Performance Feedback", "Supplier Risk Management", "FK: Feedback_ID", "both"),
-    ("Actions Against Errant Supplier", "Supplier Contracts", "FK: Action_ID", "both"),
-    ("System Overview", "Supplier Contracts", "FK: System_ID", "both"),
-    ("System Overview", "Audit Findings", "FK: System_ID", "both"),
-    # System Management relationships
-    ("System Management", "System Overview", "FK: System_ID", "both"),
-    ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
-    ("System Management", "Security & Sensitivity Classification", "FK: System_ID", "both"),
-    ("System Management", "Risk Materiality Level", "FK: System_ID", "both"),
-    ("System Management", "System Resiliency", "FK: System_ID", "both"),
-    ("System Management", "Hosting and System Dependencies", "FK: System_ID", "both"),
-    ("System Management", "Central Programmes", "FK: System_ID", "both"),
-    ("System Management", "Supplier Contracts", "FK: System_ID", "both"),
-    ("Supplier Contracts", "Hosting and System Dependencies", "FK: Contract_ID", "both")
-]
-
-# Create NetworkX graph
-G = nx.DiGraph()
-for node, color in entities.items():
-    G.add_node(node, title=node, color=color)
-
-# Add edges with labels and custom arrow directions
-for source, target, label, direction in edges:
-    G.add_edge(source, target, title=label, label=label, arrows=direction)
-
-# Create interactive PyVis network
-net = Network(height="700px", width="100%", directed=True)
-net.from_nx(G)
-net.repulsion(node_distance=200, central_gravity=0.3)
-
-# Customize edge labels and arrows
-for edge in net.edges:
-    edge["label"] = edge["title"]
-    if edge["arrows"] == "both":
-        edge["arrows"] = "to,from"
-    else:
-        edge["arrows"] = edge["arrows"]
-
-# Save and display in Streamlit
-net.save_graph("graph.html")
-components.html(open("graph.html", "r", encoding='utf-8').read(), height=750, scrolling=True)
-
-
-
