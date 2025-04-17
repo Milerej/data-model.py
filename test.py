@@ -402,13 +402,18 @@ if check_password():
     net.from_nx(G)
 
    # Set hierarchical layout options based on toggle
+    # Create PyVis network
+    net = Network(height="900px", width="100%", directed=True)
+    net.from_nx(G)
+
+    # Set hierarchical layout options based on toggle
     if view_type:
         net.set_options("""{
             "layout": {
                 "hierarchical": {
                     "enabled": true,
                     "direction": "UD",
-                    "sortMethod": "directed",
+                    "sortMethod": "hubsize",
                     "nodeSpacing": 250,
                     "levelSeparation": 250,
                     "treeSpacing": 250,
@@ -425,7 +430,8 @@ if check_password():
                     "springLength": 100,
                     "springConstant": 0.01,
                     "nodeDistance": 250,
-                    "damping": 0.09
+                    "damping": 0.09,
+                    "avoidOverlap": 1
                 }
             },
             "edges": {
@@ -445,7 +451,10 @@ if check_password():
                     "x": false,
                     "y": true
                 },
-                "levelAlignment": "true"
+                "levelAlignment": true
+            },
+            "groups": {
+                "useDefaultGroups": false
             }
         }""")
     else:
