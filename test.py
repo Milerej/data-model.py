@@ -5,6 +5,9 @@ import streamlit.components.v1 as components
 import tempfile
 import os
 
+# This MUST be the first Streamlit command
+st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
+
 def check_password():
     """Returns `True` if the user had the correct password."""
 
@@ -31,7 +34,6 @@ def check_password():
         return True
 
 if check_password():
-    st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
     st.title("⚙️ Entity Relationship Diagram : System Management and Agency Management Data Model (V2.2)")
     
     # Add the view toggle
