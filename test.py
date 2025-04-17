@@ -302,70 +302,70 @@ if check_password():
     # Complete edges list
     edges = [
         # System Management Module relationships
-        ("System Management", "System Identity & Classification", "Contains", "to"),
-        ("System Management", "Criticality & Risk", "Contains", "to"),
-        ("System Management", "System Resilience", "Contains", "to"),
-        ("System Management", "Hosting and System Dependencies", "Contains", "to"),
+        ("System Management", "System Identity & Classification", ““, ““),
+        ("System Management", "Criticality & Risk", ““, ““),
+        ("System Management", "System Resilience", ““, ““),
+        ("System Management", "Hosting and System Dependencies", ““, ““),
 
         # System Identity & Classification relationships
-        ("System Identity & Classification", "Basic Information", "Contains", "to"),
-        ("System Identity & Classification", "Organizational Context", "Contains", "to"),
-        ("System Identity & Classification", "Classification", "Contains", "to"),
+        ("System Identity & Classification", "Basic Information", ““, ““),
+        ("System Identity & Classification", "Organizational Context", ““, ““),
+        ("System Identity & Classification", "Classification", ““, ““),
 
         # Criticality & Risk relationships
-        ("Criticality & Risk", "Impact Assessment", "Contains", "to"),
-        ("Criticality & Risk", "Risk Profile", "Contains", "to"),
-        ("Criticality & Risk", "SCA/RML Approval", "Contains", "to"),
+        ("Criticality & Risk", "Impact Assessment", ““, ““),
+        ("Criticality & Risk", "Risk Profile", ““, ““),
+        ("Criticality & Risk", "SCA/RML Approval", ““, ““),
 
         # System Resilience relationships
-        ("System Resilience", "Availability & Recovery", "Contains", "to"),
+        ("System Resilience", "Availability & Recovery", ““, ““),
 
         # Hosting and System Dependencies relationships
-        ("Hosting and System Dependencies", "Dependencies Management", "Contains", "to"),
+        ("Hosting and System Dependencies", "Dependencies Management", ““, ““),
 
         # Agency Management Module relationships
-        ("Agency Management", "Agency", "Contains", "to"),
-        ("Agency Management", "Key Appointment Holder", "Contains", "to"),
+        ("Agency Management", "Agency", ““, ““),
+        ("Agency Management", "Key Appointment Holder", ““, ““),
 
         # Field relationships for Basic Information
-        ("Basic Information", "System ID", "Contains", "to"),
-        ("Basic Information", "System Name", "Contains", "to"),
-        ("Basic Information", "System Description", "Contains", "to"),
-        ("Basic Information", "System Status", "Contains", "to"),
+        ("Basic Information", "System ID", ““, ““),
+        ("Basic Information", "System Name", ““, ““),
+        ("Basic Information", "System Description", ““, ““),
+        ("Basic Information", "System Status", ““, ““),
 
         # Field relationships for Organizational Context
-        ("Organizational Context", "System Owner", "Contains", "to"),
+        ("Organizational Context", "System Owner", ““, ““),
 
         # Field relationships for Classification
-        ("Classification", "System Classification", "Contains", "to"),
+        ("Classification", "System Classification", ““, ““),
 
         # Field relationships for Impact Assessment
-        ("Impact Assessment", "Impact Level", "Contains", "to"),
+        ("Impact Assessment", "Impact Level", ““, ““),
 
         # Field relationships for Risk Profile
-        ("Risk Profile", "Risk Level", "Contains", "to"),
+        ("Risk Profile", "Risk Level", ““, ““),
 
         # Field relationships for SCA/RML Approval
-        ("SCA/RML Approval", "SCA Status", "Contains", "to"),
-        ("SCA/RML Approval", "RML Status", "Contains", "to"),
+        ("SCA/RML Approval", "SCA Status", ““, ““),
+        ("SCA/RML Approval", "RML Status", ““, ““),
 
         # Field relationships for Availability & Recovery
-        ("Availability & Recovery", "System Availability", "Contains", "to"),
-        ("Availability & Recovery", "Recovery Time", "Contains", "to"),
+        ("Availability & Recovery", "System Availability", ““, ““),
+        ("Availability & Recovery", "Recovery Time", ““, ““),
 
         # Field relationships for Dependencies Management
-        ("Dependencies Management", "Dependencies", "Contains", "to"),
+        ("Dependencies Management", "Dependencies", ““, ““),
 
         # Field relationships for Agency
-        ("Agency", "Agency Name", "Contains", "to"),
-        ("Agency", "Agency Abbreviation (Short Form)", "Contains", "to"),
-        ("Agency", "Agency Operational Status", "Contains", "to"),
-        ("Agency", "Ministry Family", "Contains", "to"),
+        ("Agency", "Agency Name", ““, ““),
+        ("Agency", "Agency Abbreviation (Short Form)", ““, ““),
+        ("Agency", "Agency Operational Status", ““, ““),
+        ("Agency", "Ministry Family", ““, ““),
 
         # Field relationships for Key Appointment Holder
-        ("Key Appointment Holder", "Full Name", "Contains", "to"),
-        ("Key Appointment Holder", "Designation", "Contains", "to"),
-        ("Key Appointment Holder", "Email", "Contains", "to"),
+        ("Key Appointment Holder", "Full Name", ““, ““),
+        ("Key Appointment Holder", "Designation", ““, ““),
+        ("Key Appointment Holder", "Email", ““, ““),
 
         # Cross-module relationships
         ("System Owner", "Agency", "References", "to"),
