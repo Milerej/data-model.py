@@ -397,12 +397,7 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-    # Create PyVis network
-    net = Network(height="900px", width="100%", directed=True)
-    net.from_nx(G)
-
-   # Set hierarchical layout options based on toggle
-    # Create PyVis network
+  # Create PyVis network
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
@@ -413,14 +408,14 @@ if check_password():
                 "hierarchical": {
                     "enabled": true,
                     "direction": "UD",
-                    "sortMethod": "hubsize",
+                    "sortMethod": "directed",
                     "nodeSpacing": 250,
                     "levelSeparation": 250,
                     "treeSpacing": 250,
-                    "blockShifting": true,
+                    "blockShifting": false,
                     "edgeMinimization": true,
                     "parentCentralization": true,
-                    "shakeTowards": "roots"
+                    "shakeTowards": "leaves"
                 }
             },
             "physics": {
