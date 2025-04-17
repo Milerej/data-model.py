@@ -49,6 +49,7 @@ if check_password():
             "shape": "dot",
             "title": "System Management Module"
         },
+        
         # Main Modules
         "Agency": {
             "color": "blue", 
@@ -62,6 +63,7 @@ if check_password():
             "size": 25, 
             "shape": "dot",
             "title": "Key Appointment Holder Sub-Module"
+        },
 
             
         
