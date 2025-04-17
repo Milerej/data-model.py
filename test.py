@@ -389,6 +389,39 @@ if check_password():
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
+    # Set hierarchical layout options based on toggle
+    if view_type:
+        net.options.layout = {
+            "hierarchical": {
+                "enabled": True,
+                "direction": "UD",
+                "sortMethod": "directed",
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
+            }
+        }
+        net.options.physics = {
+            "enabled": False
+        }
+    else:
+        net.options.layout = {
+            "hierarchical": {
+                "enabled": False
+            }
+        }
+        net.options.physics = {
+            "enabled": True,
+            "barnesHut": {
+                "gravitationalConstant": -60000,
+                "centralGravity": 0.1,
+                "springLength": 1000,
+                "springConstant": 0.08,
+                "damping": 0.12,
+                "avoidOverlap": 20
+            }
+        }
+
     # Save and display the network
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
