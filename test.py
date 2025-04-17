@@ -300,7 +300,7 @@ if check_password():
     }
 
     # Complete edges list
-       edges = [
+    edges = [
         # System Management Module relationships
         ("System Management", "System Identity & Classification", "", ""),
         ("System Management", "Criticality & Risk", "", ""),
