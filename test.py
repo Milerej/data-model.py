@@ -297,23 +297,23 @@ edges = [
     ("Agency", "Agency Operational Status", "", ""),
     ("Agency", "Ministry Family", "", ""),
 
-    # Key Appointment Holder field relationships
+   # Key Appointment Holder field relationships
     ("Key Appointment Holder", "Full Name", "", ""),
     ("Key Appointment Holder", "Designation", "", ""),
     ("Key Appointment Holder", "Email", "", "")
-    ]
+]  # Close the edges list with proper bracket
 
-    # Create NetworkX graph
-    G = nx.DiGraph()
-    for node, attributes in entities.items():
-        node_attrs = {
-            "color": attributes["color"],
-            "size": attributes["size"],
-            "shape": attributes["shape"],
-            "title": attributes["title"],
-            "label": node
-        }
-        G.add_node(node, **node_attrs)
+# Create NetworkX graph (no indentation here)
+G = nx.DiGraph()
+for node, attributes in entities.items():
+    node_attrs = {
+        "color": attributes["color"],
+        "size": attributes["size"],
+        "shape": attributes["shape"],
+        "title": attributes["title"],
+        "label": node
+    }
+    G.add_node(node, **node_attrs)
 
     # Add edges
     for source, target, label, direction in edges:
