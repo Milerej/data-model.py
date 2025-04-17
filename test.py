@@ -47,12 +47,8 @@ if check_password():
             "size": 35,
             "shape": "dot"
         },
-        "subgroup": {
-            "size": 25,
-            "shape": "dot"
-        },
         "field": {
-            "size": 15,
+            "size": 25,
             "shape": "dot"
         }
     }
@@ -61,14 +57,12 @@ if check_password():
         "system_management": {
             "module": "#1B5E20",      # Darkest green
             "submodule": "#2E7D32",   # Dark green
-            "subgroup": "#388E3C",    # Medium green
-            "field": "#43A047"        # Light green
+            "field": "#388E3C",    # Medium green
         },
         "agency_management": {
             "module": "#1A237E",      # Darkest blue
             "submodule": "#283593",   # Dark blue
-            "subgroup": "#303F9F",    # Medium blue
-            "field": "#3949AB"        # Light blue
+            "field": "#303F9F",    # Medium blue
         }
     }
 
