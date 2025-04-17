@@ -39,10 +39,26 @@ def check_password():
 if check_password():
     st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
-    st.title("⚙️ Data Model : System Management")
+    st.title("⚙️ Data Model : System Management and Agency Management")
 
     # Define entity modules and colors
     entities = {
+         "Agency Management": {
+            "color": "blue", 
+            "size": 50, 
+            "shape": "dot",
+            "title": "System Management Module"
+        },
+        # Main Modules
+        "Agency": {
+            "color": "blue", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "Agency Sub-Module"
+        },
+        
+
+        
         "System Management": {
             "color": "#2E7D32", 
             "size": 50, 
@@ -126,6 +142,45 @@ if check_password():
         },
 
         # Fields (all the existing fields remain the same)
+
+        "Agency Name": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Agency Name field"
+        },        
+        
+        "Agency Abbreviation (Short Form)": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Agency Abbreviation (Short Form) field"
+        },        
+        
+        "Agency Operational Status": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Agency Operational field"
+        },        
+        
+        "Ministry Family": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Ministry Family field"
+        },        
+        
+        "Full Name of Key Appointment Holder": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Full Name of Key Appointment Holder field"
+        },        
+        
+        "Designation": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Designation field"
+        },
+
+        "Email": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Email field"
+        },
+
+
+
+        
         "Agency": {
             "color": "#81C784", "size": 15, "shape": "dot",
             "title": "Agency field"
