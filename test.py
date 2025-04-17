@@ -556,118 +556,98 @@ if check_password():
         st.error(f"An error occurred while generating the graph: {str(e)}")
 
 
-# Add a divider between charts
-st.markdown("---")
+import streamlit as st
+from pyvis.network import Network
+import networkx as nx
+import streamlit.components.v1 as components
 
-# New section for the second chart
-st.subheader("Module Relationships Overview")
+st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
-# Define new entities for the second chart (keeping at submodule level)
-module_entities = {
-    "Agency Management": "blue",
+st.title("🧠 Interactive Data Model Interdependency Chart")
+
+# Define entity modules and colors
+entities = {
+    "Ministry Family": "blue",
+    "Agency": "blue",
+    "System Overview": "teal",
+    "Criticality Assessment": "teal",
+    "Policy": "red",
+    "Policy Waivers": "red",
+    "Supplier Profile": "purple",
+    "Supplier Risk Management": "purple",
+    "Supplier Contracts": "purple",
+    "Actions Against Errant Supplier": "purple",
+    "Supplier Performance Feedback": "purple",
+    "Bulk Tender ECN Details": "purple",
+    "EDH Agency": "purple",
+    "Risk Assessments": "orange",
+    "Risk Treatments": "orange",
+    "Audit Findings": "gray",
     "System Management": "green",
-    "Risk Management": "orange",
-    "Supplier Management": "purple",
-    "Policy Management": "red",
-    "Audit Management": "gray",
-    "Resource Management": "teal",
-    "Security Management": "brown",
-    "Project Management": "pink",
-    "Service Management": "cyan"
+    "Security & Sensitivity Classification": "green",
+    "Risk Materiality Level": "green",
+    "System Resiliency": "green",
+    "Hosting and System Dependencies": "green",
+    "Central Programmes": "green"
 }
 
-# Define relationships between modules
-module_edges = [
-    ("Agency Management", "System Management", "Manages Systems", "to"),
-    ("Agency Management", "Resource Management", "Allocates Resources", "to"),
-    ("System Management", "Security Management", "Implements Security", "both"),
-    ("System Management", "Service Management", "Provides Services", "to"),
-    ("Risk Management", "System Management", "Assesses Risks", "to"),
-    ("Risk Management", "Supplier Management", "Evaluates Risks", "to"),
-    ("Supplier Management", "Service Management", "Provides Services", "to"),
-    ("Policy Management", "System Management", "Governs Systems", "to"),
-    ("Policy Management", "Security Management", "Defines Policies", "to"),
-    ("Audit Management", "System Management", "Audits Systems", "to"),
-    ("Audit Management", "Risk Management", "Identifies Risks", "to"),
-    ("Project Management", "System Management", "Implements Systems", "to"),
-    ("Project Management", "Resource Management", "Uses Resources", "to"),
-    ("Security Management", "Risk Management", "Reports Risks", "to"),
-    ("Service Management", "Resource Management", "Uses Resources", "to")
+# Define edges with PK/FK relationships - all with bidirectional arrows
+edges = [
+    ("Agency", "System Overview", "FK: Agency_ID", "both"),
+    ("Agency", "Ministry Family", "FK: Ministry_ID", "both"),
+    ("System Overview", "Criticality Assessment", "FK: System_ID", "both"),
+    ("System Overview", "Policy", "FK: Policy_ID", "both"),
+    ("Policy", "Policy Waivers", "FK: Policy_ID", "both"),
+    ("Supplier Profile", "Supplier Risk Management", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Supplier Contracts", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Actions Against Errant Supplier", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Supplier Performance Feedback", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Bulk Tender ECN Details", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "EDH Agency", "FK: Supplier_ID", "both"),
+    ("Risk Assessments", "Risk Treatments", "FK: Assessment_ID", "both"),
+    ("Audit Findings", "Risk Treatments", "FK: Finding_ID", "both"),
+    ("Supplier Risk Management", "Risk Assessments", "FK: Risk_ID", "both"),
+    ("Supplier Performance Feedback", "Supplier Risk Management", "FK: Feedback_ID", "both"),
+    ("Actions Against Errant Supplier", "Supplier Contracts", "FK: Action_ID", "both"),
+    ("System Overview", "Supplier Contracts", "FK: System_ID", "both"),
+    ("System Overview", "Audit Findings", "FK: System_ID", "both"),
+    # System Management relationships
+    ("System Management", "System Overview", "FK: System_ID", "both"),
+    ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
+    ("System Management", "Security & Sensitivity Classification", "FK: System_ID", "both"),
+    ("System Management", "Risk Materiality Level", "FK: System_ID", "both"),
+    ("System Management", "System Resiliency", "FK: System_ID", "both"),
+    ("System Management", "Hosting and System Dependencies", "FK: System_ID", "both"),
+    ("System Management", "Central Programmes", "FK: System_ID", "both"),
+    ("System Management", "Supplier Contracts", "FK: System_ID", "both"),
+    ("Supplier Contracts", "Hosting and System Dependencies", "FK: Contract_ID", "both")
 ]
 
-# Create NetworkX graph for the second chart
-G2 = nx.DiGraph()
-for node, color in module_entities.items():
-    G2.add_node(node, title=node, color=color)
+# Create NetworkX graph
+G = nx.DiGraph()
+for node, color in entities.items():
+    G.add_node(node, title=node, color=color)
 
 # Add edges with labels and custom arrow directions
-for source, target, label, direction in module_edges:
-    G2.add_edge(source, target, title=label, label=label, arrows=direction)
+for source, target, label, direction in edges:
+    G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-# Create interactive PyVis network for the second chart
-net2 = Network(height="700px", width="100%", directed=True)
-net2.from_nx(G2)
+# Create interactive PyVis network
+net = Network(height="700px", width="100%", directed=True)
+net.from_nx(G)
+net.repulsion(node_distance=200, central_gravity=0.3)
 
-# Set options for better visualization
-net2.set_options("""
-{
-  "physics": {
-    "forceAtlas2Based": {
-      "gravitationalConstant": -100,
-      "centralGravity": 0.01,
-      "springLength": 200,
-      "springConstant": 0.08,
-      "damping": 0.4,
-      "avoidOverlap": 1
-    },
-    "maxVelocity": 50,
-    "minVelocity": 0.1,
-    "solver": "forceAtlas2Based",
-    "stabilization": {
-      "enabled": true,
-      "iterations": 1000,
-      "updateInterval": 100
-    }
-  },
-  "edges": {
-    "smooth": {
-      "type": "continuous",
-      "forceDirection": "none"
-    },
-    "color": {
-      "inherit": false,
-      "color": "#666666",
-      "opacity": 0.8
-    },
-    "width": 2,
-    "font": {
-      "size": 12,
-      "strokeWidth": 0,
-      "align": "middle"
-    }
-  },
-  "nodes": {
-    "shape": "box",
-    "size": 25,
-    "font": {
-      "size": 14,
-      "face": "arial"
-    },
-    "margin": 10,
-    "widthConstraint": {
-      "minimum": 120
-    }
-  }
-}
-""")
+# Customize edge labels and arrows
+for edge in net.edges:
+    edge["label"] = edge["title"]
+    if edge["arrows"] == "both":
+        edge["arrows"] = "to,from"
+    else:
+        edge["arrows"] = edge["arrows"]
 
-# Save and display the second chart
-try:
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-        net2.save_graph(tmp_file.name)
-        with open(tmp_file.name, 'r', encoding='utf-8') as f:
-            html_content = f.read()
-        components.html(html_content, height=750, scrolling=True)
-        os.unlink(tmp_file.name)
-except Exception as e:
-    st.error(f"An error occurred while generating the second graph: {str(e)}")
+# Save and display in Streamlit
+net.save_graph("graph.html")
+components.html(open("graph.html", "r", encoding='utf-8').read(), height=750, scrolling=True)
+
+
+
