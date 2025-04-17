@@ -1,780 +1,502 @@
 import streamlit as st
+#st.cache_data.clear()
 from pyvis.network import Network
 import networkx as nx
 import streamlit.components.v1 as components
 import tempfile
 import os
-import time
 
-# Set page config once at the start
-st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
-
-# Initialize session state
-if 'graph_key' not in st.session_state:
-    st.session_state.graph_key = 0
-
-# Password check function
 def check_password():
     """Returns `True` if the user had the correct password."""
+
     def password_entered():
         """Checks whether a password entered by the user is correct."""
         if st.session_state["password"] == "Showmethemoney":
             st.session_state["password_correct"] = True
-            del st.session_state["password"]
+            del st.session_state["password"]  # don't store password
         else:
             st.session_state["password_correct"] = False
 
     if "password_correct" not in st.session_state:
+        # First run, show input for password.
         st.text_input(
             "Password", type="password", on_change=password_entered, key="password"
         )
         return False
     elif not st.session_state["password_correct"]:
+        # Password not correct, show input + error.
         st.text_input(
             "Password", type="password", on_change=password_entered, key="password"
         )
         st.error("⚠️ Password incorrect")
         return False
     else:
+        # Password correct.
         return True
 
-# Define standard colours and sizes
-AGENCY_COLOR = "#0066CC"     # Standard blue for Agency-related items
-MINISTRY_COLOR = "#0066CC"   # Standard blue for Ministry-related items
-SYSTEM_COLOR = "#2E7D32"     # Green for System-related items
-SUBGROUP_COLOR = "#2E7D32"   # Green for subgroups
-FIELD_COLOR = "#2E7D32"      # Green for fields
 
-# Standard sizes
-MODULE_SIZE = 50      # For main modules
-SUBMODULE_SIZE = 25   # For sub-modules
-GROUP_SIZE = 20       # For groups
-FIELD_SIZE = 15      # For fields
 
-# Define entity modules and colors
-entities = {
-    # Agency Management Module
-    "Agency Management": {
-        "color": AGENCY_COLOR,
-        "size": MODULE_SIZE,
-        "shape": "dot",
-        "title": "Agency Management Module"
-    },
-    "Agency": {
-        "color": AGENCY_COLOR,
-        "size": SUBMODULE_SIZE,
-        "shape": "dot",
-        "title": "Agency Sub-Module"
-    },
-    "Key Appointment Holder": {
-        "color": AGENCY_COLOR,
-        "size": SUBMODULE_SIZE,
-        "shape": "dot",
-        "title": "Key Appointment Holder Sub-Module"
-    },
+if check_password():
+    st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
 
-    # System Management Module
-    "System Management": {
-        "color": SYSTEM_COLOR,
-        "size": MODULE_SIZE,
-        "shape": "dot",
-        "title": "System Management Module"
-    },
-    "System Identity & Classification": {
-        "color": SYSTEM_COLOR,
-        "size": SUBMODULE_SIZE,
-        "shape": "dot",
-        "title": "System Identity & Classification Sub-Module"
-    },
-    "Criticality & Risk": {
-        "color": SYSTEM_COLOR,
-        "size": SUBMODULE_SIZE,
-        "shape": "dot",
-        "title": "Criticality & Risk Sub-Module"
-    },
-    "System Resilience": {
-        "color": SYSTEM_COLOR,
-        "size": SUBMODULE_SIZE,
-        "shape": "dot",
-        "title": "System Resilience Sub-Module"
-    },
-    "Hosting and System Dependencies": {
-        "color": SYSTEM_COLOR,
-        "size": SUBMODULE_SIZE,
-        "shape": "dot",
-        "title": "Hosting and System Dependencies Sub-Module"
-    },
+    st.title("⚙️ Data Model : System Management and Agency Management")
 
-    # Sub-groups
-    "Basic Information": {
-        "color": SUBGROUP_COLOR,
-        "size": GROUP_SIZE,
-        "shape": "dot",
-        "title": "Basic Information Sub-Group"
-    },
-    "Organizational Context": {
-        "color": SUBGROUP_COLOR,
-        "size": GROUP_SIZE,
-        "shape": "dot",
-        "title": "Organizational Context Sub-Group"
-    },
-    "Classification": {
-        "color": SUBGROUP_COLOR,
-        "size": GROUP_SIZE,
-        "shape": "dot",
-        "title": "Classification Sub-Group"
-    },
-    "Impact Assessment": {
-        "color": SUBGROUP_COLOR,
-        "size": GROUP_SIZE,
-        "shape": "dot",
-        "title": "Impact Assessment Sub-Group"
-    },
-    "Risk Profile": {
-        "color": SUBGROUP_COLOR,
-        "size": GROUP_SIZE,
-        "shape": "dot",
-        "title": "Risk Profile Sub-Group"
-    },
-    "SCA/RML Approval": {
-        "color": SUBGROUP_COLOR,
-        "size": GROUP_SIZE,
-        "shape": "dot",
-        "title": "SCA/RML Approval Sub-Group"
-    },
-    "Availability & Recovery": {
-        "color": SUBGROUP_COLOR,
-        "size": GROUP_SIZE,
-        "shape": "dot",
-        "title": "Availability & Recovery Sub-Group"
-    },
-    "Dependencies Management": {
-        "color": SUBGROUP_COLOR,
-        "size": GROUP_SIZE,
-        "shape": "dot",
-        "title": "Dependencies Management Sub-Group"
-    },
+    # Define entity modules and colors
+    entities = {
+         "Agency Management": {
+            "color": "dark blue", 
+            "size": 50, 
+            "shape": "dot",
+            "title": "System Management Module"
+        },
+        
+        # Main Modules
+        "Agency": {
+            "color": "blue", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "Agency Sub-Module"
+        },
+        
+        "Key Appointment Holder": {
+            "color": "blue", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "Key Appointment Holder Sub-Module"
+        },
 
-    # Fields
-    "Agency Name": {
-        "color": AGENCY_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Agency Name field"
-    },
-    "Agency Abbreviation (Short Form)": {
-        "color": AGENCY_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Agency Abbreviation (Short Form) field"
-    },
-    "Agency Operational Status": {
-        "color": AGENCY_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Agency Operational field"
-    },
-    "Ministry Family": {
-        "color": MINISTRY_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Ministry Family field"
-    },
-    "Full Name": {
-        "color": AGENCY_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Full Name of Key Appointment Holder field"
-    },
-    "Designation": {
-        "color": AGENCY_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Designation field"
-    },
-    "Email": {
-        "color": AGENCY_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Email field"
-    },
-    "System ID": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "System ID (Primary Key)"
-    },
-    "System Name": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "System Name field"
-    },
-    "System Description": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "System Description field"
-    },
-    "System Status": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "System Status field"
-    },
-    "Security Classification": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Security Classification field"
-    },
-    "Sensitivity Classification": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Sensitivity Classification field"
-    },
-    "Economy": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Economy Impact field"
-    },
-    "Public Health and Safety": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Public Health and Safety Impact field"
-    },
-    "National Security": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "National Security Impact field"
-    },
-    "Social Preparedness": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Social Preparedness Impact field"
-    },
-    "Public Service": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Public Service Impact field"
-    },
-    "System Criticality": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "System Criticality field"
-    },
-    "Designated CII": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Designated CII field"
-    },
-    "Computed RML": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Computed RML field"
-    },
-    "Computed RML Date": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Computed RML Date field"
-    },
-    "Agency Proposed RML": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Agency Proposed RML field"
-    },
-    "RML Alignment": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "RML Alignment field"
-    },
-    "RML Justification": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "RML Justification field"
-    },
-    "Endorsed RML": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Endorsed RML field"
-    },
-    "RML Endorsement Date": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "RML Endorsement Date field"
-    },
-    "Endorsement Comments": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Endorsement Comments field"
-    },
-    "IDSC Approval Date": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "IDSC Approval Date field"
-    },
-    "IDSC Approval Attachment": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "IDSC Approval Attachment field"
-    },
-    "MHA Approval": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "MHA Approval field"
-    },
-    "CSA Approval": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "CSA Approval field"
-    },
-    "SNDGO Approval": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "SNDGO Approval field"
-    },
-    "MHA Comments": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "MHA Comments field"
-    },
-    "CSA Comments": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "CSA Comments field"
-    },
-    "SNDGO Comments": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "SNDGO Comments field"
-    },
-    "Service Availability": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Service Availability field"
-    },
-    "RTO": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "RTO field"
-    },
-    "RPO": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "RPO field"
-    },
-    "Total Dependencies": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Total Dependencies field"
-    },
-    "Downstream Impact": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Downstream Impact field"
-    },
-    "Direct Dependencies Count": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Direct Dependencies Count field"
-    },
-    "Dependency ID": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Dependency ID field"
-    },
-    "Dependency Status": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Dependency Status field"
-    },
-    "Dependency Type": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Dependency Type field"
-    },
-    "Upstream System": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Upstream System field"
-    },
-    "Dependent System": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Dependent System field"
-    },
-    "Data Exchange Frequency": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Data Exchange Frequency field"
-    },
-    "Inferred Dependencies": {
-        "color": FIELD_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Inferred Dependencies field"
-    },
-    "Ministry Family Name": {
-        "color": MINISTRY_COLOR,
-        "size": FIELD_SIZE,
-        "shape": "dot",
-        "title": "Ministry Family Name field"
+            
+        
+        "System Management": {
+            "color": "#2E7D32", 
+            "size": 50, 
+            "shape": "dot",
+            "title": "System Management Module"
+        },
+        # Main Modules
+        "System Identity & Classification": {
+            "color": "#4CAF50", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "System Identity & Classification Sub-Module"
+        },
+        "Criticality & Risk": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "Criticality & Risk Sub-Module"
+        },
+        "System Resilience": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "System Resilience Sub-Module"
+        },
+        "Hosting and System Dependencies": {
+            "color": "#4CAF50", 
+            "size": 25,
+            "shape": "dot",
+            "title": "Hosting and System Dependencies Sub-Module"
+        },
+
+        # Sub-groups
+        "Basic Information": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Basic Information Sub-Group"
+        },
+        "Organizational Context": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Organizational Context Sub-Group"
+        },
+        "Classification": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Classification Sub-Group"
+        },
+        "Impact Assessment": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Impact Assessment Sub-Group"
+        },
+        "Risk Profile": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Risk Profile Sub-Group"
+        },
+        "SCA/RML Approval": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "SCA/RML Approval Sub-Group"
+        },
+        "Availability & Recovery": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Availability & Recovery Sub-Group"
+        },
+        "Dependencies Management": {
+            "color": "#66BB6A", 
+            "size": 20, 
+            "shape": "dot",
+            "title": "Dependencies Management Sub-Group"
+        },
+
+        # Fields (all the existing fields remain the same)
+
+        "Agency Name": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Agency Name field"
+        },        
+        
+        "Agency Abbreviation (Short Form)": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Agency Abbreviation (Short Form) field"
+        },        
+        
+        "Agency Operational Status": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Agency Operational field"
+        },        
+        
+        "Ministry Family": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Ministry Family field"
+        },        
+        
+        "Full Name": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Full Name of Key Appointment Holder field"
+        },        
+        
+        "Designation": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Designation field"
+        },
+
+        "Email": {
+            "color": "blue", "size": 15, "shape": "dot",
+            "title": "Email field"
+        },
+
+
+
+        
+        "Agency": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Agency field"
+        },
+        "Ministry Family": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Ministry Family field"
+        },
+        "System ID": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System ID (Primary Key)"
+        },
+        "System Name": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Name field"
+        },
+        "System Description": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Description field"
+        },
+        "System Status": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Status field"
+        },
+        "Security Classification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Security Classification field"
+        },
+        "Sensitivity Classification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Sensitivity Classification field"
+        },
+        "Economy": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Economy impact field"
+        },
+        "Public Health and Safety": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Public Health and Safety field"
+        },
+        "National Security": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "National Security field"
+        },
+        "Social Preparedness": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Social Preparedness field"
+        },
+        "Public Service": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Public Service field"
+        },
+        "System Criticality": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "System Criticality (Auto-generated)"
+        },
+        "Designated CII": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Designated CII under Cybersecurity Act"
+        },
+        "Computed RML": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Computed Risk Materiality Level"
+        },
+        "Computed RML Date": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Computed RML Date"
+        },
+        "Agency Proposed RML": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Agency Proposed Risk Materiality Level"
+        },
+        "RML Alignment": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "In line with Computed RML?"
+        },
+        "RML Justification": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Justification if not in line"
+        },
+        "Endorsed RML": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Endorsed Risk Materiality Level"
+        },
+        "RML Endorsement Date": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Date Endorsed"
+        },
+        "Endorsement Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Endorsed Comments"
+        },
+        "IDSC Approval Date": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "IDSC's Approval Date"
+        },
+        "IDSC Approval Attachment": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "IDSC's Approval Attachment"
+        },
+        "MHA Approval": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Approved by MHA?"
+        },
+        "CSA Approval": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Approved by CSA?"
+        },
+        "SNDGO Approval": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Approved by SNDGO?"
+        },
+        "MHA Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "MHA Comments"
+        },
+        "CSA Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "CSA Comments"
+        },
+        "SNDGO Comments": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "SNDGO Comments"
+        },
+        "Service Availability": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Service Availability"
+        },
+        "RTO": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Recovery Time Objective"
+        },
+        "RPO": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Recovery Point Objective"
+        },
+        "Total Dependencies": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Total Dependencies"
+        },
+        "Downstream Impact": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Downstream Impact"
+        },
+        "Direct Dependencies Count": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Direct Dependencies Count"
+        },
+        "Dependency ID": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Dependency ID"
+        },
+        "Dependency Status": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Dependency Status"
+        },
+        "Dependency Type": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Dependency Type"
+        },
+        "Upstream System": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Upstream System"
+        },
+        "Dependent System": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Dependent System"
+        },
+        "Data Exchange Frequency": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Data Exchange Frequency"
+        },
+        "Inferred Dependencies": {
+            "color": "#81C784", "size": 15, "shape": "dot",
+            "title": "Inferred Dependencies"
+        }
     }
-}
 
+    # Define edges with the new hierarchical structure
+    edges = [
+        # Main module connections
+        ("System Management", "System Identity & Classification", "", ""),
+        ("System Management", "Criticality & Risk", "", ""),
+        ("System Management", "System Resilience", "", ""),
+        ("System Management", "Hosting and System Dependencies", "", ""),
+        
+        ("Agency Management", "Agency", "", ""),
+        ("Agency Management", "Key Appointment Holder", "", ""),
+      
+        # Agency sub-group connection    
+        ("Agency", "Agency Name", "", ""),
+        ("Agency", "Agency Abbreviation (Short Form)", "", ""),
+        ("Agency", "Agency Operational Status", "", ""),
+        ("Agency", "Ministry Family", "", ""),
+        ("Key Appointment Holder", "Full Name", "", ""),
+        ("Key Appointment Holder", "Designation", "", ""),
+        ("Key Appointment Holder", "Email", "", ""),
+        #("Agency", "Agency Name", "", "")
+        ("Ministry Family", "Ministry Family Name", "", ""),
+         
+        # System Identity & Classification sub-group connections
+        ("System Identity & Classification", "Basic Information", "", ""),
+        ("System Identity & Classification", "Organizational Context", "", ""),
+        ("System Identity & Classification", "Classification", "", ""),
 
-# Define relationships between entities
-edges = [
-    # Agency Management Module connections
-    ("Agency Management", "Agency"),
-    ("Agency Management", "Key Appointment Holder"),
-    
-    # Agency connections
-    ("Agency", "Basic Information"),
-    ("Basic Information", "Agency Name"),
-    ("Basic Information", "Agency Abbreviation (Short Form)"),
-    ("Basic Information", "Agency Operational Status"),
-    ("Basic Information", "Ministry Family"),
-    
-    # Key Appointment Holder connections
-    ("Key Appointment Holder", "Full Name"),
-    ("Key Appointment Holder", "Designation"),
-    ("Key Appointment Holder", "Email"),
-    
-    # System Management Module connections
-    ("System Management", "System Identity & Classification"),
-    ("System Management", "Criticality & Risk"),
-    ("System Management", "System Resilience"),
-    ("System Management", "Hosting and System Dependencies"),
-    
-    # System Identity & Classification connections
-    ("System Identity & Classification", "Basic Information"),
-    ("System Identity & Classification", "Organizational Context"),
-    ("System Identity & Classification", "Classification"),
-    
-    # Basic Information (System) connections
-    ("Basic Information", "System ID"),
-    ("Basic Information", "System Name"),
-    ("Basic Information", "System Description"),
-    ("Basic Information", "System Status"),
-    
-    # Classification connections
-    ("Classification", "Security Classification"),
-    ("Classification", "Sensitivity Classification"),
-    
-    # Criticality & Risk connections
-    ("Criticality & Risk", "Impact Assessment"),
-    ("Criticality & Risk", "Risk Profile"),
-    ("Criticality & Risk", "SCA/RML Approval"),
-    
-    # Impact Assessment connections
-    ("Impact Assessment", "Economy"),
-    ("Impact Assessment", "Public Health and Safety"),
-    ("Impact Assessment", "National Security"),
-    ("Impact Assessment", "Social Preparedness"),
-    ("Impact Assessment", "Public Service"),
-    
-    # Risk Profile connections
-    ("Risk Profile", "System Criticality"),
-    ("Risk Profile", "Designated CII"),
-    ("Risk Profile", "Computed RML"),
-    ("Risk Profile", "Computed RML Date"),
-    ("Risk Profile", "Agency Proposed RML"),
-    ("Risk Profile", "RML Alignment"),
-    ("Risk Profile", "RML Justification"),
-    
-    # SCA/RML Approval connections
-    ("SCA/RML Approval", "Endorsed RML"),
-    ("SCA/RML Approval", "RML Endorsement Date"),
-    ("SCA/RML Approval", "Endorsement Comments"),
-    ("SCA/RML Approval", "IDSC Approval Date"),
-    ("SCA/RML Approval", "IDSC Approval Attachment"),
-    ("SCA/RML Approval", "MHA Approval"),
-    ("SCA/RML Approval", "CSA Approval"),
-    ("SCA/RML Approval", "SNDGO Approval"),
-    ("SCA/RML Approval", "MHA Comments"),
-    ("SCA/RML Approval", "CSA Comments"),
-    ("SCA/RML Approval", "SNDGO Comments"),
-    
-    # System Resilience connections
-    ("System Resilience", "Availability & Recovery"),
-    ("Availability & Recovery", "Service Availability"),
-    ("Availability & Recovery", "RTO"),
-    ("Availability & Recovery", "RPO"),
-    
-    # Hosting and System Dependencies connections
-    ("Hosting and System Dependencies", "Dependencies Management"),
-    ("Dependencies Management", "Total Dependencies"),
-    ("Dependencies Management", "Downstream Impact"),
-    ("Dependencies Management", "Direct Dependencies Count"),
-    ("Dependencies Management", "Dependency ID"),
-    ("Dependencies Management", "Dependency Status"),
-    ("Dependencies Management", "Dependency Type"),
-    ("Dependencies Management", "Upstream System"),
-    ("Dependencies Management", "Dependent System"),
-    ("Dependencies Management", "Data Exchange Frequency"),
-    ("Dependencies Management", "Inferred Dependencies"),
-    
-    # Organizational Context connections
-    ("Organizational Context", "Ministry Family Name"),
-]
+        # Basic Information connections
+        ("Basic Information", "System ID", "", ""),
+        ("Basic Information", "System Name", "", ""),
+        ("Basic Information", "System Description", "", ""),
+        ("Basic Information", "System Status", "", ""),
 
-def create_network():
-    # Create network
-    net = Network(height="750px", width="100%", bgcolor="#ffffff", font_color="black")
-    net.force_atlas_2based()
-    
-    # Add nodes
+        # Organizational Context connections
+        ("Organizational Context", "Agency Name", "", ""),
+        ("Organizational Context", "Ministry Family Name", "", ""),
+
+        # Classification connections
+        ("Classification", "Security Classification", "", ""),
+        ("Classification", "Sensitivity Classification", "", ""),
+
+        # Criticality & Risk sub-group connections
+        ("Criticality & Risk", "Impact Assessment", "", ""),
+        ("Criticality & Risk", "Risk Profile", "", ""),
+        ("Criticality & Risk", "SCA/RML Approval", "", ""),
+
+        # Impact Assessment connections
+        ("Impact Assessment", "Economy", "", ""),
+        ("Impact Assessment", "Public Health and Safety", "", ""),
+        ("Impact Assessment", "National Security", "", ""),
+        ("Impact Assessment", "Social Preparedness", "", ""),
+        ("Impact Assessment", "Public Service", "", ""),
+        ("Impact Assessment", "System Criticality", "", ""),
+        ("Impact Assessment", "Designated CII", "", ""),
+
+        # Risk Profile connections
+        ("Risk Profile", "Computed RML", "", ""),
+        ("Risk Profile", "Computed RML Date", "", ""),
+        ("Risk Profile", "Agency Proposed RML", "", ""),
+        ("Risk Profile", "RML Alignment", "", ""),
+        ("Risk Profile", "RML Justification", "", ""),
+        ("Risk Profile", "Endorsed RML", "", ""),
+        ("Risk Profile", "RML Endorsement Date", "", ""),
+        ("Risk Profile", "Endorsement Comments", "", ""),
+        ("Computed RML", "System Criticality", "", ""),
+        ("Computed RML", "Security Classification", "", ""),
+        ("Computed RML", "Sensitivity Classification", "", ""),
+        ("Computed RML", "Inferred Dependencies", "", ""),
+
+        # SCA/RML Approval connections
+        ("SCA/RML Approval", "IDSC Approval Date", "", ""),
+        ("SCA/RML Approval", "IDSC Approval Attachment", "", ""),
+        ("SCA/RML Approval", "MHA Approval", "", ""),
+        ("SCA/RML Approval", "CSA Approval", "", ""),
+        ("SCA/RML Approval", "SNDGO Approval", "", ""),
+        ("SCA/RML Approval", "MHA Comments", "", ""),
+        ("SCA/RML Approval", "CSA Comments", "", ""),
+        ("SCA/RML Approval", "SNDGO Comments", "", ""),
+
+        # System Resilience sub-group connections
+        ("System Resilience", "Availability & Recovery", "", ""),
+        ("Availability & Recovery", "Service Availability", "", ""),
+        ("Availability & Recovery", "RTO", "", ""),
+        ("Availability & Recovery", "RPO", "", ""),
+
+        # Hosting and System Dependencies sub-group connections
+        ("Hosting and System Dependencies", "Dependencies Management", "", ""),
+        ("Dependencies Management", "Total Dependencies", "", ""),
+        ("Dependencies Management", "Downstream Impact", "", ""),
+        ("Dependencies Management", "Direct Dependencies Count", "", ""),
+        ("Dependencies Management", "Dependency ID", "", ""),
+        ("Dependencies Management", "Dependency Status", "", ""),
+        ("Dependencies Management", "Dependency Type", "", ""),
+        ("Dependencies Management", "Upstream System", "", ""),
+        ("Dependencies Management", "Dependent System", "", ""),
+        ("Dependencies Management", "Data Exchange Frequency", "", ""),
+        ("Dependencies Management", "Inferred Dependencies", "", "")
+    ]
+
+    # Create NetworkX graph
+    G = nx.DiGraph()
     for node, attributes in entities.items():
-        net.add_node(
-            node,
-            color=attributes["color"],
-            size=attributes["size"],
-            shape=attributes["shape"],
-            title=attributes["title"]
-        )
-    
-    # Add edges
-    for edge in edges:
-        net.add_edge(edge[0], edge[1], color="#808080")
-    
-    # Set physics layout options
+        node_attrs = {
+            "color": attributes["color"],
+            "size": attributes["size"],
+            "shape": attributes["shape"],
+            "title": attributes["title"],
+            "label": node
+        }
+        G.add_node(node, **node_attrs)
+
+    # Add edges with labels and custom arrow directions
+    for source, target, label, direction in edges:
+        G.add_edge(source, target, title=label, label=label, arrows=direction)
+
+    # Create interactive PyVis network
+    net = Network(height="900px", width="100%", directed=True, notebook=True)
+    net.from_nx(G)
+
+    # Set options for better spacing and reduced overlapping
     net.set_options("""
-{
-    "physics": {
-        "enabled": true,
-        "stabilization": {
-            "enabled": true,
-            "iterations": 2000,
-            "updateInterval": 25,
-            "onlyDynamicEdges": false,
-            "fit": true
-        },
-        "barnesHut": {
-            "gravitationalConstant": -60000,
-            "centralGravity": 0.1,
-            "springLength": 1000,
-            "springConstant": 0.08,
-            "damping": 0.12,
-            "avoidOverlap": 20
-        },
-        "minVelocity": 0.75,
-        "maxVelocity": 30
-    },
-    "edges": {
-        "smooth": {
-            "type": "curvedCW",
-            "roundness": 0.2,
-            "forceDirection": "horizontal"
-        },
-        "length": 300,
-        "font": {
-            "size": 11,
-            "strokeWidth": 2,
-            "strokeColor": "#ffffff"
-        },
-        "color": {
-            "inherit": false,
-            "color": "#2E7D32",
-            "opacity": 0.8
-        },
-        "width": 1.5
-    },
-    "nodes": {
-        "font": {
-            "size": 12,
-            "strokeWidth": 2,
-            "strokeColor": "#ffffff"
-        },
-        "margin": 12,
-        "scaling": {
-            "min": 10,
-            "max": 30
-        },
-        "fixed": {
-            "x": false,
-            "y": false
-        }
-    },
-    "layout": {
-        "improvedLayout": true,
-        "randomSeed": 42,
-        "hierarchical": {
-            "enabled": false,
-            "nodeSpacing": 300,
-            "levelSeparation": 300,
-            "treeSpacing": 300
-        }
-    },
-    "interaction": {
-        "hover": true,
-        "tooltipDelay": 300,
-        "dragNodes": true,
-        "dragView": true,
-        "zoomView": true
-    },
-    "configure": {
-        "enabled": true,
-        "filter": ["physics", "layout", "interaction", "manipulation"],
-        "showButton": true
-    }
-}
-""")
-    
-    # Create a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-        net.save_graph(tmp_file.name)
-        return tmp_file.name
-
-def get_network_html():
-    # Create a unique key for the current graph state
-    current_time = int(time.time())
-    if st.session_state.graph_key != current_time:
-        st.session_state.graph_key = current_time
-        
-        # Generate the network
-        tmp_file_path = create_network()
-        
-        # Read the file content
-        with open(tmp_file_path, 'r', encoding='utf-8') as file:
-            html_content = file.read()
-            
-        # Delete the temporary file
-        os.unlink(tmp_file_path)
-        
-        return html_content
-    return None
-
-def main():
-    if not check_password():
-        st.stop()
-
-    # Title and description
-    st.title("Interactive System Interdependency Graph")
-    st.markdown("""
-    This interactive graph visualizes the relationships between different components 
-    in the system. You can:
-    * Drag nodes to rearrange the layout
-    * Zoom in/out using mouse wheel
-    * Hover over nodes to see details
-    * Click and drag the background to pan
-    * Double-click to reset the view
-    """)
-
-    # Store the layout type in session state
-    if 'hierarchical_layout' not in st.session_state:
-        st.session_state.hierarchical_layout = False
-
-    # Add buttons in a horizontal layout
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        if st.button("Refresh Graph"):
-            st.session_state.graph_key = 0
-    with col2:
-        if st.button("Enable Hierarchical Layout"):
-            st.session_state.hierarchical_layout = True
-            st.session_state.graph_key = 0
-    with col3:
-        if st.button("Disable Hierarchical Layout"):
-            st.session_state.hierarchical_layout = False
-            st.session_state.graph_key = 0
-
-    # Create tabs
-    tab1, tab2 = st.tabs(["Graph View", "Legend"])
-
-    with tab1:
-        # Display the network
-        html_content = get_network_html()
-        if html_content:
-            components.html(html_content, height=800)
-
-    with tab2:
-        # Create legend
-        st.header("Legend")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.subheader("Node Colors")
-            st.markdown(f"""
-            * <span style='color:{AGENCY_COLOR}'>●</span> Blue: Agency/Ministry related
-            * <span style='color:{SYSTEM_COLOR}'>●</span> Green: System related
-            """, unsafe_allow_html=True)
-            
-            st.subheader("Node Sizes")
-            st.markdown("""
-            * Large: Main modules
-            * Medium: Sub-modules
-            * Small: Groups
-            * Tiny: Fields
-            """)
-
-        with col2:
-            st.subheader("Modules")
-            st.markdown("""
-            * Agency Management
-                * Agency
-                * Key Appointment Holder
-            * System Management
-                * System Identity & Classification
-                * Criticality & Risk
-                * System Resilience
-                * Hosting and System Dependencies
-            """)
-
-def create_network():
-    # Create network
-    net = Network(height="750px", width="100%", bgcolor="#ffffff", font_color="black")
-    net.force_atlas_2based()
-    
-    # Add nodes and edges as before...
-    
-    # Set physics layout options with conditional hierarchical layout
-    options = {
+    {
         "physics": {
-            "enabled": True,
+            "enabled": true,
             "stabilization": {
-                "enabled": True,
+                "enabled": true,
                 "iterations": 2000,
                 "updateInterval": 25,
-                "onlyDynamicEdges": False,
-                "fit": True
+                "onlyDynamicEdges": false,
+                "fit": true
             },
             "barnesHut": {
                 "gravitationalConstant": -60000,
@@ -800,7 +522,7 @@ def create_network():
                 "strokeColor": "#ffffff"
             },
             "color": {
-                "inherit": False,
+                "inherit": false,
                 "color": "#2E7D32",
                 "opacity": 0.8
             },
@@ -818,39 +540,406 @@ def create_network():
                 "max": 30
             },
             "fixed": {
-                "x": False,
-                "y": False
+                "x": false,
+                "y": false
             }
         },
         "layout": {
-            "improvedLayout": True,
+            "improvedLayout": true,
             "randomSeed": 42,
             "hierarchical": {
-                "enabled": st.session_state.hierarchical_layout,
-                "direction": "UD",
-                "sortMethod": "directed",
-                "nodeSpacing": 150,
-                "treeSpacing": 200,
-                "levelSeparation": 250
+                "enabled": false,
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
             }
-        },
-        "interaction": {
-            "hover": True,
-            "tooltipDelay": 300,
-            "dragNodes": True,
-            "dragView": True,
-            "zoomView": True
-        },
-        "configure": {
-            "enabled": True,
-            "filter": ["physics", "layout", "interaction", "manipulation"],
-            "showButton": True
         }
     }
-    
-    net.set_options(str(options).replace("True", "true").replace("False", "false"))
-    
-    # Create a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-        net.save_graph(tmp_file.name)
-        return tmp_file.name
+    """)
+
+    # Save and display the network
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net.save_graph(tmp_file.name)
+            with open(tmp_file.name, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            
+            # Insert the button and script just before the closing body tag
+            fullscreen_html = """
+            <button 
+                style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    padding: 8px 16px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                "
+                onclick="toggleFullscreen()"
+            >
+                Full Screen
+            </button>
+            <script>
+                function toggleFullscreen() {
+                    let elem = document.documentElement;
+                    
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) { /* Safari */
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) { /* IE11 */
+                            elem.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                    }
+                }
+            </script>
+            """
+            
+            # Insert the button just before </body>
+            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
+            
+            components.html(modified_html, height=900)
+            # Clean up the temporary file
+            os.unlink(tmp_file.name)
+    except Exception as e:
+        st.error(f"An error occurred while generating the graph: {str(e)}")
+
+#-----------------------------------------------------------------------
+
+    # Second Chart
+    st.title("🧠 Interactive Data Model Interdependency Chart")
+
+    # Define entity modules and colors for second chart
+    entities2 = {
+        "Ministry Family": {
+            "color": "blue",
+            "size": 25,
+            "shape": "dot",
+            "title": "Ministry Family"
+        },
+        "Agency": {
+            "color": "blue",
+            "size": 25,
+            "shape": "dot",
+            "title": "Agency"
+        },
+        "System Overview": {
+            "color": "teal",
+            "size": 25,
+            "shape": "dot",
+            "title": "System Overview"
+        },
+        "Criticality Assessment": {
+            "color": "teal",
+            "size": 25,
+            "shape": "dot",
+            "title": "Criticality Assessment"
+        },
+        "Policy": {
+            "color": "red",
+            "size": 25,
+            "shape": "dot",
+            "title": "Policy"
+        },
+        "Policy Waivers": {
+            "color": "red",
+            "size": 25,
+            "shape": "dot",
+            "title": "Policy Waivers"
+        },
+        "Supplier Profile": {
+            "color": "purple",
+            "size": 25,
+            "shape": "dot",
+            "title": "Supplier Profile"
+        },
+        "Supplier Risk Management": {
+            "color": "purple",
+            "size": 25,
+            "shape": "dot",
+            "title": "Supplier Risk Management"
+        },
+        "Supplier Contracts": {
+            "color": "purple",
+            "size": 25,
+            "shape": "dot",
+            "title": "Supplier Contracts"
+        },
+        "Actions Against Errant Supplier": {
+            "color": "purple",
+            "size": 25,
+            "shape": "dot",
+            "title": "Actions Against Errant Supplier"
+        },
+        "Supplier Performance Feedback": {
+            "color": "purple",
+            "size": 25,
+            "shape": "dot",
+            "title": "Supplier Performance Feedback"
+        },
+        "Bulk Tender ECN Details": {
+            "color": "purple",
+            "size": 25,
+            "shape": "dot",
+            "title": "Bulk Tender ECN Details"
+        },
+        "EDH Agency": {
+            "color": "purple",
+            "size": 25,
+            "shape": "dot",
+            "title": "EDH Agency"
+        },
+        "Risk Assessments": {
+            "color": "orange",
+            "size": 25,
+            "shape": "dot",
+            "title": "Risk Assessments"
+        },
+        "Risk Treatments": {
+            "color": "orange",
+            "size": 25,
+            "shape": "dot",
+            "title": "Risk Treatments"
+        },
+        "Audit Findings": {
+            "color": "gray",
+            "size": 25,
+            "shape": "dot",
+            "title": "Audit Findings"
+        },
+        "System Management": {
+            "color": "green",
+            "size": 25,
+            "shape": "dot",
+            "title": "System Management"
+        },
+        "Security & Sensitivity Classification": {
+            "color": "green",
+            "size": 25,
+            "shape": "dot",
+            "title": "Security & Sensitivity Classification"
+        },
+        "Risk Materiality Level": {
+            "color": "green",
+            "size": 25,
+            "shape": "dot",
+            "title": "Risk Materiality Level"
+        },
+        "System Resiliency": {
+            "color": "green",
+            "size": 25,
+            "shape": "dot",
+            "title": "System Resiliency"
+        },
+        "Hosting and System Dependencies": {
+            "color": "green",
+            "size": 25,
+            "shape": "dot",
+            "title": "Hosting and System Dependencies"
+        },
+        "Central Programmes": {
+            "color": "green",
+            "size": 25,
+            "shape": "dot",
+            "title": "Central Programmes"
+        }
+    }
+
+    # Define edges for second chart
+    edges2 = [
+        ("Agency", "System Overview", "FK: Agency_ID", "both"),
+        ("Agency", "Ministry Family", "FK: Ministry_ID", "both"),
+        ("System Overview", "Criticality Assessment", "FK: System_ID", "both"),
+        ("System Overview", "Policy", "FK: Policy_ID", "both"),
+        ("Policy", "Policy Waivers", "FK: Policy_ID", "both"),
+        ("Supplier Profile", "Supplier Risk Management", "FK: Supplier_ID", "both"),
+        ("Supplier Profile", "Supplier Contracts", "FK: Supplier_ID", "both"),
+        ("Supplier Profile", "Actions Against Errant Supplier", "FK: Supplier_ID", "both"),
+        ("Supplier Profile", "Supplier Performance Feedback", "FK: Supplier_ID", "both"),
+        ("Supplier Profile", "Bulk Tender ECN Details", "FK: Supplier_ID", "both"),
+        ("Supplier Profile", "EDH Agency", "FK: Supplier_ID", "both"),
+        ("Risk Assessments", "Risk Treatments", "FK: Assessment_ID", "both"),
+        ("Audit Findings", "Risk Treatments", "FK: Finding_ID", "both"),
+        ("Supplier Risk Management", "Risk Assessments", "FK: Risk_ID", "both"),
+        ("Supplier Performance Feedback", "Supplier Risk Management", "FK: Feedback_ID", "both"),
+        ("Actions Against Errant Supplier", "Supplier Contracts", "FK: Action_ID", "both"),
+        ("System Overview", "Supplier Contracts", "FK: System_ID", "both"),
+        ("System Overview", "Audit Findings", "FK: System_ID", "both"),
+        ("System Management", "System Overview", "FK: System_ID", "both"),
+        ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
+        ("System Management", "Security & Sensitivity Classification", "FK: System_ID", "both"),
+        ("System Management", "Risk Materiality Level", "FK: System_ID", "both"),
+        ("System Management", "System Resiliency", "FK: System_ID", "both"),
+        ("System Management", "Hosting and System Dependencies", "FK: System_ID", "both"),
+        ("System Management", "Central Programmes", "FK: System_ID", "both"),
+        ("System Management", "Supplier Contracts", "FK: System_ID", "both"),
+        ("Supplier Contracts", "Hosting and System Dependencies", "FK: Contract_ID", "both")
+    ]
+
+    # Create NetworkX graph for second chart
+    G2 = nx.DiGraph()
+    for node, attributes in entities2.items():
+        node_attrs = {
+            "color": attributes["color"],
+            "size": attributes["size"],
+            "shape": attributes["shape"],
+            "title": attributes["title"],
+            "label": node
+        }
+        G2.add_node(node, **node_attrs)
+
+    # Add edges with labels and custom arrow directions
+    for source, target, label, direction in edges2:
+        G2.add_edge(source, target, title=label, label=label, arrows=direction)
+
+    # Create interactive PyVis network for second chart
+    net2 = Network(height="900px", width="100%", directed=True, notebook=True)
+    net2.from_nx(G2)
+
+    # Set options for better visualization
+    net2.set_options("""
+    {
+        "physics": {
+            "enabled": true,
+            "stabilization": {
+                "enabled": true,
+                "iterations": 2000,
+                "updateInterval": 25,
+                "onlyDynamicEdges": false,
+                "fit": true
+            },
+            "barnesHut": {
+                "gravitationalConstant": -60000,
+                "centralGravity": 0.1,
+                "springLength": 1000,
+                "springConstant": 0.08,
+                "damping": 0.12,
+                "avoidOverlap": 20
+            },
+            "minVelocity": 0.75,
+            "maxVelocity": 30
+        },
+        "edges": {
+            "smooth": {
+                "type": "curvedCW",
+                "roundness": 0.2,
+                "forceDirection": "horizontal"
+            },
+            "length": 300,
+            "font": {
+                "size": 11,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            },
+            "width": 1.5
+        },
+        "nodes": {
+            "font": {
+                "size": 12,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "margin": 12,
+            "scaling": {
+                "min": 10,
+                "max": 30
+            },
+            "fixed": {
+                "x": false,
+                "y": false
+            }
+        },
+        "layout": {
+            "improvedLayout": true,
+            "randomSeed": 42,
+            "hierarchical": {
+                "enabled": false,
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
+            }
+        }
+    }
+    """)
+
+    # Save and display the second network
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net2.save_graph(tmp_file.name)
+            with open(tmp_file.name, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            
+            # Insert the button and script just before the closing body tag
+            fullscreen_html = """
+            <button 
+                style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    padding: 8px 16px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                "
+                onclick="toggleFullscreen()"
+            >
+                Full Screen
+            </button>
+            <script>
+                function toggleFullscreen() {
+                    let elem = document.documentElement;
+                    
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) { /* Safari */
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) { /* IE11 */
+                            elem.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                    }
+                }
+            </script>
+            """
+            
+            # Insert the button just before </body>
+            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
+            
+            components.html(modified_html, height=900)
+            # Clean up the temporary file
+            os.unlink(tmp_file.name)
+    except Exception as e:
+        st.error(f"An error occurred while generating the second graph: {str(e)}")
