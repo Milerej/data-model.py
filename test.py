@@ -437,6 +437,52 @@ if check_password():
                     "y": true
                 }
             }
+        }""") # Set hierarchical layout options based on toggle
+    if view_type:
+        net.set_options("""{
+            "layout": {
+                "hierarchical": {
+                    "enabled": true,
+                    "direction": "UD",
+                    "sortMethod": "directed",
+                    "nodeSpacing": 250,
+                    "levelSeparation": 250,
+                    "treeSpacing": 250,
+                    "blockShifting": true,
+                    "edgeMinimization": true,
+                    "parentCentralization": true,
+                    "shakeTowards": "roots"
+                }
+            },
+            "physics": {
+                "enabled": false,
+                "hierarchicalRepulsion": {
+                    "centralGravity": 0.0,
+                    "springLength": 100,
+                    "springConstant": 0.01,
+                    "nodeDistance": 250,
+                    "damping": 0.09
+                }
+            },
+            "edges": {
+                "smooth": {
+                    "type": "cubicBezier",
+                    "forceDirection": "vertical",
+                    "roundness": 0.5
+                },
+                "color": {
+                    "inherit": false,
+                    "color": "#2E7D32",
+                    "opacity": 0.8
+                }
+            },
+            "nodes": {
+                "fixed": {
+                    "x": false,
+                    "y": true
+                },
+                "levelAlignment": "true"
+            }
         }""")
     else:
         net.set_options("""{
