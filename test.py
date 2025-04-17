@@ -401,43 +401,7 @@ if check_password():
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
-    # Set hierarchical layout options based on toggle
-    if view_type:
-        net.set_options("""{
-            "layout": {
-                "hierarchical": {
-                    "enabled": true,
-                    "direction": "UD",
-                    "sortMethod": "directed",
-                    "nodeSpacing": 150,
-                    "levelSeparation": 200,
-                    "treeSpacing": 200,
-                    "blockShifting": true,
-                    "edgeMinimization": true,
-                    "parentCentralization": true
-                }
-            },
-            "physics": {
-                "enabled": false
-            },
-            "edges": {
-                "smooth": {
-                    "type": "cubicBezier",
-                    "forceDirection": "vertical"
-                },
-                "color": {
-                    "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.8
-                }
-            },
-            "nodes": {
-                "fixed": {
-                    "x": false,
-                    "y": true
-                }
-            }
-        }""") # Set hierarchical layout options based on toggle
+   # Set hierarchical layout options based on toggle
     if view_type:
         net.set_options("""{
             "layout": {
