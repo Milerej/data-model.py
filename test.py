@@ -134,57 +134,7 @@ if check_password():
             "title": "Key Appointment Holder Sub-Module"
         },
 
-        # System Management Subgroups
-        "Basic Information": {
-            "color": COLOR_SCHEMES["system_management"]["subgroup"],
-            "size": NODE_SETTINGS["subgroup"]["size"],
-            "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "Basic Information Sub-Group"
-        },
-        "Organizational Context": {
-            "color": COLOR_SCHEMES["system_management"]["subgroup"],
-            "size": NODE_SETTINGS["subgroup"]["size"],
-            "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "Organizational Context Sub-Group"
-        },
-        "Classification": {
-            "color": COLOR_SCHEMES["system_management"]["subgroup"],
-            "size": NODE_SETTINGS["subgroup"]["size"],
-            "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "Classification Sub-Group"
-        },
-        "Impact Assessment": {
-            "color": COLOR_SCHEMES["system_management"]["subgroup"],
-            "size": NODE_SETTINGS["subgroup"]["size"],
-            "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "Impact Assessment Sub-Group"
-        },
-        "Risk Profile": {
-            "color": COLOR_SCHEMES["system_management"]["subgroup"],
-            "size": NODE_SETTINGS["subgroup"]["size"],
-            "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "Risk Profile Sub-Group"
-        },
-        "SCA/RML Approval": {
-            "color": COLOR_SCHEMES["system_management"]["subgroup"],
-            "size": NODE_SETTINGS["subgroup"]["size"],
-            "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "SCA/RML Approval Sub-Group"
-        },
-        "Availability & Recovery": {
-            "color": COLOR_SCHEMES["system_management"]["subgroup"],
-            "size": NODE_SETTINGS["subgroup"]["size"],
-            "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "Availability & Recovery Sub-Group"
-        },
-        "Dependencies Management": {
-            "color": COLOR_SCHEMES["system_management"]["subgroup"],
-            "size": NODE_SETTINGS["subgroup"]["size"],
-            "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "Dependencies Management Sub-Group"
-        },
-
-            # Fields for both modules
+        # Fields for both modules
         # Agency Management Fields
         "Agency Name": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
@@ -305,80 +255,52 @@ if check_password():
     }
 
     # Complete edges list
-    edges = [
-        # Root node connections
-        ("DGP 2.0", "System Management", "", ""),
-        ("DGP 2.0", "Agency Management", "", ""),
-    
-        # System Management Module relationships
-        ("System Management", "System Identity & Classification", "", ""),
-        ("System Management", "Criticality & Risk", "", ""),
-        ("System Management", "System Resilience", "", ""),
-        ("System Management", "Hosting and System Dependencies", "", ""),
+edges = [
+    # Root node connections
+    ("DGP 2.0", "System Management", "", ""),
+    ("DGP 2.0", "Agency Management", "", ""),
 
-        # System Identity & Classification relationships
-        ("System Identity & Classification", "Basic Information", "", ""),
-        ("System Identity & Classification", "Organizational Context", "", ""),
-        ("System Identity & Classification", "Classification", "", ""),
+    # System Management Module relationships
+    ("System Management", "System Identity & Classification", "", ""),
+    ("System Management", "Criticality & Risk", "", ""),
+    ("System Management", "System Resilience", "", ""),
+    ("System Management", "Hosting and System Dependencies", "", ""),
 
-        # Criticality & Risk relationships
-        ("Criticality & Risk", "Impact Assessment", "", ""),
-        ("Criticality & Risk", "Risk Profile", "", ""),
-        ("Criticality & Risk", "SCA/RML Approval", "", ""),
+    # Agency Management Module relationships
+    ("Agency Management", "Agency", "", ""),
+    ("Agency Management", "Key Appointment Holder", "", ""),
 
-        # System Resilience relationships
-        ("System Resilience", "Availability & Recovery", "", ""),
+    # System Identity & Classification field relationships
+    ("System Identity & Classification", "System ID", "", ""),
+    ("System Identity & Classification", "System Name", "", ""),
+    ("System Identity & Classification", "System Description", "", ""),
+    ("System Identity & Classification", "System Status", "", ""),
+    ("System Identity & Classification", "Agency Name", "", ""),
+    ("System Identity & Classification", "System Classification", "", ""),
 
-        # Hosting and System Dependencies relationships
-        ("Hosting and System Dependencies", "Dependencies Management", "", ""),
+    # Criticality & Risk field relationships
+    ("Criticality & Risk", "Impact Level", "", ""),
+    ("Criticality & Risk", "Risk Level", "", ""),
+    ("Criticality & Risk", "SCA Status", "", ""),
+    ("Criticality & Risk", "RML Status", "", ""),
 
-        # Agency Management Module relationships
-        ("Agency Management", "Agency", "", ""),
-        ("Agency Management", "Key Appointment Holder", "", ""),
+    # System Resilience field relationships
+    ("System Resilience", "System Availability", "", ""),
+    ("System Resilience", "Recovery Time", "", ""),
 
-        # Field relationships for Basic Information
-        ("Basic Information", "System ID", "", ""),
-        ("Basic Information", "System Name", "", ""),
-        ("Basic Information", "System Description", "", ""),
-        ("Basic Information", "System Status", "", ""),
+    # Hosting and System Dependencies field relationships
+    ("Hosting and System Dependencies", "Dependencies", "", ""),
 
-        # Field relationships for Organizational Context
-        ("Organizational Context", "Agency Name", "", ""),
+    # Agency field relationships
+    ("Agency", "Agency Name", "", ""),
+    ("Agency", "Agency Abbreviation (Short Form)", "", ""),
+    ("Agency", "Agency Operational Status", "", ""),
+    ("Agency", "Ministry Family", "", ""),
 
-        # Field relationships for Classification
-        ("Classification", "System Classification", "", ""),
-
-        # Field relationships for Impact Assessment
-        ("Impact Assessment", "Impact Level", "", ""),
-
-        # Field relationships for Risk Profile
-        ("Risk Profile", "Risk Level", "", ""),
-
-        # Field relationships for SCA/RML Approval
-        ("SCA/RML Approval", "SCA Status", "", ""),
-        ("SCA/RML Approval", "RML Status", "", ""),
-
-        # Field relationships for Availability & Recovery
-        ("Availability & Recovery", "System Availability", "", ""),
-        ("Availability & Recovery", "Recovery Time", "", ""),
-
-        # Field relationships for Dependencies Management
-        ("Dependencies Management", "Dependencies", "", ""),
-
-        # Field relationships for Agency
-        ("Agency", "Agency Name", "", ""),
-        ("Agency", "Agency Abbreviation (Short Form)", "", ""),
-        ("Agency", "Agency Operational Status", "", ""),
-        ("Agency", "Ministry Family", "", ""),
-
-        # Field relationships for Key Appointment Holder
-        ("Key Appointment Holder", "Full Name", "", ""),
-        ("Key Appointment Holder", "Designation", "", ""),
-        ("Key Appointment Holder", "Email", "", ""),
-
-        # Cross-module relationships
-        #("Agency Name", "Agency", "", ""),
-        #("Dependencies", "System ID", "", "")
+    # Key Appointment Holder field relationships
+    ("Key Appointment Holder", "Full Name", "", ""),
+    ("Key Appointment Holder", "Designation", "", ""),
+    ("Key Appointment Holder", "Email", "", "")
     ]
 
     # Create NetworkX graph
