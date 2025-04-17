@@ -391,36 +391,40 @@ if check_password():
 
     # Set hierarchical layout options based on toggle
     if view_type:
-        net.options.layout = {
-            "hierarchical": {
-                "enabled": True,
-                "direction": "UD",
-                "sortMethod": "directed",
-                "nodeSpacing": 300,
-                "levelSeparation": 300,
-                "treeSpacing": 300
+        net.set_options("""{
+            "layout": {
+                "hierarchical": {
+                    "enabled": true,
+                    "direction": "UD",
+                    "sortMethod": "directed",
+                    "nodeSpacing": 300,
+                    "levelSeparation": 300,
+                    "treeSpacing": 300
+                }
+            },
+            "physics": {
+                "enabled": false
             }
-        }
-        net.options.physics = {
-            "enabled": False
-        }
+        }""")
     else:
-        net.options.layout = {
-            "hierarchical": {
-                "enabled": False
+        net.set_options("""{
+            "layout": {
+                "hierarchical": {
+                    "enabled": false
+                }
+            },
+            "physics": {
+                "enabled": true,
+                "barnesHut": {
+                    "gravitationalConstant": -60000,
+                    "centralGravity": 0.1,
+                    "springLength": 1000,
+                    "springConstant": 0.08,
+                    "damping": 0.12,
+                    "avoidOverlap": 20
+                }
             }
-        }
-        net.options.physics = {
-            "enabled": True,
-            "barnesHut": {
-                "gravitationalConstant": -60000,
-                "centralGravity": 0.1,
-                "springLength": 1000,
-                "springConstant": 0.08,
-                "damping": 0.12,
-                "avoidOverlap": 20
-            }
-        }
+        }""")
 
     # Save and display the network
     try:
