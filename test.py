@@ -554,3 +554,120 @@ if check_password():
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
+
+
+# Add a divider between charts
+st.markdown("---")
+
+# New section for the second chart
+st.subheader("Module Relationships Overview")
+
+# Define new entities for the second chart (keeping at submodule level)
+module_entities = {
+    "Agency Management": "blue",
+    "System Management": "green",
+    "Risk Management": "orange",
+    "Supplier Management": "purple",
+    "Policy Management": "red",
+    "Audit Management": "gray",
+    "Resource Management": "teal",
+    "Security Management": "brown",
+    "Project Management": "pink",
+    "Service Management": "cyan"
+}
+
+# Define relationships between modules
+module_edges = [
+    ("Agency Management", "System Management", "Manages Systems", "to"),
+    ("Agency Management", "Resource Management", "Allocates Resources", "to"),
+    ("System Management", "Security Management", "Implements Security", "both"),
+    ("System Management", "Service Management", "Provides Services", "to"),
+    ("Risk Management", "System Management", "Assesses Risks", "to"),
+    ("Risk Management", "Supplier Management", "Evaluates Risks", "to"),
+    ("Supplier Management", "Service Management", "Provides Services", "to"),
+    ("Policy Management", "System Management", "Governs Systems", "to"),
+    ("Policy Management", "Security Management", "Defines Policies", "to"),
+    ("Audit Management", "System Management", "Audits Systems", "to"),
+    ("Audit Management", "Risk Management", "Identifies Risks", "to"),
+    ("Project Management", "System Management", "Implements Systems", "to"),
+    ("Project Management", "Resource Management", "Uses Resources", "to"),
+    ("Security Management", "Risk Management", "Reports Risks", "to"),
+    ("Service Management", "Resource Management", "Uses Resources", "to")
+]
+
+# Create NetworkX graph for the second chart
+G2 = nx.DiGraph()
+for node, color in module_entities.items():
+    G2.add_node(node, title=node, color=color)
+
+# Add edges with labels and custom arrow directions
+for source, target, label, direction in module_edges:
+    G2.add_edge(source, target, title=label, label=label, arrows=direction)
+
+# Create interactive PyVis network for the second chart
+net2 = Network(height="700px", width="100%", directed=True)
+net2.from_nx(G2)
+
+# Set options for better visualization
+net2.set_options("""
+{
+  "physics": {
+    "forceAtlas2Based": {
+      "gravitationalConstant": -100,
+      "centralGravity": 0.01,
+      "springLength": 200,
+      "springConstant": 0.08,
+      "damping": 0.4,
+      "avoidOverlap": 1
+    },
+    "maxVelocity": 50,
+    "minVelocity": 0.1,
+    "solver": "forceAtlas2Based",
+    "stabilization": {
+      "enabled": true,
+      "iterations": 1000,
+      "updateInterval": 100
+    }
+  },
+  "edges": {
+    "smooth": {
+      "type": "continuous",
+      "forceDirection": "none"
+    },
+    "color": {
+      "inherit": false,
+      "color": "#666666",
+      "opacity": 0.8
+    },
+    "width": 2,
+    "font": {
+      "size": 12,
+      "strokeWidth": 0,
+      "align": "middle"
+    }
+  },
+  "nodes": {
+    "shape": "box",
+    "size": 25,
+    "font": {
+      "size": 14,
+      "face": "arial"
+    },
+    "margin": 10,
+    "widthConstraint": {
+      "minimum": 120
+    }
+  }
+}
+""")
+
+# Save and display the second chart
+try:
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+        net2.save_graph(tmp_file.name)
+        with open(tmp_file.name, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        components.html(html_content, height=750, scrolling=True)
+        os.unlink(tmp_file.name)
+except Exception as e:
+    st.error(f"An error occurred while generating the second graph: {str(e)}")
