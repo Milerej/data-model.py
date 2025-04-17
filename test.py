@@ -385,20 +385,21 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-    # Create PyVis network
+  # Create PyVis network
     net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
 
     # Network visualization options
-    network_options = {
+    net.set_options("""
+    {
         "physics": {
-            "enabled": not view_type,  # Disable physics when in hierarchical view
+            "enabled": """ + str(not view_type).lower() + """,
             "stabilization": {
-                "enabled": True,
+                "enabled": true,
                 "iterations": 2000,
                 "updateInterval": 25,
-                "onlyDynamicEdges": False,
-                "fit": True
+                "onlyDynamicEdges": false,
+                "fit": true
             },
             "barnesHut": {
                 "gravitationalConstant": -60000,
@@ -424,7 +425,7 @@ if check_password():
                 "strokeColor": "#ffffff"
             },
             "color": {
-                "inherit": False,
+                "inherit": false,
                 "color": "#2E7D32",
                 "opacity": 0.8
             },
@@ -442,79 +443,21 @@ if check_password():
                 "max": 30
             },
             "fixed": {
-                "x": False,
-                "y": False
+                "x": false,
+                "y": false
             }
         },
         "layout": {
-            "improvedLayout": True,
+            "improvedLayout": true,
             "randomSeed": 42,
             "hierarchical": {
-                "enabled": view_type,
+                "enabled": """ + str(view_type).lower() + """,
                 "direction": "UD",
                 "sortMethod": "directed",
-                "nodeSpacing": 200,
-                "levelSeparation": 200,
-                "treeSpacing": 200
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
             }
         }
     }
-    
-    net.set_options(str(network_options))
-
-    # Save and display the network
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-            net.save_graph(tmp_file.name)
-            with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                html_content = f.read()
-            
-            fullscreen_html = """
-            <button 
-                style="
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 10000;
-                    padding: 8px 16px;
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-family: Arial, sans-serif;
-                    font-size: 14px;
-                "
-                onclick="toggleFullscreen()"
-            >
-                Full Screen
-            </button>
-            <script>
-                function toggleFullscreen() {
-                    let elem = document.documentElement;
-                    if (!document.fullscreenElement) {
-                        if (elem.requestFullscreen) {
-                            elem.requestFullscreen();
-                        } else if (elem.webkitRequestFullscreen) {
-                            elem.webkitRequestFullscreen();
-                        } else if (elem.msRequestFullscreen) {
-                            elem.msRequestFullscreen();
-                        }
-                    } else {
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) {
-                            document.msExitFullscreen();
-                        }
-                    }
-                }
-            </script>
-            """
-            
-            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
-            components.html(modified_html, height=900)
-            os.unlink(tmp_file.name)
-    except Exception as e:
-        st.error(f"An error occurred while generating the graph: {str(e)}")
+    """)
