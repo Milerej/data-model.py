@@ -385,51 +385,16 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-    # Create PyVis network
-    net = Network(height="900px", width="100%", directed=True, notebook=True)
+ # Create PyVis network
+    net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
-    # Network visualization options
-    if view_type:
-        net.set_options("""
-        {
-            "physics": {"enabled": false},
-            "layout": {
-                "hierarchical": {
-                    "enabled": true,
-                    "direction": "UD",
-                    "sortMethod": "directed",
-                    "nodeSpacing": 300,
-                    "levelSeparation": 300
-                }
-            }
-        }
-        """)
-    else:
-        net.set_options("""
-        {
-            "physics": {
-                "enabled": true,
-                "barnesHut": {
-                    "gravitationalConstant": -60000,
-                    "centralGravity": 0.1,
-                    "springLength": 1000,
-                    "springConstant": 0.08,
-                    "damping": 0.12,
-                    "avoidOverlap": 20
-                }
-            },
-            "edges": {
-                "smooth": {
-                    "type": "curvedCW",
-                    "roundness": 0.2
-                },
-                "length": 300
-            },
-            "layout": {
-                "hierarchical": {
-                    "enabled": false
-                }
-            }
-        }
-        """)
+    # Save and display the network
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net.save_graph(tmp_file.name)
+            with open(tmp_file.name, 'r', encoding='utf-8') as f:
+                components.html(f.read(), height=900)
+            os.unlink(tmp_file.name)
+    except Exception as e:
+        st.error(f"An error occurred while generating the graph: {str(e)}")
