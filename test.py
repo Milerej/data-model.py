@@ -243,11 +243,11 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "System Status field"
         },
-        "System Owner": {
+        "Agency Name": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "System Owner field"
+            "title": "Agency Name field"
         },
         "System Classification": {
             "color": COLOR_SCHEMES["system_management"]["field"],
@@ -334,7 +334,7 @@ if check_password():
         ("Basic Information", "System Status", "", ""),
 
         # Field relationships for Organizational Context
-        ("Organizational Context", "System Owner", "", ""),
+        ("Organizational Context", "Agency Name", "", ""),
 
         # Field relationships for Classification
         ("Classification", "System Classification", "", ""),
@@ -368,8 +368,8 @@ if check_password():
         ("Key Appointment Holder", "Email", "", ""),
 
         # Cross-module relationships
-        ("System Owner", "Agency", "References", ""),
-        ("Dependencies", "System ID", "References", "")
+        ("Agency Name", "Agency", "", ""),
+        ("Dependencies", "System ID", "", "")
     ]
 
     # Create NetworkX graph
