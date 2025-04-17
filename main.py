@@ -697,6 +697,10 @@ def main():
     * Double-click to reset the view
     """)
 
+    # Store the layout type in session state
+    if 'hierarchical_layout' not in st.session_state:
+        st.session_state.hierarchical_layout = False
+
     # Add buttons in a horizontal layout
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -704,33 +708,149 @@ def main():
             st.session_state.graph_key = 0
     with col2:
         if st.button("Enable Hierarchical Layout"):
+            st.session_state.hierarchical_layout = True
             st.session_state.graph_key = 0
-            net.set_options("""
-            {
-                "layout": {
-                    "hierarchical": {
-                        "enabled": true,
-                        "direction": "UD",
-                        "sortMethod": "directed",
-                        "nodeSpacing": 150,
-                        "treeSpacing": 200,
-                        "levelSeparation": 250
-                    }
-                }
-            }
-            """)
     with col3:
         if st.button("Disable Hierarchical Layout"):
+            st.session_state.hierarchical_layout = False
             st.session_state.graph_key = 0
-            net.set_options("""
-            {
-                "layout": {
-                    "hierarchical": {
-                        "enabled": false
-                    }
-                }
-            }
-            """)
 
     # Create tabs
     tab1, tab2 = st.tabs(["Graph View", "Legend"])
+
+    with tab1:
+        # Display the network
+        html_content = get_network_html()
+        if html_content:
+            components.html(html_content, height=800)
+
+    with tab2:
+        # Create legend
+        st.header("Legend")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.subheader("Node Colors")
+            st.markdown(f"""
+            * <span style='color:{AGENCY_COLOR}'>●</span> Blue: Agency/Ministry related
+            * <span style='color:{SYSTEM_COLOR}'>●</span> Green: System related
+            """, unsafe_allow_html=True)
+            
+            st.subheader("Node Sizes")
+            st.markdown("""
+            * Large: Main modules
+            * Medium: Sub-modules
+            * Small: Groups
+            * Tiny: Fields
+            """)
+
+        with col2:
+            st.subheader("Modules")
+            st.markdown("""
+            * Agency Management
+                * Agency
+                * Key Appointment Holder
+            * System Management
+                * System Identity & Classification
+                * Criticality & Risk
+                * System Resilience
+                * Hosting and System Dependencies
+            """)
+
+def create_network():
+    # Create network
+    net = Network(height="750px", width="100%", bgcolor="#ffffff", font_color="black")
+    net.force_atlas_2based()
+    
+    # Add nodes and edges as before...
+    
+    # Set physics layout options with conditional hierarchical layout
+    options = {
+        "physics": {
+            "enabled": True,
+            "stabilization": {
+                "enabled": True,
+                "iterations": 2000,
+                "updateInterval": 25,
+                "onlyDynamicEdges": False,
+                "fit": True
+            },
+            "barnesHut": {
+                "gravitationalConstant": -60000,
+                "centralGravity": 0.1,
+                "springLength": 1000,
+                "springConstant": 0.08,
+                "damping": 0.12,
+                "avoidOverlap": 20
+            },
+            "minVelocity": 0.75,
+            "maxVelocity": 30
+        },
+        "edges": {
+            "smooth": {
+                "type": "curvedCW",
+                "roundness": 0.2,
+                "forceDirection": "horizontal"
+            },
+            "length": 300,
+            "font": {
+                "size": 11,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "color": {
+                "inherit": False,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            },
+            "width": 1.5
+        },
+        "nodes": {
+            "font": {
+                "size": 12,
+                "strokeWidth": 2,
+                "strokeColor": "#ffffff"
+            },
+            "margin": 12,
+            "scaling": {
+                "min": 10,
+                "max": 30
+            },
+            "fixed": {
+                "x": False,
+                "y": False
+            }
+        },
+        "layout": {
+            "improvedLayout": True,
+            "randomSeed": 42,
+            "hierarchical": {
+                "enabled": st.session_state.hierarchical_layout,
+                "direction": "UD",
+                "sortMethod": "directed",
+                "nodeSpacing": 150,
+                "treeSpacing": 200,
+                "levelSeparation": 250
+            }
+        },
+        "interaction": {
+            "hover": True,
+            "tooltipDelay": 300,
+            "dragNodes": True,
+            "dragView": True,
+            "zoomView": True
+        },
+        "configure": {
+            "enabled": True,
+            "filter": ["physics", "layout", "interaction", "manipulation"],
+            "showButton": True
+        }
+    }
+    
+    net.set_options(str(options).replace("True", "true").replace("False", "false"))
+    
+    # Create a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+        net.save_graph(tmp_file.name)
+        return tmp_file.name
