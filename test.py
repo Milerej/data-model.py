@@ -33,6 +33,9 @@ def check_password():
 if check_password():
     st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
     st.title("⚙️ Data Model : System Management and Agency Management")
+    
+    # Add the view toggle
+    view_type = st.toggle("Enable Hierarchical Layout", False)
 
     # Define standardised settings
     NODE_SETTINGS = {
@@ -103,7 +106,7 @@ if check_password():
             "title": "Hosting and System Dependencies Sub-Module"
         },
 
-        # Agency Management Module and related nodes
+            # Agency Management Module and related nodes
         "Agency Management": {
             "color": COLOR_SCHEMES["agency_management"]["module"],
             "size": NODE_SETTINGS["module"]["size"],
@@ -173,7 +176,7 @@ if check_password():
             "title": "Dependencies Management Sub-Group"
         },
 
-        # Fields for both modules
+            # Fields for both modules
         # Agency Management Fields
         "Agency Name": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
@@ -218,7 +221,7 @@ if check_password():
             "title": "Email field"
         },
 
-            # System Management Fields
+        # System Management Fields
         "System ID": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -242,12 +245,6 @@ if check_password():
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "System Status field"
-        },
-        "Agency Name": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Agency Name field"
         },
         "System Classification": {
             "color": COLOR_SCHEMES["system_management"]["field"],
@@ -368,8 +365,8 @@ if check_password():
         ("Key Appointment Holder", "Email", "", ""),
 
         # Cross-module relationships
-       # ("Agency Name", "Agency", "", ""),
-       # ("Dependencies", "System ID", "", "")
+        ("Agency Name", "Agency", "", ""),
+        ("Dependencies", "System ID", "", "")
     ]
 
     # Create NetworkX graph
@@ -393,16 +390,15 @@ if check_password():
     net.from_nx(G)
 
     # Network visualization options
-    net.set_options("""
-    {
+    network_options = {
         "physics": {
-            "enabled": true,
+            "enabled": not view_type,  # Disable physics when in hierarchical view
             "stabilization": {
-                "enabled": true,
+                "enabled": True,
                 "iterations": 2000,
                 "updateInterval": 25,
-                "onlyDynamicEdges": false,
-                "fit": true
+                "onlyDynamicEdges": False,
+                "fit": True
             },
             "barnesHut": {
                 "gravitationalConstant": -60000,
@@ -428,7 +424,7 @@ if check_password():
                 "strokeColor": "#ffffff"
             },
             "color": {
-                "inherit": false,
+                "inherit": False,
                 "color": "#2E7D32",
                 "opacity": 0.8
             },
@@ -446,22 +442,25 @@ if check_password():
                 "max": 30
             },
             "fixed": {
-                "x": false,
-                "y": false
+                "x": False,
+                "y": False
             }
         },
         "layout": {
-            "improvedLayout": true,
+            "improvedLayout": True,
             "randomSeed": 42,
             "hierarchical": {
-                "enabled": false,
-                "nodeSpacing": 300,
-                "levelSeparation": 300,
-                "treeSpacing": 300
+                "enabled": view_type,
+                "direction": "UD",
+                "sortMethod": "directed",
+                "nodeSpacing": 200,
+                "levelSeparation": 200,
+                "treeSpacing": 200
             }
         }
     }
-    """)
+    
+    net.set_options(str(network_options))
 
     # Save and display the network
     try:
