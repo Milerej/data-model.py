@@ -397,47 +397,34 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-   # Create PyVis network
+    # Create PyVis network
     net = Network(height="900px", width="100%", directed=True)
-    
-    # Modify node attributes before adding to network
-    for node in G.nodes():
-        G.nodes[node]['shape'] = 'box'
-        G.nodes[node]['color'] = {
-            'background': '#D2E5FF',
-            'border': '#2B7CE9'
-        }
-        # Add label formatting for entity-style display
-        label = node
-        if G.nodes[node].get('attributes'):
-            label = f"{node}\n{'_'*20}\n" + "\n".join(G.nodes[node]['attributes'])
-        G.nodes[node]['label'] = label
-
     net.from_nx(G)
 
-    # Set ERD layout options
+    # Set hierarchical layout options based on toggle
     if view_type:
         net.set_options("""{
             "layout": {
                 "hierarchical": {
                     "enabled": true,
-                    "direction": "LR",
+                    "direction": "UD",
                     "sortMethod": "directed",
-                    "nodeSpacing": 350,
-                    "levelSeparation": 300,
-                    "treeSpacing": 350,
+                    "nodeSpacing": 200,
+                    "levelSeparation": 200,
+                    "treeSpacing": 200,
                     "blockShifting": false,
                     "edgeMinimization": false,
-                    "parentCentralization": false
+                    "parentCentralization": false,
+                    "shakeTowards": "roots"
                 }
             },
             "physics": {
                 "enabled": true,
                 "hierarchicalRepulsion": {
                     "centralGravity": 0.5,
-                    "springLength": 250,
+                    "springLength": 150,
                     "springConstant": 0.3,
-                    "nodeDistance": 350,
+                    "nodeDistance": 200,
                     "damping": 0.09,
                     "avoidOverlap": 1
                 },
@@ -451,57 +438,30 @@ if check_password():
             "edges": {
                 "smooth": {
                     "type": "cubicBezier",
-                    "forceDirection": "horizontal",
+                    "forceDirection": "vertical",
                     "roundness": 0.5
                 },
                 "color": {
                     "inherit": false,
-                    "color": "#666666",
-                    "opacity": 1
-                },
-                "width": 2,
-                "arrows": {
-                    "to": {
-                        "enabled": true,
-                        "scaleFactor": 0.5
-                    }
-                },
-                "font": {
-                    "size": 12,
-                    "align": "middle",
-                    "face": "arial",
-                    "background": "white",
-                    "strokeWidth": 0
+                    "color": "#2E7D32",
+                    "opacity": 0.8
                 }
             },
             "nodes": {
-                "shape": "box",
-                "margin": 20,
-                "widthConstraint": {
-                    "minimum": 120
+                "fixed": {
+                    "x": false,
+                    "y": true
                 },
-                "heightConstraint": {
-                    "minimum": 50
-                },
+                "shape": "dot",
+                "size": 25,
                 "font": {
-                    "size": 14,
-                    "face": "arial",
-                    "align": "center",
-                    "multi": true
-                },
-                "color": {
-                    "border": "#2B7CE9",
-                    "background": "#D2E5FF"
-                },
-                "shapeProperties": {
-                    "borderRadius": 0
+                    "size": 14
                 }
             },
             "interaction": {
                 "dragNodes": true,
                 "dragView": true,
-                "zoomView": true,
-                "hover": true
+                "zoomView": true
             },
             "groups": {
                 "useDefaultGroups": false
@@ -519,7 +479,7 @@ if check_password():
                 "barnesHut": {
                     "gravitationalConstant": -60000,
                     "centralGravity": 0.1,
-                    "springLength": 250,
+                    "springLength": 200,
                     "springConstant": 0.08,
                     "damping": 0.12,
                     "avoidOverlap": 1
@@ -532,27 +492,65 @@ if check_password():
                 },
                 "color": {
                     "inherit": false,
-                    "color": "#666666",
-                    "opacity": 1
-                },
-                "width": 2,
-                "arrows": {
-                    "to": {
-                        "enabled": true,
-                        "scaleFactor": 0.5
-                    }
-                }
-            },
-            "nodes": {
-                "shape": "box",
-                "color": {
-                    "border": "#2B7CE9",
-                    "background": "#D2E5FF"
-                },
-                "shapeProperties": {
-                    "borderRadius": 0
+                    "color": "#2E7D32",
+                    "opacity": 0.8
                 }
             }
         }""")
 
-    # Rest of the code remains the same...
+    # Save and display the network
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net.save_graph(tmp_file.name)
+            with open(tmp_file.name, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            
+            fullscreen_html = """
+            <button 
+                style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    padding: 8px 16px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                "
+                onclick="toggleFullscreen()"
+            >
+                Full Screen
+            </button>
+            <script>
+                function toggleFullscreen() {
+                    let elem = document.documentElement;
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.webkitRequestFullscreen) {
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) {
+                            elem.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                    }
+                }
+            </script>
+            """
+            
+            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
+            components.html(modified_html, height=900)
+            os.unlink(tmp_file.name)
+    except Exception as e:
+        st.error(f"An error occurred while generating the graph: {str(e)}")
