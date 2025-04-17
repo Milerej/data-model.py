@@ -385,79 +385,51 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-  # Create PyVis network
+    # Create PyVis network
     net = Network(height="900px", width="100%", directed=True, notebook=True)
     net.from_nx(G)
 
     # Network visualization options
-    net.set_options("""
-    {
-        "physics": {
-            "enabled": """ + str(not view_type).lower() + """,
-            "stabilization": {
-                "enabled": true,
-                "iterations": 2000,
-                "updateInterval": 25,
-                "onlyDynamicEdges": false,
-                "fit": true
-            },
-            "barnesHut": {
-                "gravitationalConstant": -60000,
-                "centralGravity": 0.1,
-                "springLength": 1000,
-                "springConstant": 0.08,
-                "damping": 0.12,
-                "avoidOverlap": 20
-            },
-            "minVelocity": 0.75,
-            "maxVelocity": 30
-        },
-        "edges": {
-            "smooth": {
-                "type": "curvedCW",
-                "roundness": 0.2,
-                "forceDirection": "horizontal"
-            },
-            "length": 300,
-            "font": {
-                "size": 11,
-                "strokeWidth": 2,
-                "strokeColor": "#ffffff"
-            },
-            "color": {
-                "inherit": false,
-                "color": "#2E7D32",
-                "opacity": 0.8
-            },
-            "width": 1.5
-        },
-        "nodes": {
-            "font": {
-                "size": 12,
-                "strokeWidth": 2,
-                "strokeColor": "#ffffff"
-            },
-            "margin": 12,
-            "scaling": {
-                "min": 10,
-                "max": 30
-            },
-            "fixed": {
-                "x": false,
-                "y": false
-            }
-        },
-        "layout": {
-            "improvedLayout": true,
-            "randomSeed": 42,
-            "hierarchical": {
-                "enabled": """ + str(view_type).lower() + """,
-                "direction": "UD",
-                "sortMethod": "directed",
-                "nodeSpacing": 300,
-                "levelSeparation": 300,
-                "treeSpacing": 300
+    if view_type:
+        net.set_options("""
+        {
+            "physics": {"enabled": false},
+            "layout": {
+                "hierarchical": {
+                    "enabled": true,
+                    "direction": "UD",
+                    "sortMethod": "directed",
+                    "nodeSpacing": 300,
+                    "levelSeparation": 300
+                }
             }
         }
-    }
-    """)
+        """)
+    else:
+        net.set_options("""
+        {
+            "physics": {
+                "enabled": true,
+                "barnesHut": {
+                    "gravitationalConstant": -60000,
+                    "centralGravity": 0.1,
+                    "springLength": 1000,
+                    "springConstant": 0.08,
+                    "damping": 0.12,
+                    "avoidOverlap": 20
+                }
+            },
+            "edges": {
+                "smooth": {
+                    "type": "curvedCW",
+                    "roundness": 0.2
+                },
+                "length": 300
+            },
+            "layout": {
+                "hierarchical": {
+                    "enabled": false
+                }
+            }
+        }
+        """)
