@@ -44,7 +44,7 @@ if check_password():
     # Define entity modules and colors
     entities = {
          "Agency Management": {
-            "color": "blue", 
+            "color": "dark blue", 
             "size": 50, 
             "shape": "dot",
             "title": "System Management Module"
@@ -57,7 +57,13 @@ if check_password():
             "title": "Agency Sub-Module"
         },
         
+        "Key Appointment Holder": {
+            "color": "blue", 
+            "size": 25, 
+            "shape": "dot",
+            "title": "Key Appointment Holder Sub-Module
 
+            
         
         "System Management": {
             "color": "#2E7D32", 
@@ -378,7 +384,8 @@ if check_password():
         ("Key Appointment Holder", "Full Name", "", ""),
         ("Key Appointment Holder", "Designation", "", ""),
         ("Key Appointment Holder", "Email", "", ""),
-        
+        ("Agency", "Agency Name", "", "")
+        ("Ministry Family", "Ministry Family Name", "", ""),
          
         # System Identity & Classification sub-group connections
         ("System Identity & Classification", "Basic Information", "", ""),
@@ -392,10 +399,8 @@ if check_password():
         ("Basic Information", "System Status", "", ""),
 
         # Organizational Context connections
-        ("Organizational Context", "Agency", "", ""),
-        ("Organizational Context", "Ministry Family", "", ""),
-        #("Agency", "Agency", "", "")
-        #("Ministry Family", "Ministry Family", "", "")
+        ("Organizational Context", "Agency Name", "", ""),
+        ("Organizational Context", "Ministry Family Name", "", ""),
 
         # Classification connections
         ("Classification", "Security Classification", "", ""),
