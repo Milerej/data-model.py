@@ -574,108 +574,88 @@ def create_network():
     for edge in edges:
         net.add_edge(edge[0], edge[1], color="#808080")
     
-      # Set physics layout options
+    # Set physics layout options
     net.set_options("""
-    const options = {
-        "physics": {
+{
+    "physics": {
+        "enabled": true,
+        "stabilization": {
             "enabled": true,
-            "stabilization": {
-                "enabled": true,
-                "iterations": 2000,
-                "updateInterval": 25,
-                "onlyDynamicEdges": false,
-                "fit": true
-            },
-            "barnesHut": {
-                "gravitationalConstant": -60000,
-                "centralGravity": 0.1,
-                "springLength": 1000,
-                "springConstant": 0.08,
-                "damping": 0.12,
-                "avoidOverlap": 20
-            },
-            "minVelocity": 0.75,
-            "maxVelocity": 30
+            "iterations": 2000,
+            "updateInterval": 25,
+            "onlyDynamicEdges": false,
+            "fit": true
         },
-        "edges": {
-            "smooth": {
-                "type": "curvedCW",
-                "roundness": 0.2,
-                "forceDirection": "horizontal"
-            },
-            "length": 300,
-            "font": {
-                "size": 11,
-                "strokeWidth": 2,
-                "strokeColor": "#ffffff"
-            },
-            "color": {
-                "inherit": false,
-                "color": "#2E7D32",
-                "opacity": 0.8
-            },
-            "width": 1.5
+        "barnesHut": {
+            "gravitationalConstant": -60000,
+            "centralGravity": 0.1,
+            "springLength": 1000,
+            "springConstant": 0.08,
+            "damping": 0.12,
+            "avoidOverlap": 20
         },
-        "nodes": {
-            "font": {
-                "size": 12,
-                "strokeWidth": 2,
-                "strokeColor": "#ffffff"
-            },
-            "margin": 12,
-            "scaling": {
-                "min": 10,
-                "max": 30
-            },
-            "fixed": {
-                "x": false,
-                "y": false
-            }
+        "minVelocity": 0.75,
+        "maxVelocity": 30
+    },
+    "edges": {
+        "smooth": {
+            "type": "curvedCW",
+            "roundness": 0.2,
+            "forceDirection": "horizontal"
         },
-        "layout": {
-            "improvedLayout": true,
-            "randomSeed": 42,
-            "hierarchical": {
-                "enabled": false,
-                "nodeSpacing": 300,
-                "levelSeparation": 300,
-                "treeSpacing": 300
-            }
+        "length": 300,
+        "font": {
+            "size": 11,
+            "strokeWidth": 2,
+            "strokeColor": "#ffffff"
         },
-        "interaction": {
-            "hover": true,
-            "tooltipDelay": 300,
-            "dragNodes": true,
-            "dragView": true,
-            "zoomView": true
+        "color": {
+            "inherit": false,
+            "color": "#2E7D32",
+            "opacity": 0.8
         },
-        "configure": {
-            "enabled": true,
-            "filter": ["physics", "layout", "interaction", "manipulation"],
-            "showButton": true
+        "width": 1.5
+    },
+    "nodes": {
+        "font": {
+            "size": 12,
+            "strokeWidth": 2,
+            "strokeColor": "#ffffff"
+        },
+        "margin": 12,
+        "scaling": {
+            "min": 10,
+            "max": 30
+        },
+        "fixed": {
+            "x": false,
+            "y": false
         }
-    }
-    """)
-        },
-        "layout": {
-            "improvedLayout": true,
-            "randomSeed": 42,
-            "hierarchical": {
-                "enabled": false,
-                "nodeSpacing": 300,
-                "levelSeparation": 300,
-                "treeSpacing": 300
-            }
-        },
-        "interaction": {
-            "hover": true,
-            "tooltipDelay": 300,
-            "dragNodes": true,
-            "dragView": true,
-            "zoomView": true
+    },
+    "layout": {
+        "improvedLayout": true,
+        "randomSeed": 42,
+        "hierarchical": {
+            "enabled": false,
+            "nodeSpacing": 300,
+            "levelSeparation": 300,
+            "treeSpacing": 300
         }
+    },
+    "interaction": {
+        "hover": true,
+        "tooltipDelay": 300,
+        "dragNodes": true,
+        "dragView": true,
+        "zoomView": true
+    },
+    "configure": {
+        "enabled": true,
+        "filter": ["physics", "layout", "interaction", "manipulation"],
+        "showButton": true
     }
-    """)
+}
+""")
     
     # Create a temporary file
     with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
