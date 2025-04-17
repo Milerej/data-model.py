@@ -300,76 +300,76 @@ if check_password():
     }
 
     # Complete edges list
-    edges = [
+       edges = [
         # System Management Module relationships
-        ("System Management", "System Identity & Classification", ““, ““),
-        ("System Management", "Criticality & Risk", ““, ““),
-        ("System Management", "System Resilience", ““, ““),
-        ("System Management", "Hosting and System Dependencies", ““, ““),
+        ("System Management", "System Identity & Classification", "", ""),
+        ("System Management", "Criticality & Risk", "", ""),
+        ("System Management", "System Resilience", "", ""),
+        ("System Management", "Hosting and System Dependencies", "", ""),
 
         # System Identity & Classification relationships
-        ("System Identity & Classification", "Basic Information", ““, ““),
-        ("System Identity & Classification", "Organizational Context", ““, ““),
-        ("System Identity & Classification", "Classification", ““, ““),
+        ("System Identity & Classification", "Basic Information", "", ""),
+        ("System Identity & Classification", "Organizational Context", "", ""),
+        ("System Identity & Classification", "Classification", "", ""),
 
         # Criticality & Risk relationships
-        ("Criticality & Risk", "Impact Assessment", ““, ““),
-        ("Criticality & Risk", "Risk Profile", ““, ““),
-        ("Criticality & Risk", "SCA/RML Approval", ““, ““),
+        ("Criticality & Risk", "Impact Assessment", "", ""),
+        ("Criticality & Risk", "Risk Profile", "", ""),
+        ("Criticality & Risk", "SCA/RML Approval", "", ""),
 
         # System Resilience relationships
-        ("System Resilience", "Availability & Recovery", ““, ““),
+        ("System Resilience", "Availability & Recovery", "", ""),
 
         # Hosting and System Dependencies relationships
-        ("Hosting and System Dependencies", "Dependencies Management", ““, ““),
+        ("Hosting and System Dependencies", "Dependencies Management", "", ""),
 
         # Agency Management Module relationships
-        ("Agency Management", "Agency", ““, ““),
-        ("Agency Management", "Key Appointment Holder", ““, ““),
+        ("Agency Management", "Agency", "", ""),
+        ("Agency Management", "Key Appointment Holder", "", ""),
 
         # Field relationships for Basic Information
-        ("Basic Information", "System ID", ““, ““),
-        ("Basic Information", "System Name", ““, ““),
-        ("Basic Information", "System Description", ““, ““),
-        ("Basic Information", "System Status", ““, ““),
+        ("Basic Information", "System ID", "", ""),
+        ("Basic Information", "System Name", "", ""),
+        ("Basic Information", "System Description", "", ""),
+        ("Basic Information", "System Status", "", ""),
 
         # Field relationships for Organizational Context
-        ("Organizational Context", "System Owner", ““, ““),
+        ("Organizational Context", "System Owner", "", ""),
 
         # Field relationships for Classification
-        ("Classification", "System Classification", ““, ““),
+        ("Classification", "System Classification", "", ""),
 
         # Field relationships for Impact Assessment
-        ("Impact Assessment", "Impact Level", ““, ““),
+        ("Impact Assessment", "Impact Level", "", ""),
 
         # Field relationships for Risk Profile
-        ("Risk Profile", "Risk Level", ““, ““),
+        ("Risk Profile", "Risk Level", "", ""),
 
         # Field relationships for SCA/RML Approval
-        ("SCA/RML Approval", "SCA Status", ““, ““),
-        ("SCA/RML Approval", "RML Status", ““, ““),
+        ("SCA/RML Approval", "SCA Status", "", ""),
+        ("SCA/RML Approval", "RML Status", "", ""),
 
         # Field relationships for Availability & Recovery
-        ("Availability & Recovery", "System Availability", ““, ““),
-        ("Availability & Recovery", "Recovery Time", ““, ““),
+        ("Availability & Recovery", "System Availability", "", ""),
+        ("Availability & Recovery", "Recovery Time", "", ""),
 
         # Field relationships for Dependencies Management
-        ("Dependencies Management", "Dependencies", ““, ““),
+        ("Dependencies Management", "Dependencies", "", ""),
 
         # Field relationships for Agency
-        ("Agency", "Agency Name", ““, ““),
-        ("Agency", "Agency Abbreviation (Short Form)", ““, ““),
-        ("Agency", "Agency Operational Status", ““, ““),
-        ("Agency", "Ministry Family", ““, ““),
+        ("Agency", "Agency Name", "", ""),
+        ("Agency", "Agency Abbreviation (Short Form)", "", ""),
+        ("Agency", "Agency Operational Status", "", ""),
+        ("Agency", "Ministry Family", "", ""),
 
         # Field relationships for Key Appointment Holder
-        ("Key Appointment Holder", "Full Name", ““, ““),
-        ("Key Appointment Holder", "Designation", ““, ““),
-        ("Key Appointment Holder", "Email", ““, ““),
+        ("Key Appointment Holder", "Full Name", "", ""),
+        ("Key Appointment Holder", "Designation", "", ""),
+        ("Key Appointment Holder", "Email", "", ""),
 
         # Cross-module relationships
-        ("System Owner", "Agency", "References", "to"),
-        ("Dependencies", "System ID", "References", "to")
+        ("System Owner", "Agency", "References", ""),
+        ("Dependencies", "System ID", "References", "")
     ]
 
     # Create NetworkX graph
