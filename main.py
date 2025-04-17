@@ -163,7 +163,7 @@ if check_password():
             "title": "Ministry Family field"
         },        
         
-        "Full Name of Key Appointment Holder": {
+        "Full Name": {
             "color": "blue", "size": 15, "shape": "dot",
             "title": "Full Name of Key Appointment Holder field"
         },        
