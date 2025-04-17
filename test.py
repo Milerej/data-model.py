@@ -368,7 +368,7 @@ if check_password():
         ("Key Appointment Holder", "Email", "", ""),
 
         # Cross-module relationships
-        ("Agency Name", "Agency", "", ""),
+       # ("Agency Name", "Agency", "", ""),
         ("Dependencies", "System ID", "", "")
     ]
 
