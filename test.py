@@ -567,72 +567,100 @@ if check_password():
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
+    # Add dynamic spacing function
+    def get_dynamic_spacing():
+        # Count nodes at each level
+        level_counts = {}
+        for edge in edges:
+            source = edge[0]
+            if source not in level_counts:
+                level_counts[source] = 0
+            level_counts[source] += 1
+        
+        # Calculate maximum nodes at any level
+        max_nodes = max(level_counts.values()) if level_counts else 1
+        
+        # Dynamic spacing calculations
+        base_node_spacing = 150
+        base_level_separation = 200
+        
+        # Adjust spacing based on number of nodes
+        dynamic_node_spacing = base_node_spacing * (1 + (max_nodes / 20))
+        dynamic_level_separation = base_level_separation * (1 + (len(level_counts) / 10))
+        
+        return dynamic_node_spacing, dynamic_level_separation
+
+    # Get dynamic spacing values
+    node_spacing, level_separation = get_dynamic_spacing()
+
     # Set hierarchical layout options based on toggle
     if view_type:
-        net.set_options("""{
-            "layout": {
-                "hierarchical": {
+        net.set_options(f"""{{
+            "layout": {{
+                "hierarchical": {{
                     "enabled": true,
                     "direction": "UD",
                     "sortMethod": "directed",
-                    "nodeSpacing": 200,
-                    "levelSeparation": 200,
-                    "treeSpacing": 200,
-                    "blockShifting": false,
-                    "edgeMinimization": false,
-                    "parentCentralization": false,
+                    "nodeSpacing": {node_spacing},
+                    "levelSeparation": {level_separation},
+                    "treeSpacing": {node_spacing * 1.2},
+                    "blockShifting": true,
+                    "edgeMinimization": true,
+                    "parentCentralization": true,
                     "shakeTowards": "roots"
-                }
-            },
-            "physics": {
+                }}
+            }},
+            "physics": {{
                 "enabled": true,
-                "hierarchicalRepulsion": {
-                    "centralGravity": 0.5,
-                    "springLength": 150,
-                    "springConstant": 0.3,
-                    "nodeDistance": 200,
+                "hierarchicalRepulsion": {{
+                    "centralGravity": 0.2,
+                    "springLength": {level_separation * 0.75},
+                    "springConstant": 0.2,
+                    "nodeDistance": {node_spacing * 1.1},
                     "damping": 0.09,
                     "avoidOverlap": 1
-                },
-                "stabilization": {
+                }},
+                "stabilization": {{
                     "enabled": true,
                     "iterations": 2000,
                     "updateInterval": 100,
                     "fit": true
-                }
-            },
-            "edges": {
-                "smooth": {
+                }}
+            }},
+            "edges": {{
+                "smooth": {{
                     "type": "cubicBezier",
                     "forceDirection": "vertical",
-                    "roundness": 0.5
-                },
-                "color": {
+                    "roundness": 0.3
+                }},
+                "color": {{
                     "inherit": false,
                     "color": "#2E7D32",
-                    "opacity": 0.8
-                }
-            },
-            "nodes": {
-                "fixed": {
+                    "opacity": 0.6
+                }}
+            }},
+            "nodes": {{
+                "fixed": {{
                     "x": false,
                     "y": true
-                },
+                }},
                 "shape": "dot",
-                "size": 25,
-                "font": {
-                    "size": 14
-                }
-            },
-            "interaction": {
+                "size": 20,
+                "font": {{
+                    "size": 12,
+                    "face": "arial"
+                }}
+            }},
+            "interaction": {{
                 "dragNodes": true,
                 "dragView": true,
-                "zoomView": true
-            },
-            "groups": {
+                "zoomView": true,
+                "hover": true
+            }},
+            "groups": {{
                 "useDefaultGroups": false
-            }
-        }""")
+            }}
+        }}""")
     else:
         net.set_options("""{
             "layout": {
@@ -720,5 +748,3 @@ if check_password():
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
-        
-    
