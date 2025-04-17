@@ -369,8 +369,17 @@ if check_password():
         
         ("Agency Management", "Agency", "", ""),
         ("Agency Management", "Key Appointment Holder", "", ""),
-
+      
+        # Agency sub-group connection    
+        ("Agency", "Agency Name", "", ""),
+        ("Agency", "Agency Abbreviation (Short Form)", "", ""),
+        ("Agency", "Agency Operational Status", "", ""),
+        ("Agency", "Ministry Family", "", ""),
+        ("Key Appointment Holder", "Full Name", "", ""),
+        ("Key Appointment Holder", "Designation", "", ""),
+        ("Key Appointment Holder", "Email", "", ""),
         
+         
         # System Identity & Classification sub-group connections
         ("System Identity & Classification", "Basic Information", "", ""),
         ("System Identity & Classification", "Organizational Context", "", ""),
