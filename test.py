@@ -397,7 +397,7 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
-  # Create PyVis network
+ # Create PyVis network
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
@@ -409,24 +409,30 @@ if check_password():
                     "enabled": true,
                     "direction": "UD",
                     "sortMethod": "directed",
-                    "nodeSpacing": 250,
-                    "levelSeparation": 250,
-                    "treeSpacing": 250,
+                    "nodeSpacing": 200,
+                    "levelSeparation": 200,
+                    "treeSpacing": 200,
                     "blockShifting": false,
-                    "edgeMinimization": true,
+                    "edgeMinimization": false,
                     "parentCentralization": true,
                     "shakeTowards": "leaves"
                 }
             },
             "physics": {
-                "enabled": false,
+                "enabled": true,
                 "hierarchicalRepulsion": {
-                    "centralGravity": 0.0,
-                    "springLength": 100,
-                    "springConstant": 0.01,
-                    "nodeDistance": 250,
+                    "centralGravity": 0.1,
+                    "springLength": 150,
+                    "springConstant": 0.2,
+                    "nodeDistance": 200,
                     "damping": 0.09,
                     "avoidOverlap": 1
+                },
+                "stabilization": {
+                    "enabled": true,
+                    "iterations": 1000,
+                    "updateInterval": 100,
+                    "fit": true
                 }
             },
             "edges": {
@@ -444,12 +450,18 @@ if check_password():
             "nodes": {
                 "fixed": {
                     "x": false,
-                    "y": true
+                    "y": false
                 },
-                "levelAlignment": true
+                "shape": "dot",
+                "size": 25,
+                "font": {
+                    "size": 14
+                }
             },
-            "groups": {
-                "useDefaultGroups": false
+            "interaction": {
+                "dragNodes": true,
+                "dragView": true,
+                "zoomView": true
             }
         }""")
     else:
