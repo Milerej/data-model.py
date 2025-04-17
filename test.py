@@ -57,21 +57,22 @@ if check_password():
         "system_management": {
             "module": "#1B5E20",      # Darkest green
             "submodule": "#2E7D32",   # Dark green
-            "field": "#388E3C",    # Medium green
+            "field": "#388E3C"        # Medium green
         },
         "agency_management": {
             "module": "#1A237E",      # Darkest blue
             "submodule": "#283593",   # Dark blue
-            "field": "#303F9F",    # Medium blue
+            "field": "#303F9F"        # Medium blue
         }
     }
+
 
     # Complete entities dictionary with all nodes
     entities = {
         # Root node
         "DGP 2.0": {
-            "color": "#1A237E",  # Dark blue color
-            "size": 60,  # Larger than module size
+            "color": "#1A237E",
+            "size": 60,
             "shape": NODE_SETTINGS["module"]["shape"],
             "title": "DGP 2.0 Root"
         },
@@ -108,7 +109,7 @@ if check_password():
             "title": "Hosting and System Dependencies Sub-Module"
         },
 
-            # Agency Management Module and related nodes
+        # Agency Management Module and related nodes
         "Agency Management": {
             "color": COLOR_SCHEMES["agency_management"]["module"],
             "size": NODE_SETTINGS["module"]["size"],
@@ -142,6 +143,8 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Agency Abbreviation field"
         },
+
+
         "Agency Operational Status": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -248,66 +251,67 @@ if check_password():
         }
     }
 
-    # Complete edges list
-edges = [
-    # Root node connections
-    ("DGP 2.0", "System Management", "", ""),
-    ("DGP 2.0", "Agency Management", "", ""),
 
-    # System Management Module relationships
-    ("System Management", "System Identity & Classification", "", ""),
-    ("System Management", "Criticality & Risk", "", ""),
-    ("System Management", "System Resilience", "", ""),
-    ("System Management", "Hosting and System Dependencies", "", ""),
+    # Define edges
+    edges = [
+        # Root node connections
+        ("DGP 2.0", "System Management", "", ""),
+        ("DGP 2.0", "Agency Management", "", ""),
 
-    # Agency Management Module relationships
-    ("Agency Management", "Agency", "", ""),
-    ("Agency Management", "Key Appointment Holder", "", ""),
+        # System Management Module relationships
+        ("System Management", "System Identity & Classification", "", ""),
+        ("System Management", "Criticality & Risk", "", ""),
+        ("System Management", "System Resilience", "", ""),
+        ("System Management", "Hosting and System Dependencies", "", ""),
 
-    # System Identity & Classification field relationships
-    ("System Identity & Classification", "System ID", "", ""),
-    ("System Identity & Classification", "System Name", "", ""),
-    ("System Identity & Classification", "System Description", "", ""),
-    ("System Identity & Classification", "System Status", "", ""),
-    ("System Identity & Classification", "Agency Name", "", ""),
-    ("System Identity & Classification", "System Classification", "", ""),
+        # Agency Management Module relationships
+        ("Agency Management", "Agency", "", ""),
+        ("Agency Management", "Key Appointment Holder", "", ""),
 
-    # Criticality & Risk field relationships
-    ("Criticality & Risk", "Impact Level", "", ""),
-    ("Criticality & Risk", "Risk Level", "", ""),
-    ("Criticality & Risk", "SCA Status", "", ""),
-    ("Criticality & Risk", "RML Status", "", ""),
+        # System Identity & Classification field relationships
+        ("System Identity & Classification", "System ID", "", ""),
+        ("System Identity & Classification", "System Name", "", ""),
+        ("System Identity & Classification", "System Description", "", ""),
+        ("System Identity & Classification", "System Status", "", ""),
+        ("System Identity & Classification", "Agency Name", "", ""),
+        ("System Identity & Classification", "System Classification", "", ""),
 
-    # System Resilience field relationships
-    ("System Resilience", "System Availability", "", ""),
-    ("System Resilience", "Recovery Time", "", ""),
+        # Criticality & Risk field relationships
+        ("Criticality & Risk", "Impact Level", "", ""),
+        ("Criticality & Risk", "Risk Level", "", ""),
+        ("Criticality & Risk", "SCA Status", "", ""),
+        ("Criticality & Risk", "RML Status", "", ""),
 
-    # Hosting and System Dependencies field relationships
-    ("Hosting and System Dependencies", "Dependencies", "", ""),
+        # System Resilience field relationships
+        ("System Resilience", "System Availability", "", ""),
+        ("System Resilience", "Recovery Time", "", ""),
 
-    # Agency field relationships
-    ("Agency", "Agency Name", "", ""),
-    ("Agency", "Agency Abbreviation (Short Form)", "", ""),
-    ("Agency", "Agency Operational Status", "", ""),
-    ("Agency", "Ministry Family", "", ""),
+        # Hosting and System Dependencies field relationships
+        ("Hosting and System Dependencies", "Dependencies", "", ""),
 
-   # Key Appointment Holder field relationships
-    ("Key Appointment Holder", "Full Name", "", ""),
-    ("Key Appointment Holder", "Designation", "", ""),
-    ("Key Appointment Holder", "Email", "", "")
-]  # Close the edges list with proper bracket
+        # Agency field relationships
+        ("Agency", "Agency Name", "", ""),
+        ("Agency", "Agency Abbreviation (Short Form)", "", ""),
+        ("Agency", "Agency Operational Status", "", ""),
+        ("Agency", "Ministry Family", "", ""),
 
-# Create NetworkX graph (no indentation here)
-G = nx.DiGraph()
-for node, attributes in entities.items():
-    node_attrs = {
-        "color": attributes["color"],
-        "size": attributes["size"],
-        "shape": attributes["shape"],
-        "title": attributes["title"],
-        "label": node
-    }
-    G.add_node(node, **node_attrs)
+        # Key Appointment Holder field relationships
+        ("Key Appointment Holder", "Full Name", "", ""),
+        ("Key Appointment Holder", "Designation", "", ""),
+        ("Key Appointment Holder", "Email", "", "")
+    ]
+
+    # Create NetworkX graph
+    G = nx.DiGraph()
+    for node, attributes in entities.items():
+        node_attrs = {
+            "color": attributes["color"],
+            "size": attributes["size"],
+            "shape": attributes["shape"],
+            "title": attributes["title"],
+            "label": node
+        }
+        G.add_node(node, **node_attrs)
 
     # Add edges
     for source, target, label, direction in edges:
@@ -316,6 +320,7 @@ for node, attributes in entities.items():
     # Create PyVis network
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
+
 
     # Set hierarchical layout options based on toggle
     if view_type:
