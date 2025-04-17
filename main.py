@@ -574,7 +574,7 @@ def create_network():
     for edge in edges:
         net.add_edge(edge[0], edge[1], color="#808080")
     
-   # Set physics layout options
+      # Set physics layout options
     net.set_options("""
     const options = {
         "physics": {
@@ -631,6 +631,31 @@ def create_network():
                 "x": false,
                 "y": false
             }
+        },
+        "layout": {
+            "improvedLayout": true,
+            "randomSeed": 42,
+            "hierarchical": {
+                "enabled": false,
+                "nodeSpacing": 300,
+                "levelSeparation": 300,
+                "treeSpacing": 300
+            }
+        },
+        "interaction": {
+            "hover": true,
+            "tooltipDelay": 300,
+            "dragNodes": true,
+            "dragView": true,
+            "zoomView": true
+        },
+        "configure": {
+            "enabled": true,
+            "filter": ["physics", "layout", "interaction", "manipulation"],
+            "showButton": true
+        }
+    }
+    """)
         },
         "layout": {
             "improvedLayout": true,
