@@ -366,7 +366,11 @@ if check_password():
         ("System Management", "Criticality & Risk", "", ""),
         ("System Management", "System Resilience", "", ""),
         ("System Management", "Hosting and System Dependencies", "", ""),
+        
+        ("Agency Management", "Agency", "", ""),
+        ("Agency Management", "Key Appointment Holder", "", ""),
 
+        
         # System Identity & Classification sub-group connections
         ("System Identity & Classification", "Basic Information", "", ""),
         ("System Identity & Classification", "Organizational Context", "", ""),
@@ -381,6 +385,8 @@ if check_password():
         # Organizational Context connections
         ("Organizational Context", "Agency", "", ""),
         ("Organizational Context", "Ministry Family", "", ""),
+        ("Agency", "Agency", "", "")
+        ("Ministry Family", "Ministry Family", "", "")
 
         # Classification connections
         ("Classification", "Security Classification", "", ""),
