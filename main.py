@@ -697,62 +697,40 @@ def main():
     * Double-click to reset the view
     """)
 
-    # Add a refresh button
-    if st.button("Refresh Graph"):
-        st.session_state.graph_key = 0
+    # Add buttons in a horizontal layout
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("Refresh Graph"):
+            st.session_state.graph_key = 0
+    with col2:
+        if st.button("Enable Hierarchical Layout"):
+            st.session_state.graph_key = 0
+            net.set_options("""
+            {
+                "layout": {
+                    "hierarchical": {
+                        "enabled": true,
+                        "direction": "UD",
+                        "sortMethod": "directed",
+                        "nodeSpacing": 150,
+                        "treeSpacing": 200,
+                        "levelSeparation": 250
+                    }
+                }
+            }
+            """)
+    with col3:
+        if st.button("Disable Hierarchical Layout"):
+            st.session_state.graph_key = 0
+            net.set_options("""
+            {
+                "layout": {
+                    "hierarchical": {
+                        "enabled": false
+                    }
+                }
+            }
+            """)
 
     # Create tabs
     tab1, tab2 = st.tabs(["Graph View", "Legend"])
-
-    with tab1:
-        # Display the network
-        html_content = get_network_html()
-        if html_content:
-            components.html(html_content, height=800)
-
-    with tab2:
-        # Create legend
-        st.header("Legend")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.subheader("Node Colors")
-            st.markdown(f"""
-            * <span style='color:{AGENCY_COLOR}'>●</span> Blue: Agency/Ministry related
-            * <span style='color:{SYSTEM_COLOR}'>●</span> Green: System related
-            """, unsafe_allow_html=True)
-            
-            st.subheader("Node Sizes")
-            st.markdown("""
-            * Large: Main modules
-            * Medium: Sub-modules
-            * Small: Groups
-            * Tiny: Fields
-            """)
-
-        with col2:
-            st.subheader("Modules")
-            st.markdown("""
-            * Agency Management
-                * Agency
-                * Key Appointment Holder
-            * System Management
-                * System Identity & Classification
-                * Criticality & Risk
-                * System Resilience
-                * Hosting and System Dependencies
-            """)
-
-        st.markdown("""
-        ---
-        ### Navigation Tips
-        1. **Zoom**: Use mouse wheel to zoom in/out
-        2. **Pan**: Click and drag the background
-        3. **Move Nodes**: Click and drag individual nodes
-        4. **View Details**: Hover over nodes to see additional information
-        5. **Reset View**: Double-click on the background
-        """)
-
-if __name__ == "__main__":
-    main()
