@@ -397,7 +397,7 @@ if check_password():
     for source, target, label, direction in edges:
         G.add_edge(source, target, title=label, label=label, arrows=direction)
 
- # Create PyVis network
+    # Create PyVis network
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
@@ -414,23 +414,23 @@ if check_password():
                     "treeSpacing": 200,
                     "blockShifting": false,
                     "edgeMinimization": false,
-                    "parentCentralization": true,
-                    "shakeTowards": "leaves"
+                    "parentCentralization": false,
+                    "shakeTowards": "roots"
                 }
             },
             "physics": {
                 "enabled": true,
                 "hierarchicalRepulsion": {
-                    "centralGravity": 0.1,
+                    "centralGravity": 0.5,
                     "springLength": 150,
-                    "springConstant": 0.2,
+                    "springConstant": 0.3,
                     "nodeDistance": 200,
                     "damping": 0.09,
                     "avoidOverlap": 1
                 },
                 "stabilization": {
                     "enabled": true,
-                    "iterations": 1000,
+                    "iterations": 2000,
                     "updateInterval": 100,
                     "fit": true
                 }
@@ -450,7 +450,7 @@ if check_password():
             "nodes": {
                 "fixed": {
                     "x": false,
-                    "y": false
+                    "y": true
                 },
                 "shape": "dot",
                 "size": 25,
@@ -462,6 +462,9 @@ if check_password():
                 "dragNodes": true,
                 "dragView": true,
                 "zoomView": true
+            },
+            "groups": {
+                "useDefaultGroups": false
             }
         }""")
     else:
