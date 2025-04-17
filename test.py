@@ -397,13 +397,33 @@ if check_password():
                     "enabled": true,
                     "direction": "UD",
                     "sortMethod": "directed",
-                    "nodeSpacing": 300,
-                    "levelSeparation": 300,
-                    "treeSpacing": 300
+                    "nodeSpacing": 150,
+                    "levelSeparation": 200,
+                    "treeSpacing": 200,
+                    "blockShifting": true,
+                    "edgeMinimization": true,
+                    "parentCentralization": true
                 }
             },
             "physics": {
                 "enabled": false
+            },
+            "edges": {
+                "smooth": {
+                    "type": "cubicBezier",
+                    "forceDirection": "vertical"
+                },
+                "color": {
+                    "inherit": false,
+                    "color": "#2E7D32",
+                    "opacity": 0.8
+                }
+            },
+            "nodes": {
+                "fixed": {
+                    "x": false,
+                    "y": true
+                }
             }
         }""")
     else:
@@ -418,10 +438,21 @@ if check_password():
                 "barnesHut": {
                     "gravitationalConstant": -60000,
                     "centralGravity": 0.1,
-                    "springLength": 1000,
+                    "springLength": 200,
                     "springConstant": 0.08,
                     "damping": 0.12,
-                    "avoidOverlap": 20
+                    "avoidOverlap": 1
+                }
+            },
+            "edges": {
+                "smooth": {
+                    "type": "curvedCW",
+                    "roundness": 0.2
+                },
+                "color": {
+                    "inherit": false,
+                    "color": "#2E7D32",
+                    "opacity": 0.8
                 }
             }
         }""")
