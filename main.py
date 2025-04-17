@@ -578,22 +578,33 @@ def create_network():
     net.set_options("""
     const options = {
       "physics": {
+        "enabled": true,
         "forceAtlas2Based": {
-          "gravitationalConstant": -100,
+          "gravitationalConstant": -50,
           "centralGravity": 0.01,
           "springLength": 200,
           "springConstant": 0.08,
-          "damping": 0.4,
+          "damping": 0.9,
           "avoidOverlap": 1
         },
-        "maxVelocity": 50,
-        "minVelocity": 0.1,
+        "maxVelocity": 15,
+        "minVelocity": 0.75,
         "solver": "forceAtlas2Based",
-        "timestep": 0.5
+        "stabilization": {
+          "enabled": true,
+          "iterations": 1000,
+          "updateInterval": 25,
+          "fit": true
+        },
+        "timestep": 0.3,
+        "adaptiveTimestep": true
       },
       "interaction": {
         "hover": true,
-        "tooltipDelay": 300
+        "tooltipDelay": 300,
+        "dragNodes": true,
+        "dragView": true,
+        "zoomView": true
       },
       "edges": {
         "smooth": {
