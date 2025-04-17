@@ -61,7 +61,7 @@ if check_password():
             "color": "blue", 
             "size": 25, 
             "shape": "dot",
-            "title": "Key Appointment Holder Sub-Module
+            "title": "Key Appointment Holder Sub-Module"
 
             
         
