@@ -32,7 +32,7 @@ def check_password():
 
 if check_password():
     st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
-    st.title("⚙️ Data Model : System Management and Agency Management")
+    st.title("⚙️ Data Model : System Management and Agency Management (V2.2)")
     
     # Add the view toggle
     view_type = st.toggle("Enable Hierarchical Layout", False)
