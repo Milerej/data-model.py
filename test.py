@@ -401,30 +401,29 @@ if check_password():
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
-    # Set hierarchical layout options based on toggle
+    # Set ERD layout options
     if view_type:
         net.set_options("""{
             "layout": {
                 "hierarchical": {
                     "enabled": true,
-                    "direction": "UD",
+                    "direction": "LR",
                     "sortMethod": "directed",
-                    "nodeSpacing": 200,
-                    "levelSeparation": 200,
-                    "treeSpacing": 200,
+                    "nodeSpacing": 350,
+                    "levelSeparation": 300,
+                    "treeSpacing": 350,
                     "blockShifting": false,
                     "edgeMinimization": false,
-                    "parentCentralization": false,
-                    "shakeTowards": "roots"
+                    "parentCentralization": false
                 }
             },
             "physics": {
                 "enabled": true,
                 "hierarchicalRepulsion": {
                     "centralGravity": 0.5,
-                    "springLength": 150,
+                    "springLength": 250,
                     "springConstant": 0.3,
-                    "nodeDistance": 200,
+                    "nodeDistance": 350,
                     "damping": 0.09,
                     "avoidOverlap": 1
                 },
@@ -438,30 +437,64 @@ if check_password():
             "edges": {
                 "smooth": {
                     "type": "cubicBezier",
-                    "forceDirection": "vertical",
+                    "forceDirection": "horizontal",
                     "roundness": 0.5
                 },
                 "color": {
                     "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.8
+                    "color": "#666666",
+                    "opacity": 1
+                },
+                "width": 2,
+                "arrows": {
+                    "to": {
+                        "enabled": true,
+                        "scaleFactor": 0.5
+                    }
+                },
+                "font": {
+                    "size": 12,
+                    "align": "middle",
+                    "face": "arial",
+                    "background": "white",
+                    "strokeWidth": 0
                 }
             },
             "nodes": {
-                "fixed": {
-                    "x": false,
-                    "y": true
-                },
-                "shape": "dot",
+                "shape": "box",
                 "size": 25,
                 "font": {
-                    "size": 14
+                    "size": 14,
+                    "face": "arial",
+                    "align": "center",
+                    "multi": true,
+                    "bold": {
+                        "color": "#343434"
+                    }
+                },
+                "color": {
+                    "border": "#2B7CE9",
+                    "background": "#D2E5FF"
+                },
+                "margin": {
+                    "top": 25,
+                    "right": 25,
+                    "bottom": 25,
+                    "left": 25
+                },
+                "widthConstraint": {
+                    "minimum": 150,
+                    "maximum": 250
+                },
+                "heightConstraint": {
+                    "minimum": 75
                 }
             },
             "interaction": {
                 "dragNodes": true,
                 "dragView": true,
-                "zoomView": true
+                "zoomView": true,
+                "hover": true
             },
             "groups": {
                 "useDefaultGroups": false
@@ -479,7 +512,7 @@ if check_password():
                 "barnesHut": {
                     "gravitationalConstant": -60000,
                     "centralGravity": 0.1,
-                    "springLength": 200,
+                    "springLength": 250,
                     "springConstant": 0.08,
                     "damping": 0.12,
                     "avoidOverlap": 1
@@ -492,8 +525,22 @@ if check_password():
                 },
                 "color": {
                     "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.8
+                    "color": "#666666",
+                    "opacity": 1
+                },
+                "width": 2,
+                "arrows": {
+                    "to": {
+                        "enabled": true,
+                        "scaleFactor": 0.5
+                    }
+                }
+            },
+            "nodes": {
+                "shape": "box",
+                "color": {
+                    "border": "#2B7CE9",
+                    "background": "#D2E5FF"
                 }
             }
         }""")
