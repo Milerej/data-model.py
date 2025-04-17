@@ -385,8 +385,8 @@ if check_password():
         # Organizational Context connections
         ("Organizational Context", "Agency", "", ""),
         ("Organizational Context", "Ministry Family", "", ""),
-        ("Agency", "Agency", "", "")
-        ("Ministry Family", "Ministry Family", "", "")
+        #("Agency", "Agency", "", "")
+        #("Ministry Family", "Ministry Family", "", "")
 
         # Classification connections
         ("Classification", "Security Classification", "", ""),
