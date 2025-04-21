@@ -557,7 +557,6 @@ if check_password():
 
             # Organizational Context field connections
         ("Organizational Context", "Agency Name", "", ""),
-        ("Organizational Context", "Ministry Family Name", "", ""),
 
         # Classification field connections
         ("Classification", "Security Classification", "", ""),
