@@ -401,18 +401,25 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Ministry field"
         },
-        "CIO Name": {
+        "KAH Name": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "CIO Name field"
+            "title": "KAH Name field"
         },
-        "CIO Email": {
+        "KAH Email": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "CIO Email field"
+            "title": "KAH Email field"
+        },
+        "KAH Appointment": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "KAH Appointment field"
         }
+
     }
 
     # Define the edges (connections between nodes)
@@ -424,7 +431,7 @@ if check_password():
 
 
 
-                # System Management Module connections - Level 1
+         # System Management Module connections - Level 1
         ("System Management", "System Identity & Classification"),
         ("System Management", "Criticality & Risk"),
         ("System Management", "System Resilience"),
@@ -499,8 +506,9 @@ if check_password():
         ("Agency", "Ministry"),
 
         # Key Appointment Holder connections - Level 2
-        ("Key Appointment Holder", "CIO Name"),
-        ("Key Appointment Holder", "CIO Email"),
+        ("Key Appointment Holder", "KAH Name"),
+        ("Key Appointment Holder", "KAH Email"),
+        ("Key Appointment Holder", "KAH Appointment"),
     ]
 
 
