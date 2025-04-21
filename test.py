@@ -26,7 +26,7 @@ def check_password():
         return False
     return False
 
-[Rest of the code remains exactly the same]
+
 
     # Initialize session state for systems data if not exists
     if 'systems_data' not in st.session_state:
