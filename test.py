@@ -1,3 +1,4 @@
+#PART1
 import streamlit as st
 from pyvis.network import Network
 import networkx as nx
@@ -55,7 +56,7 @@ if check_password():
             "size": 15,
             "shape": "dot"
         }
-}
+    }
 
     COLOR_SCHEMES = {
         "system_management": {
@@ -70,7 +71,11 @@ if check_password():
             "subgroup": "#303F9F",    # Medium blue
             "field": "#3949AB"        # Light blue
         }
-    }
+}
+
+
+#PART2
+
 
     # Complete entities dictionary with all nodes
     entities = {
@@ -121,6 +126,9 @@ if check_password():
             "shape": NODE_SETTINGS["module"]["shape"],
             "title": "Agency Management Module"
         },
+
+
+#PART3
 
 
         # Agency Management submodules
@@ -186,6 +194,9 @@ if check_password():
             "shape": NODE_SETTINGS["subgroup"]["shape"],
             "title": "Dependencies Management Sub-Group"
         },
+
+
+#PART4
 
 
         # System Management Fields - Basic Information
@@ -271,6 +282,10 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Public Service field"
         },
+
+
+#PART5
+
 
         # System Management Fields - Risk Materiality Level
         "System Criticality": {
@@ -365,6 +380,9 @@ if check_password():
         },
 
 
+#PART6
+
+
         # System Management Fields - Availability & Recovery
         "Availability Tier": {
             "color": COLOR_SCHEMES["system_management"]["field"],
@@ -379,59 +397,65 @@ if check_password():
             "title": "Recovery Tier field"
         },
 
-        # System Management Fields - Dependencies Management
-        "Hosting Type": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
+        # Agency Management Fields
+        "Agency Code": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Hosting Type field"
+            "title": "Agency Code field"
         },
-        "Hosting Location": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
+        "Agency Name": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Hosting Location field"
+            "title": "Agency Name field"
         },
-        "Dependencies": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
+        "Agency Sector": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Dependencies field"
+            "title": "Agency Sector field"
+        },
+        "Agency Type": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Agency Type field"
         }
     }
 
-    # Define relationships between nodes
-    relationships = [
+    # Define all edges (connections between nodes)
+    edges = [
         ("DGP 2.0", "System Management"),
         ("DGP 2.0", "Agency Management"),
 
-        # System Management relationships
+        # System Management connections
         ("System Management", "System Identity & Classification"),
         ("System Management", "Criticality & Risk"),
         ("System Management", "System Resilience"),
         ("System Management", "Hosting and System Dependencies"),
 
-        # System Identity & Classification relationships
+        # System Identity & Classification connections
         ("System Identity & Classification", "Basic Information"),
         ("System Identity & Classification", "Organizational Context"),
         ("System Identity & Classification", "Classification"),
 
-        # Criticality & Risk relationships
+        # Criticality & Risk connections
         ("Criticality & Risk", "Impact Assessment"),
         ("Criticality & Risk", "Risk Materiality Level"),
         ("Criticality & Risk", "SCA/RML Approval"),
 
-        # System Resilience relationships
+        # System Resilience connections
         ("System Resilience", "Availability & Recovery"),
 
-        # Hosting and System Dependencies relationships
+        # Hosting and System Dependencies connections
         ("Hosting and System Dependencies", "Dependencies Management"),
 
-        # Agency Management relationships
-        ("Agency Management", "Agency"),
-        ("Agency Management", "Key Appointment Holder"),
 
-        # Basic Information fields
+#PART7
+
+
+        # Basic Information field connections
         ("Basic Information", "System ID"),
         ("Basic Information", "System Name"),
         ("Basic Information", "System Description"),
@@ -439,19 +463,18 @@ if check_password():
         ("Basic Information", "Operational Date"),
         ("Basic Information", "Decommission Date"),
 
-        # Classification fields
+        # Classification field connections
         ("Classification", "Security Classification"),
         ("Classification", "Sensitivity Classification"),
 
-
-        # Impact Assessment fields
+        # Impact Assessment field connections
         ("Impact Assessment", "Economy"),
         ("Impact Assessment", "Public Health and Safety"),
         ("Impact Assessment", "National Security"),
         ("Impact Assessment", "Social Preparedness"),
         ("Impact Assessment", "Public Service"),
 
-        # Risk Materiality Level fields
+        # Risk Materiality Level field connections
         ("Risk Materiality Level", "System Criticality"),
         ("Risk Materiality Level", "Designated CII"),
         ("Risk Materiality Level", "Computed RML"),
@@ -463,125 +486,104 @@ if check_password():
         ("Risk Materiality Level", "RML Endorsement Date"),
         ("Risk Materiality Level", "Endorsement Comments"),
 
-        # SCA/RML Approval fields
+        # SCA/RML Approval field connections
         ("SCA/RML Approval", "IDSC Approval Date"),
         ("SCA/RML Approval", "IDSC Approval Attachment"),
         ("SCA/RML Approval", "MHA Approval"),
         ("SCA/RML Approval", "CSA Approval"),
         ("SCA/RML Approval", "SNDGO Approval"),
 
-        # Availability & Recovery fields
+        # Availability & Recovery field connections
         ("Availability & Recovery", "Availability Tier"),
         ("Availability & Recovery", "Recovery Tier"),
 
-        # Dependencies Management fields
-        ("Dependencies Management", "Hosting Type"),
-        ("Dependencies Management", "Hosting Location"),
-        ("Dependencies Management", "Dependencies"),
+        # Agency Management connections
+        ("Agency Management", "Agency"),
+        ("Agency Management", "Key Appointment Holder"),
+
+        # Agency field connections
+        ("Agency", "Agency Code"),
+        ("Agency", "Agency Name"),
+        ("Agency", "Agency Sector"),
+        ("Agency", "Agency Type"),
     ]
 
     # Create network
-    net = Network(height="750px", width="100%", bgcolor="#ffffff", font_color="black")
+    net = Network(height='750px', width='100%', bgcolor='#ffffff', font_color='black')
     net.force_atlas_2based()
 
     # Add nodes
-    for node_id, attributes in entities.items():
+    for node_id, attrs in entities.items():
         net.add_node(
             node_id,
-            color=attributes["color"],
-            size=attributes["size"],
-            shape=attributes["shape"],
-            title=attributes["title"]
+            color=attrs['color'],
+            size=attrs['size'],
+            title=attrs['title'],
+            shape=attrs['shape']
         )
 
+
+#PART8
+
+
     # Add edges
-    for source, target in relationships:
-        net.add_edge(source, target)
+    for edge in edges:
+        net.add_edge(edge[0], edge[1])
 
-    # Configure physics
-    net.set_options("""
-    const options = {
-      "physics": {
-        "forceAtlas2Based": {
-          "gravitationalConstant": -100,
-          "centralGravity": 0.01,
-          "springLength": 200,
-          "springConstant": 0.08,
-          "damping": 0.4,
-          "avoidOverlap": 1
-        },
-        "minVelocity": 0.75,
-        "solver": "forceAtlas2Based"
-      }
-    }
-    """)
-
-
-    # If hierarchical layout is enabled
+    # Configure hierarchical layout if enabled
     if view_type:
         net.set_options("""
         const options = {
-          "layout": {
-            "hierarchical": {
-              "enabled": true,
-              "levelSeparation": 150,
-              "nodeSpacing": 150,
-              "treeSpacing": 200,
-              "blockShifting": true,
-              "edgeMinimization": true,
-              "parentCentralization": true,
-              "direction": "UD",
-              "sortMethod": "directed"
-            }
-          },
-          "physics": {
-            "hierarchicalRepulsion": {
-              "centralGravity": 0.0,
-              "springLength": 150,
-              "springConstant": 0.01,
-              "nodeDistance": 150,
-              "damping": 0.09
+            "layout": {
+                "hierarchical": {
+                    "enabled": true,
+                    "levelSeparation": 150,
+                    "nodeSpacing": 150,
+                    "treeSpacing": 200,
+                    "blockShifting": true,
+                    "edgeMinimization": true,
+                    "parentCentralization": true,
+                    "direction": "UD",
+                    "sortMethod": "directed",
+                    "shakeTowards": "roots"
+                }
             },
-            "minVelocity": 0.75,
-            "solver": "hierarchicalRepulsion"
-          }
+            "physics": {
+                "hierarchicalRepulsion": {
+                    "centralGravity": 0.5,
+                    "springLength": 200,
+                    "springConstant": 0.01,
+                    "nodeDistance": 200,
+                    "damping": 0.09
+                },
+                "minVelocity": 0.75,
+                "solver": "hierarchicalRepulsion"
+            }
+        }
+        """)
+    else:
+        net.set_options("""
+        const options = {
+            "physics": {
+                "forceAtlas2Based": {
+                    "gravitationalConstant": -100,
+                    "centralGravity": 0.01,
+                    "springLength": 200,
+                    "springConstant": 0.08,
+                    "damping": 0.4,
+                    "avoidOverlap": 1
+                },
+                "minVelocity": 0.75,
+                "solver": "forceAtlas2Based"
+            }
         }
         """)
 
-    # Create a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-        net.save_graph(tmp_file.name)
-        
-    # Read the temporary file and display it
-    with open(tmp_file.name, 'r', encoding='utf-8') as file:
-        source_code = file.read()
-    
-    # Delete the temporary file
-    os.unlink(tmp_file.name)
-    
-    # Display the network
-    components.html(source_code, height=800)
-
-    # Add legend
-    st.markdown("""
-    ### Legend
-    
-    #### Node Sizes
-    - Largest: Root Node (DGP 2.0)
-    - Large: Module Level
-    - Medium: Sub-Module Level
-    - Small: Sub-Group Level
-    - Smallest: Field Level
-    
-    #### Colors
-    - Grey: Root Node
-    - Green Shades: System Management Module and related nodes
-    - Blue Shades: Agency Management Module and related nodes
-    
-    #### Layout Options
-    - Toggle the switch above to change between force-directed and hierarchical layouts
-    """)
-
-    # Add footer
-    st.markdown("---")
-    st.markdown("© 2024 Open Government Products. All rights reserved.")
+    # Save and display the network
+    try:
+        path = os.path.join(tempfile.gettempdir(), "graph.html")
+        net.save_graph(path)
+        with open(path, 'r', encoding='utf-8') as file:
+            components.html(file.read(), height=800)
+    except Exception as e:
+        st.error(f"Error displaying graph: {str(e)}")
