@@ -31,9 +31,29 @@ def check_password():
     else:
         return True
 
+def find_impacted_systems(G, source_system):
+    """Find all systems impacted by the failure of a source system"""
+    impacted = set()
+    
+    def dfs(node):
+        successors = list(G.successors(node))
+        predecessors = list(G.predecessors(node))
+        for successor in successors:
+            if successor not in impacted:
+                impacted.add(successor)
+                dfs(successor)
+        for predecessor in predecessors:
+            if predecessor not in impacted:
+                impacted.add(predecessor)
+                dfs(predecessor)
+    
+    impacted.add(source_system)
+    dfs(source_system)
+    return list(impacted)
+
 if check_password():
-    st.set_page_config(page_title="Interactive Dependency Graph", layout="wide")
-    st.title("🔄 System Dependencies Visualization")
+    st.set_page_config(page_title="System Impact Analysis", layout="wide")
+    st.title("🔄 System Impact Analysis")
 
     # Define color palette for systems
     colors = [
@@ -42,7 +62,7 @@ if check_password():
         "#2CA02C", "#D62728", "#9467BD", "#8C564B", "#E377C2"
     ]
 
-    # Generate 200 systems with random levels (1-4)
+    # Generate 200 systems
     entities = {}
     for i in range(1, 201):
         entities[f"System {i}"] = {
@@ -50,7 +70,8 @@ if check_password():
             "size": 20,
             "shape": "dot",
             "title": f"System {i}",
-            "level": random.randint(1, 4)
+            "level": random.randint(1, 4),
+            "original_color": random.choice(colors)  # Store original color
         }
 
     # Generate edges (each system connects to 2-4 other systems)
@@ -58,9 +79,8 @@ if check_password():
     systems = list(entities.keys())
     for system in systems:
         current_level = entities[system]["level"]
-        # Connect to 2-4 random systems in higher levels
         num_connections = random.randint(2, 4)
-        possible_targets = [s for s in systems if entities[s]["level"] > current_level]
+        possible_targets = [s for s in systems if s != system]  # Allow connections to any other system
         if possible_targets:
             targets = random.sample(possible_targets, min(num_connections, len(possible_targets)))
             for target in targets:
@@ -74,6 +94,35 @@ if check_password():
     # Add edges
     for source, target, title, arrow in edges:
         G.add_edge(source, target, title=title, arrows=arrow)
+
+    # Add system selection dropdown in sidebar
+    st.sidebar.title("Impact Analysis")
+    selected_system = st.sidebar.selectbox(
+        "Select a system to analyze impact:",
+        options=["None"] + sorted(systems)
+    )
+
+    # If a system is selected, find impacted systems
+    if selected_system != "None":
+        impacted_systems = find_impacted_systems(G, selected_system)
+        
+        # Update node colors based on impact
+        for node in G.nodes():
+            if node == selected_system:
+                G.nodes[node]["color"] = "#FF0000"  # Red for selected system
+            elif node in impacted_systems:
+                G.nodes[node]["color"] = "#FFA500"  # Orange for impacted systems
+            else:
+                G.nodes[node]["color"] = "#CCCCCC"  # Grey for unimpacted systems
+
+        # Display impacted systems in sidebar
+        st.sidebar.markdown("### Impacted Systems")
+        st.sidebar.markdown(f"**Selected System:** {selected_system}")
+        st.sidebar.markdown(f"**Number of Impacted Systems:** {len(impacted_systems)}")
+        st.sidebar.markdown("**List of Impacted Systems:**")
+        for sys in sorted(impacted_systems):
+            if sys != selected_system:
+                st.sidebar.markdown(f"- {sys}")
 
     # Create PyVis network
     net = Network(height="900px", width="100%", directed=True)
