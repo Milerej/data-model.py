@@ -404,38 +404,20 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Service Availability field"
         },
-        "RTO": {
+        "RECOVERY TIME OBJECTIVE": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "RTO field"
+            "title": "RECOVERY TIME OBJECTIVE field"
         },
-        "RPO": {
+        "RECOVERY POINT OBJECTIVE": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "RPO field"
+            "title": "RECOVERY POINT OBJECTIVE field"
         },
 
         # System Management Fields - Dependencies
-        "Total Dependencies": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Total Dependencies field"
-        },
-        "Downstream Impact": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Downstream Impact field"
-        },
-        "Direct Dependencies Count": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Direct Dependencies Count field"
-        },
         "Dependency ID": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -597,8 +579,8 @@ if check_password():
 
         # Availability & Recovery field connections
         ("Availability & Recovery", "Service Availability", "", ""),
-        ("Availability & Recovery", "RTO", "", ""),
-        ("Availability & Recovery", "RPO", "", ""),
+        ("Availability & Recovery", "RECOVERY TIME OBJECTIVE", "", ""),
+        ("Availability & Recovery", "RECOVERY POINT OBJECTIVE", "", ""),
 
 
 
@@ -611,11 +593,11 @@ if check_password():
         ("Dependencies Management", "Dependency Status", "", ""),
         ("Dependencies Management", "Dependency Type", "", ""),
         ("Dependencies Management", "Dependent System", "", ""),
-        ("Downstream Dependency ", "Dependency ID", "", ""),
-        ("Downstream Dependency ", "Dependency Status", "", ""),
-        ("Downstream Dependency ", "Dependency Type", "", ""),
-        ("Downstream Dependency ", "Dependent System", "", ""),
-        ("Downstream Dependency ", "Computed RML", "", ""),
+        ("Downstream Dependency", "Dependency ID", "", ""),
+        ("Downstream Dependency", "Dependency Status", "", ""),
+        ("Downstream Dependency", "Dependency Type", "", ""),
+        ("Downstream Dependency", "Dependent System", "", ""),
+        ("Downstream Dependency", "Computed RML", "", ""),
 
         # Agency Management Module relationships
         ("Agency Management", "Agency", "", ""),
