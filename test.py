@@ -547,17 +547,65 @@ if check_password():
  # ----------- Break ----------
 
 
- # Second Chart
+# Second Chart
 st.markdown("## Data Model Interdependency Chart")
 
 # Define entity modules and colors for second chart
 entities_2 = {
     "Ministry Family": {"color": "blue", "size": 20, "shape": "dot", "title": "Ministry Family"},
     "Agency": {"color": "blue", "size": 20, "shape": "dot", "title": "Agency"},
-    # ... [Add the rest of your entities with the same structure]
+    "System Overview": {"color": "teal", "size": 20, "shape": "dot", "title": "System Overview"},
+    "Criticality Assessment": {"color": "teal", "size": 20, "shape": "dot", "title": "Criticality Assessment"},
+    "Policy": {"color": "red", "size": 20, "shape": "dot", "title": "Policy"},
+    "Policy Waivers": {"color": "red", "size": 20, "shape": "dot", "title": "Policy Waivers"},
+    "Supplier Profile": {"color": "purple", "size": 20, "shape": "dot", "title": "Supplier Profile"},
+    "Supplier Risk Management": {"color": "purple", "size": 20, "shape": "dot", "title": "Supplier Risk Management"},
+    "Supplier Contracts": {"color": "purple", "size": 20, "shape": "dot", "title": "Supplier Contracts"},
+    "Actions Against Errant Supplier": {"color": "purple", "size": 20, "shape": "dot", "title": "Actions Against Errant Supplier"},
+    "Supplier Performance Feedback": {"color": "purple", "size": 20, "shape": "dot", "title": "Supplier Performance Feedback"},
+    "Bulk Tender ECN Details": {"color": "purple", "size": 20, "shape": "dot", "title": "Bulk Tender ECN Details"},
+    "EDH Agency": {"color": "purple", "size": 20, "shape": "dot", "title": "EDH Agency"},
+    "Risk Assessments": {"color": "orange", "size": 20, "shape": "dot", "title": "Risk Assessments"},
+    "Risk Treatments": {"color": "orange", "size": 20, "shape": "dot", "title": "Risk Treatments"},
+    "Audit Findings": {"color": "gray", "size": 20, "shape": "dot", "title": "Audit Findings"},
+    "System Management": {"color": "green", "size": 20, "shape": "dot", "title": "System Management"},
+    "Security & Sensitivity Classification": {"color": "green", "size": 20, "shape": "dot", "title": "Security & Sensitivity Classification"},
+    "Risk Materiality Level": {"color": "green", "size": 20, "shape": "dot", "title": "Risk Materiality Level"},
+    "System Resiliency": {"color": "green", "size": 20, "shape": "dot", "title": "System Resiliency"},
+    "Hosting and System Dependencies": {"color": "green", "size": 20, "shape": "dot", "title": "Hosting and System Dependencies"},
+    "Central Programmes": {"color": "green", "size": 20, "shape": "dot", "title": "Central Programmes"}
 }
 
-# [Your edges_2 definition remains the same]
+# Define edges for second chart
+edges_2 = [
+    ("Agency", "System Overview", "FK: Agency_ID", "both"),
+    ("Agency", "Ministry Family", "FK: Ministry_ID", "both"),
+    ("System Overview", "Criticality Assessment", "FK: System_ID", "both"),
+    ("System Overview", "Policy", "FK: Policy_ID", "both"),
+    ("Policy", "Policy Waivers", "FK: Policy_ID", "both"),
+    ("Supplier Profile", "Supplier Risk Management", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Supplier Contracts", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Actions Against Errant Supplier", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Supplier Performance Feedback", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "Bulk Tender ECN Details", "FK: Supplier_ID", "both"),
+    ("Supplier Profile", "EDH Agency", "FK: Supplier_ID", "both"),
+    ("Risk Assessments", "Risk Treatments", "FK: Assessment_ID", "both"),
+    ("Audit Findings", "Risk Treatments", "FK: Finding_ID", "both"),
+    ("Supplier Risk Management", "Risk Assessments", "FK: Risk_ID", "both"),
+    ("Supplier Performance Feedback", "Supplier Risk Management", "FK: Feedback_ID", "both"),
+    ("Actions Against Errant Supplier", "Supplier Contracts", "FK: Action_ID", "both"),
+    ("System Overview", "Supplier Contracts", "FK: System_ID", "both"),
+    ("System Overview", "Audit Findings", "FK: System_ID", "both"),
+    ("System Management", "System Overview", "FK: System_ID", "both"),
+    ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
+    ("System Management", "Security & Sensitivity Classification", "FK: System_ID", "both"),
+    ("System Management", "Risk Materiality Level", "FK: System_ID", "both"),
+    ("System Management", "System Resiliency", "FK: System_ID", "both"),
+    ("System Management", "Hosting and System Dependencies", "FK: System_ID", "both"),
+    ("System Management", "Central Programmes", "FK: System_ID", "both"),
+    ("System Management", "Supplier Contracts", "FK: System_ID", "both"),
+    ("Supplier Contracts", "Hosting and System Dependencies", "FK: Contract_ID", "both")
+]
 
 # Create NetworkX graph for second chart
 G2 = nx.DiGraph()
@@ -602,7 +650,7 @@ def get_dynamic_spacing_2():
 node_spacing_2, level_separation_2 = get_dynamic_spacing_2()
 
 # Set hierarchical layout options for second chart
-if view_type:  # Assuming you have the same view_type toggle for both charts
+if view_type:
     net2.set_options(f"""{{
         "layout": {{
             "hierarchical": {{
@@ -611,13 +659,94 @@ if view_type:  # Assuming you have the same view_type toggle for both charts
                 "sortMethod": "directed",
                 "nodeSpacing": {node_spacing_2},
                 "levelSeparation": {level_separation_2},
-                "treeSpacing": {node_spacing_2 * 1.2}
+                "treeSpacing": {node_spacing_2 * 1.2},
+                "blockShifting": true,
+                "edgeMinimization": true,
+                "parentCentralization": true,
+                "shakeTowards": "roots"
             }}
         }},
-        # ... [Rest of your options remain the same but use net2]
+        "physics": {{
+            "enabled": true,
+            "hierarchicalRepulsion": {{
+                "centralGravity": 0.2,
+                "springLength": {level_separation_2 * 0.75},
+                "springConstant": 0.2,
+                "nodeDistance": {node_spacing_2 * 1.1},
+                "damping": 0.09,
+                "avoidOverlap": 1
+            }},
+            "stabilization": {{
+                "enabled": true,
+                "iterations": 2000,
+                "updateInterval": 100,
+                "fit": true
+            }}
+        }},
+        "edges": {{
+            "smooth": {{
+                "type": "cubicBezier",
+                "forceDirection": "vertical",
+                "roundness": 0.3
+            }},
+            "color": {{
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.6
+            }}
+        }},
+        "nodes": {{
+            "fixed": {{
+                "x": false,
+                "y": true
+            }},
+            "shape": "dot",
+            "size": 20,
+            "font": {{
+                "size": 12,
+                "face": "arial"
+            }}
+        }},
+        "interaction": {{
+            "dragNodes": true,
+            "dragView": true,
+            "zoomView": true,
+            "hover": true
+        }},
+        "groups": {{
+            "useDefaultGroups": false
+        }}
     }}""")
 else:
-    net2.set_options("""{ ... }""")  # Your non-hierarchical options
+    net2.set_options("""{
+        "layout": {
+            "hierarchical": {
+                "enabled": false
+            }
+        },
+        "physics": {
+            "enabled": true,
+            "barnesHut": {
+                "gravitationalConstant": -60000,
+                "centralGravity": 0.1,
+                "springLength": 200,
+                "springConstant": 0.08,
+                "damping": 0.12,
+                "avoidOverlap": 1
+            }
+        },
+        "edges": {
+            "smooth": {
+                "type": "curvedCW",
+                "roundness": 0.2
+            },
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            }
+        }
+    }""")
 
 # Save and display second chart with fullscreen
 try:
