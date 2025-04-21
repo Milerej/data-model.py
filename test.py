@@ -238,23 +238,23 @@ Ministry: {system_info['System Identity & Classification']['Ministry Family Name
         dep_type = edge[2].get('dependency_type', 'Unknown')
         net.add_edge(source, target, title=f"Dependency Type: {dep_type}")
 
-  # Set network options
+    # Set network options
     net.set_options("""
     {
         "physics": {
             "enabled": true,
             "forceAtlas2Based": {
-                "gravitationalConstant": -2000,  # Increased repulsion between nodes
-                "centralGravity": 0.005,        # Reduced central gravity
-                "springLength": 200,            # Increased spring length
-                "springConstant": 0.05,         # Adjusted spring constant
-                "damping": 0.9,                # Added damping
-                "avoidOverlap": 1              # Added overlap avoidance
+                "gravitationalConstant": -2000,
+                "centralGravity": 0.005,
+                "springLength": 200,
+                "springConstant": 0.05,
+                "damping": 0.9,
+                "avoidOverlap": 1
             },
             "solver": "forceAtlas2Based",
             "stabilization": {
                 "enabled": true,
-                "iterations": 200,              # Increased iterations
+                "iterations": 200,
                 "updateInterval": 50,
                 "fit": true
             },
@@ -269,7 +269,7 @@ Ministry: {system_info['System Identity & Classification']['Ministry Family Name
             },
             "arrows": {"to": {"enabled": true}},
             "color": {"inherit": false, "color": "#666666"},
-            "length": 250                      # Fixed edge length
+            "length": 250
         },
         "nodes": {
             "font": {
@@ -278,8 +278,8 @@ Ministry: {system_info['System Identity & Classification']['Ministry Family Name
             },
             "borderWidth": 2,
             "borderWidthSelected": 4,
-            "size": 25,                        # Increased node size
-            "shape": "dot",                    # Changed shape to dot
+            "size": 25,
+            "shape": "dot",
             "scaling": {
                 "min": 20,
                 "max": 30
@@ -291,48 +291,14 @@ Ministry: {system_info['System Identity & Classification']['Ministry Family Name
             "keyboard": {
                 "enabled": true
             },
-            "zoomView": true,                  # Enable zoom
-            "dragView": true                   # Enable drag
+            "zoomView": true,
+            "dragView": true
         },
         "layout": {
-            "randomSeed": 42,                  # Fixed seed for consistent layout
+            "randomSeed": 42,
             "improvedLayout": true,
             "hierarchical": {
                 "enabled": false
-            }
-        }
-    }
-    """)    # Set network options
-    net.set_options("""
-    {
-        "physics": {
-            "enabled": true,
-            "forceAtlas2Based": {
-                "gravitationalConstant": -50,
-                "centralGravity": 0.01,
-                "springLength": 100,
-                "springConstant": 0.08
-            },
-            "solver": "forceAtlas2Based",
-            "stabilization": {"iterations": 100}
-        },
-        "edges": {
-            "smooth": {"type": "continuous"},
-            "arrows": {"to": {"enabled": true}},
-            "color": {"inherit": false, "color": "#666666"}
-        },
-        "nodes": {
-            "font": {
-                "size": 12
-            },
-            "borderWidth": 2,
-            "borderWidthSelected": 4
-        },
-        "interaction": {
-            "hover": true,
-            "navigationButtons": true,
-            "keyboard": {
-                "enabled": true
             }
         }
     }
