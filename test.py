@@ -464,7 +464,7 @@ if check_password():
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Inferred Dependencies field"
+            "title": " Downstream Dependency field"
         },
 
 
@@ -635,7 +635,7 @@ if check_password():
         ("System Criticality", "Computed RML", "", ""),
         ("Security Classification", "Computed RML", "", ""),
         ("Sensitivity Classification", "Computed RML", "", ""),
-        ("Inferred Dependencies", "Computed RML", "", ""),
+        ("Downstream Dependency", "Computed RML", "", ""),
 
     ]
 
