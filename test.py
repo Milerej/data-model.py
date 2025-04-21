@@ -55,10 +55,7 @@ if check_password():
             "size": 15,
             "shape": "dot"
         }
-    }
-
-
-
+}
 
     COLOR_SCHEMES = {
         "system_management": {
@@ -126,9 +123,7 @@ if check_password():
         },
 
 
-
-
-            # Agency Management submodules
+        # Agency Management submodules
         "Agency": {
             "color": COLOR_SCHEMES["agency_management"]["submodule"],
             "size": NODE_SETTINGS["submodule"]["size"],
@@ -193,9 +188,7 @@ if check_password():
         },
 
 
-
-
-            # System Management Fields - Basic Information
+        # System Management Fields - Basic Information
         "System ID": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -279,10 +272,7 @@ if check_password():
             "title": "Public Service field"
         },
 
-
-
-
-            # System Management Fields - Risk Materiality Level
+        # System Management Fields - Risk Materiality Level
         "System Criticality": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -375,425 +365,223 @@ if check_password():
         },
 
 
-
-
-            # System Management Fields - Additional Approval Fields
-        "MHA Comments": {
+        # System Management Fields - Availability & Recovery
+        "Availability Tier": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "MHA Comments field"
+            "title": "Availability Tier field"
         },
-        "CSA Comments": {
+        "Recovery Tier": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "CSA Comments field"
-        },
-        "SNDGO Comments": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "SNDGO Comments field"
+            "title": "Recovery Tier field"
         },
 
-        # System Management Fields - System Resilience
-        "Service Availability": {
+        # System Management Fields - Dependencies Management
+        "Hosting Type": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Service Availability field"
+            "title": "Hosting Type field"
         },
-        "RECOVERY TIME OBJECTIVE": {
+        "Hosting Location": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "RECOVERY TIME OBJECTIVE field"
+            "title": "Hosting Location field"
         },
-        "RECOVERY POINT OBJECTIVE": {
+        "Dependencies": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "RECOVERY POINT OBJECTIVE field"
-        },
-
-        # System Management Fields - Dependencies
-        "Dependency ID": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Dependency ID field"
-        },
-        "Dependency Status": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Dependency Status field"
-        },
-        "Dependency Type": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Dependency Type field"
-        },
-        "Dependent System": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Dependent System field"
-        },
-        "Downstream Dependency": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Downstream Dependency field"
-        },
-
-
-
-
-            # Agency Management Fields
-        "Agency Name": {
-            "color": COLOR_SCHEMES["agency_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Agency Name field"
-        },
-        "Agency Abbreviation (Short Form)": {
-            "color": COLOR_SCHEMES["agency_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Agency Abbreviation field"
-        },
-        "Agency Operational Status": {
-            "color": COLOR_SCHEMES["agency_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Agency Operational Status field"
-        },
-        "Ministry Family": {
-            "color": COLOR_SCHEMES["agency_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Ministry Family field"
-        },
-        "Full Name": {
-            "color": COLOR_SCHEMES["agency_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Full Name field"
-        },
-        "Designation": {
-            "color": COLOR_SCHEMES["agency_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Designation field"
-        },
-        "Email": {
-            "color": COLOR_SCHEMES["agency_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Email field"
+            "title": "Dependencies field"
         }
     }
 
-    # Complete edges list
-    edges = [
-        # Root node connections
-        ("DGP 2.0", "System Management", "", ""),
-        ("DGP 2.0", "Agency Management", "", ""),
+    # Define relationships between nodes
+    relationships = [
+        ("DGP 2.0", "System Management"),
+        ("DGP 2.0", "Agency Management"),
 
-        # System Management Module relationships
-        ("System Management", "System Identity & Classification", "", ""),
-        ("System Management", "Criticality & Risk", "", ""),
-        ("System Management", "System Resilience", "", ""),
-        ("System Management", "Hosting and System Dependencies", "", ""),
+        # System Management relationships
+        ("System Management", "System Identity & Classification"),
+        ("System Management", "Criticality & Risk"),
+        ("System Management", "System Resilience"),
+        ("System Management", "Hosting and System Dependencies"),
 
         # System Identity & Classification relationships
-        ("System Identity & Classification", "Basic Information", "", ""),
-        ("System Identity & Classification", "Organizational Context", "", ""),
-        ("System Identity & Classification", "Classification", "", ""),
-
-        # Basic Information field connections
-        ("Basic Information", "System ID", "", ""),
-        ("Basic Information", "System Name", "", ""),
-        ("Basic Information", "System Description", "", ""),
-        ("Basic Information", "System Status", "", ""),
-        ("Basic Information", "Operational Date", "", ""),
-        ("Basic Information", "Decommission Date", "", ""),
-
-
-
-
-            # Organizational Context field connections
-        ("Organizational Context", "Agency Name", "", ""),
-
-        # Classification field connections
-        ("Classification", "Security Classification", "", ""),
-        ("Classification", "Sensitivity Classification", "", ""),
+        ("System Identity & Classification", "Basic Information"),
+        ("System Identity & Classification", "Organizational Context"),
+        ("System Identity & Classification", "Classification"),
 
         # Criticality & Risk relationships
-        ("Criticality & Risk", "Impact Assessment", "", ""),
-        ("Criticality & Risk", "Risk Materiality Level", "", ""),
-        ("Criticality & Risk", "SCA/RML Approval", "", ""),
-
-        # Impact Assessment field connections
-        ("Impact Assessment", "Economy", "", ""),
-        ("Impact Assessment", "Public Health and Safety", "", ""),
-        ("Impact Assessment", "National Security", "", ""),
-        ("Impact Assessment", "Social Preparedness", "", ""),
-        ("Impact Assessment", "Public Service", "", ""),
-        ("Impact Assessment", "Designated CII", "", ""),
-        ("Economy", "System Criticality", "", ""),
-        ("Public Health and Safety", "System Criticality", "", ""),
-        ("National Security", "System Criticality", "", ""),
-        ("Social Preparedness", "System Criticality", "", ""),
-        ("Public Service", "System Criticality", "", ""),
-        ("Designated CII", "System Criticality", "", ""),
-
-
-
-        # Risk Materiality Level field connections
-        ("Risk Materiality Level", "Computed RML", "", ""),
-        ("Risk Materiality Level", "Computed RML Date", "", ""),
-        ("Risk Materiality Level", "Agency Proposed RML", "", ""),
-        ("Risk Materiality Level", "RML Alignment", "", ""),
-        ("Risk Materiality Level", "RML Justification", "", ""),
-
-
-        # SCA/RML Approval field connections
-        ("SCA/RML Approval", "Endorsed RML", "", ""),
-        ("SCA/RML Approval", "RML Endorsement Date", "", ""),
-        ("SCA/RML Approval", "Endorsement Comments", "", ""),
-        ("SCA/RML Approval", "IDSC Approval Date", "", ""),
-        ("SCA/RML Approval", "IDSC Approval Attachment", "", ""),
-        ("SCA/RML Approval", "MHA Approval", "", ""),
-        ("SCA/RML Approval", "CSA Approval", "", ""),
-        ("SCA/RML Approval", "SNDGO Approval", "", ""),
-        ("SCA/RML Approval", "MHA Comments", "", ""),
-        ("SCA/RML Approval", "CSA Comments", "", ""),
-        ("SCA/RML Approval", "SNDGO Comments", "", ""),
+        ("Criticality & Risk", "Impact Assessment"),
+        ("Criticality & Risk", "Risk Materiality Level"),
+        ("Criticality & Risk", "SCA/RML Approval"),
 
         # System Resilience relationships
-        ("System Resilience", "Availability & Recovery", "", ""),
+        ("System Resilience", "Availability & Recovery"),
 
-        # Availability & Recovery field connections
-        ("Availability & Recovery", "Service Availability", "", ""),
-        ("Availability & Recovery", "RECOVERY TIME OBJECTIVE", "", ""),
-        ("Availability & Recovery", "RECOVERY POINT OBJECTIVE", "", ""),
+        # Hosting and System Dependencies relationships
+        ("Hosting and System Dependencies", "Dependencies Management"),
+
+        # Agency Management relationships
+        ("Agency Management", "Agency"),
+        ("Agency Management", "Key Appointment Holder"),
+
+        # Basic Information fields
+        ("Basic Information", "System ID"),
+        ("Basic Information", "System Name"),
+        ("Basic Information", "System Description"),
+        ("Basic Information", "System Status"),
+        ("Basic Information", "Operational Date"),
+        ("Basic Information", "Decommission Date"),
+
+        # Classification fields
+        ("Classification", "Security Classification"),
+        ("Classification", "Sensitivity Classification"),
 
 
+        # Impact Assessment fields
+        ("Impact Assessment", "Economy"),
+        ("Impact Assessment", "Public Health and Safety"),
+        ("Impact Assessment", "National Security"),
+        ("Impact Assessment", "Social Preparedness"),
+        ("Impact Assessment", "Public Service"),
 
+        # Risk Materiality Level fields
+        ("Risk Materiality Level", "System Criticality"),
+        ("Risk Materiality Level", "Designated CII"),
+        ("Risk Materiality Level", "Computed RML"),
+        ("Risk Materiality Level", "Computed RML Date"),
+        ("Risk Materiality Level", "Agency Proposed RML"),
+        ("Risk Materiality Level", "RML Alignment"),
+        ("Risk Materiality Level", "RML Justification"),
+        ("Risk Materiality Level", "Endorsed RML"),
+        ("Risk Materiality Level", "RML Endorsement Date"),
+        ("Risk Materiality Level", "Endorsement Comments"),
 
-            # Hosting and System Dependencies relationships
-        ("Hosting and System Dependencies", "Dependencies Management", "", ""),
+        # SCA/RML Approval fields
+        ("SCA/RML Approval", "IDSC Approval Date"),
+        ("SCA/RML Approval", "IDSC Approval Attachment"),
+        ("SCA/RML Approval", "MHA Approval"),
+        ("SCA/RML Approval", "CSA Approval"),
+        ("SCA/RML Approval", "SNDGO Approval"),
 
-        # Dependencies Management field connections
-        ("Dependencies Management", "Dependency ID", "", ""),
-        ("Dependencies Management", "Dependency Status", "", ""),
-        ("Dependencies Management", "Dependency Type", "", ""),
-        ("Dependencies Management", "Dependent System", "", ""),
-        ("Downstream Dependency", "Dependency ID", "", ""),
-        ("Downstream Dependency", "Dependency Status", "", ""),
-        ("Downstream Dependency", "Dependency Type", "", ""),
-        ("Downstream Dependency", "Dependent System", "", ""),
-        ("Downstream Dependency", "Computed RML", "", ""),
+        # Availability & Recovery fields
+        ("Availability & Recovery", "Availability Tier"),
+        ("Availability & Recovery", "Recovery Tier"),
 
-        # Agency Management Module relationships
-        ("Agency Management", "Agency", "", ""),
-        ("Agency Management", "Key Appointment Holder", "", ""),
-
-        # Agency field connections
-        ("Agency", "Agency Name", "", ""),
-        ("Agency", "Agency Abbreviation (Short Form)", "", ""),
-        ("Agency", "Agency Operational Status", "", ""),
-        ("Agency", "Ministry Family", "", ""),
-
-        # Key Appointment Holder field connections
-        ("Key Appointment Holder", "Full Name", "", ""),
-        ("Key Appointment Holder", "Designation", "", ""),
-        ("Key Appointment Holder", "Email", "", ""),
-
-        # Cross-module relationships
-        ("System Criticality", "Computed RML", "", ""),
-        ("Security Classification", "Computed RML", "", ""),
-        ("Sensitivity Classification", "Computed RML", "", ""),
-
+        # Dependencies Management fields
+        ("Dependencies Management", "Hosting Type"),
+        ("Dependencies Management", "Hosting Location"),
+        ("Dependencies Management", "Dependencies"),
     ]
 
-    # Create NetworkX graph
-    G = nx.DiGraph()
-    for node, attributes in entities.items():
-        node_attrs = {
-            "color": attributes["color"],
-            "size": attributes["size"],
-            "shape": attributes["shape"],
-            "title": attributes["title"],
-            "label": node
-        }
-        G.add_node(node, **node_attrs)
+    # Create network
+    net = Network(height="750px", width="100%", bgcolor="#ffffff", font_color="black")
+    net.force_atlas_2based()
 
-
-
+    # Add nodes
+    for node_id, attributes in entities.items():
+        net.add_node(
+            node_id,
+            color=attributes["color"],
+            size=attributes["size"],
+            shape=attributes["shape"],
+            title=attributes["title"]
+        )
 
     # Add edges
-    for source, target, label, direction in edges:
-        G.add_edge(source, target, title=label, label=label, arrows=direction)
+    for source, target in relationships:
+        net.add_edge(source, target)
 
-    # Create PyVis network
-    net = Network(height="900px", width="100%", directed=True)
-    net.from_nx(G)
+    # Configure physics
+    net.set_options("""
+    const options = {
+      "physics": {
+        "forceAtlas2Based": {
+          "gravitationalConstant": -100,
+          "centralGravity": 0.01,
+          "springLength": 200,
+          "springConstant": 0.08,
+          "damping": 0.4,
+          "avoidOverlap": 1
+        },
+        "minVelocity": 0.75,
+        "solver": "forceAtlas2Based"
+      }
+    }
+    """)
 
-    # Set hierarchical layout options based on toggle
+
+    # If hierarchical layout is enabled
     if view_type:
-        net.set_options("""{
-            "layout": {
-                "hierarchical": {
-                    "enabled": true,
-                    "direction": "UD",
-                    "sortMethod": "directed",
-                    "nodeSpacing": 200,
-                    "levelSeparation": 200,
-                    "treeSpacing": 200,
-                    "blockShifting": false,
-                    "edgeMinimization": false,
-                    "parentCentralization": false,
-                    "shakeTowards": "roots"
-                }
-            },
-            "physics": {
-                "enabled": true,
-                "hierarchicalRepulsion": {
-                    "centralGravity": 0.5,
-                    "springLength": 150,
-                    "springConstant": 0.3,
-                    "nodeDistance": 200,
-                    "damping": 0.09,
-                    "avoidOverlap": 1
-                },
-                "stabilization": {
-                    "enabled": true,
-                    "iterations": 2000,
-                    "updateInterval": 100,
-                    "fit": true
-                }
-            },
-            "edges": {
-                "smooth": {
-                    "type": "cubicBezier",
-                    "forceDirection": "vertical",
-                    "roundness": 0.5
-                },
-                "color": {
-                    "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.8
-                }
-            },
-            "nodes": {
-                "fixed": {
-                    "x": false,
-                    "y": true
-                },
-                "shape": "dot",
-                "size": 25,
-                "font": {
-                    "size": 14
-                }
-            },
-            "interaction": {
-                "dragNodes": true,
-                "dragView": true,
-                "zoomView": true
-            },
-            "groups": {
-                "useDefaultGroups": false
+        net.set_options("""
+        const options = {
+          "layout": {
+            "hierarchical": {
+              "enabled": true,
+              "levelSeparation": 150,
+              "nodeSpacing": 150,
+              "treeSpacing": 200,
+              "blockShifting": true,
+              "edgeMinimization": true,
+              "parentCentralization": true,
+              "direction": "UD",
+              "sortMethod": "directed"
             }
-        }""")
-    else:
-        net.set_options("""{
-            "layout": {
-                "hierarchical": {
-                    "enabled": false
-                }
+          },
+          "physics": {
+            "hierarchicalRepulsion": {
+              "centralGravity": 0.0,
+              "springLength": 150,
+              "springConstant": 0.01,
+              "nodeDistance": 150,
+              "damping": 0.09
             },
-            "physics": {
-                "enabled": true,
-                "barnesHut": {
-                    "gravitationalConstant": -60000,
-                    "centralGravity": 0.1,
-                    "springLength": 200,
-                    "springConstant": 0.08,
-                    "damping": 0.12,
-                    "avoidOverlap": 1
-                }
-            },
-            "edges": {
-                "smooth": {
-                    "type": "curvedCW",
-                    "roundness": 0.2
-                },
-                "color": {
-                    "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.8
-                }
-            }
-        }""")
+            "minVelocity": 0.75,
+            "solver": "hierarchicalRepulsion"
+          }
+        }
+        """)
 
-    # Save and display the network
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-            net.save_graph(tmp_file.name)
-            with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                html_content = f.read()
+    # Create a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+        net.save_graph(tmp_file.name)
+        
+    # Read the temporary file and display it
+    with open(tmp_file.name, 'r', encoding='utf-8') as file:
+        source_code = file.read()
+    
+    # Delete the temporary file
+    os.unlink(tmp_file.name)
+    
+    # Display the network
+    components.html(source_code, height=800)
 
-            fullscreen_html = """
-            <button 
-                style="
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 10000;
-                    padding: 8px 16px;
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-family: Arial, sans-serif;
-                    font-size: 14px;
-                "
-                onclick="toggleFullscreen()"
-            >
-                Full Screen
-            </button>
-            <script>
-                function toggleFullscreen() {
-                    let elem = document.documentElement;
-                    if (!document.fullscreenElement) {
-                        if (elem.requestFullscreen) {
-                            elem.requestFullscreen();
-                        } else if (elem.webkitRequestFullscreen) {
-                            elem.webkitRequestFullscreen();
-                        } else if (elem.msRequestFullscreen) {
-                            elem.msRequestFullscreen();
-                        }
-                    } else {
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) {
-                            document.msExitFullscreen();
-                        }
-                    }
-                }
-            </script>
-            """
+    # Add legend
+    st.markdown("""
+    ### Legend
+    
+    #### Node Sizes
+    - Largest: Root Node (DGP 2.0)
+    - Large: Module Level
+    - Medium: Sub-Module Level
+    - Small: Sub-Group Level
+    - Smallest: Field Level
+    
+    #### Colors
+    - Grey: Root Node
+    - Green Shades: System Management Module and related nodes
+    - Blue Shades: Agency Management Module and related nodes
+    
+    #### Layout Options
+    - Toggle the switch above to change between force-directed and hierarchical layouts
+    """)
 
-            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
-            components.html(modified_html, height=900)
-            os.unlink(tmp_file.name)
-    except Exception as e:
-        st.error(f"An error occurred while generating the graph: {str(e)}")
+    # Add footer
+    st.markdown("---")
+    st.markdown("© 2024 Open Government Products. All rights reserved.")
