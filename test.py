@@ -35,13 +35,6 @@ if check_password():
     st.set_page_config(page_title="Interactive Dependency Graph", layout="wide")
     st.title("🔄 System Dependencies Visualization")
 
-    # Add the view toggle and physics toggle
-    col1, col2 = st.columns(2)
-    with col1:
-        view_type = st.toggle("Enable Hierarchical Layout", False)
-    with col2:
-        physics_enabled = st.toggle("Enable Physics", True)
-
     # Define color palette for systems
     colors = [
         "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
@@ -86,113 +79,58 @@ if check_password():
     net = Network(height="900px", width="100%", directed=True)
     net.from_nx(G)
 
-    if view_type:
-        net.set_options("""{
-            "layout": {
-                "hierarchical": {
-                    "enabled": true,
-                    "direction": "UD",
-                    "sortMethod": "directed",
-                    "nodeSpacing": 100,
-                    "levelSeparation": 150,
-                    "treeSpacing": 200,
-                    "blockShifting": true,
-                    "edgeMinimization": true,
-                    "parentCentralization": true,
-                    "shakeTowards": "roots"
-                }
+    net.set_options("""{
+        "layout": {
+            "randomSeed": 42,
+            "improvedLayout": true
+        },
+        "physics": {
+            "enabled": true,
+            "forceAtlas2Based": {
+                "gravitationalConstant": -50,
+                "centralGravity": 0.01,
+                "springLength": 100,
+                "springConstant": 0.08,
+                "damping": 0.4,
+                "avoidOverlap": 1
             },
-            "physics": {
+            "solver": "forceAtlas2Based",
+            "stabilization": {
                 "enabled": true,
-                "hierarchicalRepulsion": {
-                    "centralGravity": 0.0,
-                    "springLength": 100,
-                    "springConstant": 0.01,
-                    "nodeDistance": 120,
-                    "damping": 0.09
-                },
-                "solver": "hierarchicalRepulsion",
-                "stabilization": {
-                    "enabled": true,
-                    "iterations": 1000,
-                    "updateInterval": 100,
-                    "onlyDynamicEdges": false,
-                    "fit": true
-                }
-            },
-            "edges": {
-                "smooth": {
-                    "type": "cubicBezier",
-                    "forceDirection": "vertical",
-                    "roundness": 0.4
-                },
-                "arrows": {
-                    "to": {
-                        "enabled": true,
-                        "scaleFactor": 0.5
-                    }
-                }
-            },
-            "interaction": {
-                "dragNodes": true,
-                "dragView": true,
-                "zoomView": true,
-                "hover": true
+                "iterations": 1000,
+                "updateInterval": 100,
+                "fit": true
             }
-        }""")
-    else:
-        net.set_options(f"""{{
-            "layout": {{
-                "randomSeed": 42,
-                "improvedLayout": true
-            }},
-            "physics": {{
-                "enabled": {str(physics_enabled).lower()},
-                "forceAtlas2Based": {{
-                    "gravitationalConstant": -50,
-                    "centralGravity": 0.01,
-                    "springLength": 100,
-                    "springConstant": 0.08,
-                    "damping": 0.4,
-                    "avoidOverlap": 1
-                }},
-                "solver": "forceAtlas2Based",
-                "stabilization": {{
+        },
+        "edges": {
+            "smooth": {
+                "type": "continuous",
+                "roundness": 0.5
+            },
+            "arrows": {
+                "to": {
                     "enabled": true,
-                    "iterations": 1000,
-                    "updateInterval": 100,
-                    "fit": true
-                }}
-            }},
-            "edges": {{
-                "smooth": {{
-                    "type": "continuous",
-                    "roundness": 0.5
-                }},
-                "arrows": {{
-                    "to": {{
-                        "enabled": true,
-                        "scaleFactor": 0.5
-                    }}
-                }},
-                "color": {{
-                    "inherit": false,
-                    "color": "#666666",
-                    "opacity": 0.8
-                }}
-            }},
-            "interaction": {{
-                "hover": true,
-                "navigationButtons": true,
-                "keyboard": {{
-                    "enabled": true
-                }},
-                "dragNodes": true,
-                "dragView": true,
-                "zoomView": true,
-                "multiselect": true
-            }}
-        }}""")
+                    "scaleFactor": 0.5
+                }
+            },
+            "color": {
+                "inherit": false,
+                "color": "#666666",
+                "opacity": 0.8
+            }
+        },
+        "interaction": {
+            "hover": true,
+            "navigationButtons": true,
+            "keyboard": {
+                "enabled": true
+            },
+            "dragNodes": true,
+            "dragView": true,
+            "zoomView": true,
+            "multiselect": true
+        }
+    }""")
 
     # Save and display the network
     try:
