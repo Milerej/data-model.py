@@ -1,4 +1,38 @@
 import streamlit as st
+from pyvis.network import Network
+import networkx as nx
+import streamlit.components.v1 as components
+import tempfile
+import os
+import random
+from datetime import datetime, timedelta
+import pandas as pd
+
+# Add password check function
+def check_password():
+    """Returns `True` if the user had the correct password."""
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        if st.session_state["password"] == "Showmethemoney":
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.text_input(
+            "Password", type="password", on_change=password_entered, key="password"
+        )
+        return False
+    elif not st.session_state["password_correct"]:
+        st.text_input(
+            "Password", type="password", on_change=password_entered, key="password"
+        )
+        st.error("⚠️ Password incorrect")
+        return False
+    else:
+        return True
+        
 def generate_random_date(start_year=2015):
     """Generate a random date from start_year to current date"""
     start_date = datetime(start_year, 1, 1)
