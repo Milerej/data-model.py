@@ -4,6 +4,7 @@ import networkx as nx
 import streamlit.components.v1 as components
 import tempfile
 import os
+import random
 
 def check_password():
     """Returns `True` if the user had the correct password."""
@@ -39,103 +40,38 @@ if check_password():
     with col1:
         view_type = st.toggle("Enable Hierarchical Layout", False)
     with col2:
-        physics_enabled = st.toggle("Enable Physics", False)
+        physics_enabled = st.toggle("Enable Physics", True)
 
-    # Define color schemes
-    COLOR_SCHEMES = {
-        "system": "#1B5E20",
-        "dependency": "#2E7D32"
-    }
-
-    # Define mock systems and their attributes
-    entities = {
-        "System A": {
-            "color": "#E41A1C",  # Red
-            "size": 30,
-            "shape": "dot",
-            "title": "Critical Payment System",
-            "level": 1
-        },
-        "System B": {
-            "color": "#377EB8",  # Blue
-            "size": 30,
-            "shape": "dot",
-            "title": "Authentication System",
-            "level": 2
-        },
-        "System C": {
-            "color": "#4DAF4A",  # Green
-            "size": 30,
-            "shape": "dot",
-            "title": "Document Management System",
-            "level": 2
-        },
-        "System D": {
-            "color": "#984EA3",  # Purple
-            "size": 30,
-            "shape": "dot",
-            "title": "Email System",
-            "level": 3
-        },
-        "System E": {
-            "color": "#FF7F00",  # Orange
-            "size": 30,
-            "shape": "dot",
-            "title": "Database System",
-            "level": 3
-        },
-        "System F": {
-            "color": "#FFFF33",  # Yellow
-            "size": 30,
-            "shape": "dot",
-            "title": "Reporting System",
-            "level": 2
-        },
-        "System G": {
-            "color": "#A65628",  # Brown
-            "size": 30,
-            "shape": "dot",
-            "title": "API Gateway",
-            "level": 2
-        },
-        "System H": {
-            "color": "#F781BF",  # Pink
-            "size": 30,
-            "shape": "dot",
-            "title": "Monitoring System",
-            "level": 4
-        }
-    }
-
-    # Define mock dependencies with clearer parent-child relationships
-    edges = [
-        # Level 1 (Top Level Systems)
-        ("System A", "System B", "Requires authentication", "to"),
-        ("System A", "System E", "Stores transaction data", "to"),
-        ("System A", "System G", "API access", "to"),
-        
-        # Level 2 Systems
-        ("System B", "System E", "User data storage", "to"),
-        ("System B", "System H", "Security monitoring", "to"),
-        
-        # Level 3 Systems
-        ("System C", "System B", "User authentication", "to"),
-        ("System C", "System E", "Document storage", "to"),
-        ("System C", "System G", "API access", "to"),
-        
-        # Level 4 Systems
-        ("System D", "System B", "User verification", "to"),
-        ("System D", "System C", "Document attachment", "to"),
-        ("System D", "System H", "Email monitoring", "to"),
-        
-        # Cross-level dependencies
-        ("System E", "System H", "Database monitoring", "to"),
-        ("System F", "System A", "Payment data", "to"),
-        ("System F", "System E", "Analytics data", "to"),
-        ("System G", "System B", "API authentication", "to"),
-        ("System G", "System H", "API monitoring", "to"),
-        ("System H", "System E", "Logs storage", "to")
+    # Define color palette for systems
+    colors = [
+        "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
+        "#FFFF33", "#A65628", "#F781BF", "#1F77B4", "#FF7F0E",
+        "#2CA02C", "#D62728", "#9467BD", "#8C564B", "#E377C2"
     ]
+
+    # Generate 200 systems with random levels (1-4)
+    entities = {}
+    for i in range(1, 201):
+        entities[f"System {i}"] = {
+            "color": random.choice(colors),
+            "size": 20,
+            "shape": "dot",
+            "title": f"System {i}",
+            "level": random.randint(1, 4)
+        }
+
+    # Generate edges (each system connects to 2-4 other systems)
+    edges = []
+    systems = list(entities.keys())
+    for system in systems:
+        current_level = entities[system]["level"]
+        # Connect to 2-4 random systems in higher levels
+        num_connections = random.randint(2, 4)
+        possible_targets = [s for s in systems if entities[s]["level"] > current_level]
+        if possible_targets:
+            targets = random.sample(possible_targets, min(num_connections, len(possible_targets)))
+            for target in targets:
+                edges.append((system, target, f"Connects to {target}", "to"))
 
     # Create NetworkX graph
     G = nx.DiGraph()
@@ -157,7 +93,7 @@ if check_password():
                     "enabled": true,
                     "direction": "UD",
                     "sortMethod": "directed",
-                    "nodeSpacing": 150,
+                    "nodeSpacing": 100,
                     "levelSeparation": 150,
                     "treeSpacing": 200,
                     "blockShifting": true,
@@ -200,32 +136,33 @@ if check_password():
             "interaction": {
                 "dragNodes": true,
                 "dragView": true,
-                "zoomView": true
+                "zoomView": true,
+                "hover": true
             }
         }""")
     else:
         net.set_options(f"""{{
             "layout": {{
-                "randomSeed": 42
+                "randomSeed": 42,
+                "improvedLayout": true
             }},
             "physics": {{
                 "enabled": {str(physics_enabled).lower()},
+                "forceAtlas2Based": {{
+                    "gravitationalConstant": -50,
+                    "centralGravity": 0.01,
+                    "springLength": 100,
+                    "springConstant": 0.08,
+                    "damping": 0.4,
+                    "avoidOverlap": 1
+                }},
+                "solver": "forceAtlas2Based",
                 "stabilization": {{
                     "enabled": true,
-                    "iterations": 2000,
-                    "updateInterval": 50,
+                    "iterations": 1000,
+                    "updateInterval": 100,
                     "fit": true
-                }},
-                "barnesHut": {{
-                    "gravitationalConstant": -2000,
-                    "centralGravity": 0.3,
-                    "springLength": 200,
-                    "springConstant": 0.04,
-                    "damping": 0.09,
-                    "avoidOverlap": 0.1
-                }},
-                "minVelocity": 0.75,
-                "maxVelocity": 30
+                }}
             }},
             "edges": {{
                 "smooth": {{
@@ -252,7 +189,8 @@ if check_password():
                 }},
                 "dragNodes": true,
                 "dragView": true,
-                "zoomView": true
+                "zoomView": true,
+                "multiselect": true
             }}
         }}""")
 
@@ -310,18 +248,6 @@ if check_password():
             modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
             components.html(modified_html, height=900)
             os.unlink(tmp_file.name)
-
-        # Add legend
-        st.sidebar.markdown("## System Legend")
-        for node, attrs in entities.items():
-            st.sidebar.markdown(
-                f'<div style="display: flex; align-items: center;">'
-                f'<div style="width: 20px; height: 20px; background-color: {attrs["color"]}; '
-                f'border-radius: 50%; margin-right: 10px;"></div>'
-                f'<div>{node}: {attrs["title"]}</div>'
-                f'</div>',
-                unsafe_allow_html=True
-            )
 
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
