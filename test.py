@@ -238,7 +238,71 @@ Ministry: {system_info['System Identity & Classification']['Ministry Family Name
         dep_type = edge[2].get('dependency_type', 'Unknown')
         net.add_edge(source, target, title=f"Dependency Type: {dep_type}")
 
-    # Set network options
+  # Set network options
+    net.set_options("""
+    {
+        "physics": {
+            "enabled": true,
+            "forceAtlas2Based": {
+                "gravitationalConstant": -2000,  # Increased repulsion between nodes
+                "centralGravity": 0.005,        # Reduced central gravity
+                "springLength": 200,            # Increased spring length
+                "springConstant": 0.05,         # Adjusted spring constant
+                "damping": 0.9,                # Added damping
+                "avoidOverlap": 1              # Added overlap avoidance
+            },
+            "solver": "forceAtlas2Based",
+            "stabilization": {
+                "enabled": true,
+                "iterations": 200,              # Increased iterations
+                "updateInterval": 50,
+                "fit": true
+            },
+            "minVelocity": 0.75,
+            "maxVelocity": 30
+        },
+        "edges": {
+            "smooth": {
+                "type": "continuous",
+                "forceDirection": "none",
+                "roundness": 0.5
+            },
+            "arrows": {"to": {"enabled": true}},
+            "color": {"inherit": false, "color": "#666666"},
+            "length": 250                      # Fixed edge length
+        },
+        "nodes": {
+            "font": {
+                "size": 12,
+                "face": "Arial"
+            },
+            "borderWidth": 2,
+            "borderWidthSelected": 4,
+            "size": 25,                        # Increased node size
+            "shape": "dot",                    # Changed shape to dot
+            "scaling": {
+                "min": 20,
+                "max": 30
+            }
+        },
+        "interaction": {
+            "hover": true,
+            "navigationButtons": true,
+            "keyboard": {
+                "enabled": true
+            },
+            "zoomView": true,                  # Enable zoom
+            "dragView": true                   # Enable drag
+        },
+        "layout": {
+            "randomSeed": 42,                  # Fixed seed for consistent layout
+            "improvedLayout": true,
+            "hierarchical": {
+                "enabled": false
+            }
+        }
+    }
+    """)    # Set network options
     net.set_options("""
     {
         "physics": {
