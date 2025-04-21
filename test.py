@@ -574,12 +574,12 @@ if check_password():
         ("Impact Assessment", "Social Preparedness", "", ""),
         ("Impact Assessment", "Public Service", "", ""),
         ("Impact Assessment", "Designated CII", "", ""),
-        ("Economy", "System Criticality ", "", ""),
-        ("Public Health and Safety", "System Criticality ", "", ""),
-        ("National Security", "System Criticality ", "", ""),
-        ("Social Preparedness", "System Criticality ", "", ""),
-        ("Public Service", "System Criticality ", "", ""),
-        ("Designated CII", "System Criticality ", "", ""),
+        ("Economy", "System Criticality", "", ""),
+        ("Public Health and Safety", "System Criticality", "", ""),
+        ("National Security", "System Criticality", "", ""),
+        ("Social Preparedness", "System Criticality", "", ""),
+        ("Public Service", "System Criticality", "", ""),
+        ("Designated CII", "System Criticality", "", ""),
 
 
 
@@ -589,6 +589,7 @@ if check_password():
         ("Risk Profile", "Agency Proposed RML", "", ""),
         ("Risk Profile", "RML Alignment", "", ""),
         ("Risk Profile", "RML Justification", "", ""),
+
 
         # SCA/RML Approval field connections
         ("SCA/RML Approval", "Endorsed RML", "", ""),
@@ -645,8 +646,11 @@ if check_password():
         ("Key Appointment Holder", "Email", "", ""),
 
         # Cross-module relationships
-        #("Agency Name", "Agency", "", ""),
-        #("Dependencies Management", "System ID", "", "")
+        ("System Criticality", "Computed RML", "", ""),
+        ("Security Classification", "Computed RML", "", ""),
+        ("Sensitivity Classification", "Computed RML", "", ""),
+        ("Inferred Dependencies", "Computed RML", "", ""),
+
     ]
 
     # Create NetworkX graph
