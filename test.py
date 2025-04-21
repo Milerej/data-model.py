@@ -27,7 +27,9 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
- 
+
+
+
 #Part 2 - Password Protection and Configuration:
 def check_password():
     """Returns `True` if the user had the correct password."""
@@ -57,7 +59,9 @@ def check_password():
 # Add session state initialization
 if 'graph_data' not in st.session_state:
     st.session_state.graph_data = {}
- 
+
+
+
 #Part 3 - Add new functionality for graph controls:
 def add_graph_controls():
     """Add controls for graph manipulation"""
@@ -96,7 +100,9 @@ def export_graph_data():
         json.dump(st.session_state.graph_data, f)
     
 st.sidebar.success(f"Data exported to {filename}")
- 
+
+
+
 #Part 4 - Node and Edge Configuration:
 def create_node_settings():
     """Create standardized node settings"""
@@ -157,7 +163,9 @@ def apply_node_styling(node_data, node_settings, color_schemes):
             "title": attributes.get("title", node_name)
         }
     return styled_nodes
- 
+
+
+
 #Part 5 - Graph Creation and Manipulation:
 def create_network_graph(entities, edges, view_type, filter_modules, search_term):
     """Create and configure the network graph"""
@@ -226,7 +234,9 @@ def configure_layout(net, view_type):
         }
     
     net.set_options(json.dumps(layout_options))
- 
+
+
+
 #Part 6 - Main Application Logic:
 def main():
     """Main application function"""
