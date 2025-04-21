@@ -454,25 +454,13 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Dependency Type field"
         },
-        "Upstream System": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Upstream System field"
-        },
         "Dependent System": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Dependent System field"
         },
-        "Data Exchange Frequency": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Data Exchange Frequency field"
-        },
-        "Inferred Dependencies": {
+        " Downstream Dependency": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
@@ -619,16 +607,14 @@ if check_password():
         ("Hosting and System Dependencies", "Dependencies Management", "", ""),
 
         # Dependencies Management field connections
-        ("Dependencies Management", "Total Dependencies", "", ""),
-        ("Dependencies Management", "Downstream Impact", "", ""),
-        ("Dependencies Management", "Direct Dependencies Count", "", ""),
         ("Dependencies Management", "Dependency ID", "", ""),
         ("Dependencies Management", "Dependency Status", "", ""),
         ("Dependencies Management", "Dependency Type", "", ""),
-        ("Dependencies Management", "Upstream System", "", ""),
         ("Dependencies Management", "Dependent System", "", ""),
-        ("Dependencies Management", "Data Exchange Frequency", "", ""),
-        ("Dependencies Management", "Inferred Dependencies", "", ""),
+        ("Downstream Dependency ", "Dependency ID", "", ""),
+        ("Downstream Dependency ", "Dependency Status", "", ""),
+        ("Downstream Dependency ", "Dependency Type", "", ""),
+        ("Downstream Dependency ", "Dependent System", "", ""),
 
         # Agency Management Module relationships
         ("Agency Management", "Agency", "", ""),
