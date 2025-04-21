@@ -167,11 +167,11 @@ if check_password():
             "shape": NODE_SETTINGS["subgroup"]["shape"],
             "title": "Impact Assessment Sub-Group"
         },
-        "Risk Profile": {
+        "Risk Materiality Level": {
             "color": COLOR_SCHEMES["system_management"]["subgroup"],
             "size": NODE_SETTINGS["subgroup"]["size"],
             "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "Risk Profile Sub-Group"
+            "title": "Risk Materiality Level Sub-Group"
         },
         "SCA/RML Approval": {
             "color": COLOR_SCHEMES["system_management"]["subgroup"],
@@ -282,7 +282,7 @@ if check_password():
 
 
 
-            # System Management Fields - Risk Profile
+            # System Management Fields - Risk Materiality Level
         "System Criticality": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -404,38 +404,20 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Service Availability field"
         },
-        "RTO": {
+        "RECOVERY TIME OBJECTIVE": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "RTO field"
+            "title": "RECOVERY TIME OBJECTIVE field"
         },
-        "RPO": {
+        "RECOVERY POINT OBJECTIVE": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "RPO field"
+            "title": "RECOVERY POINT OBJECTIVE field"
         },
 
         # System Management Fields - Dependencies
-        "Total Dependencies": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Total Dependencies field"
-        },
-        "Downstream Impact": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Downstream Impact field"
-        },
-        "Direct Dependencies Count": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Direct Dependencies Count field"
-        },
         "Dependency ID": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -454,29 +436,17 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Dependency Type field"
         },
-        "Upstream System": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Upstream System field"
-        },
         "Dependent System": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Dependent System field"
         },
-        "Data Exchange Frequency": {
+        "Downstream Dependency": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Data Exchange Frequency field"
-        },
-        "Inferred Dependencies": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Inferred Dependencies field"
+            "title": "Downstream Dependency field"
         },
 
 
@@ -564,7 +534,7 @@ if check_password():
 
         # Criticality & Risk relationships
         ("Criticality & Risk", "Impact Assessment", "", ""),
-        ("Criticality & Risk", "Risk Profile", "", ""),
+        ("Criticality & Risk", "Risk Materiality Level", "", ""),
         ("Criticality & Risk", "SCA/RML Approval", "", ""),
 
         # Impact Assessment field connections
@@ -583,12 +553,12 @@ if check_password():
 
 
 
-        # Risk Profile field connections
-        ("Risk Profile", "Computed RML", "", ""),
-        ("Risk Profile", "Computed RML Date", "", ""),
-        ("Risk Profile", "Agency Proposed RML", "", ""),
-        ("Risk Profile", "RML Alignment", "", ""),
-        ("Risk Profile", "RML Justification", "", ""),
+        # Risk Materiality Level field connections
+        ("Risk Materiality Level", "Computed RML", "", ""),
+        ("Risk Materiality Level", "Computed RML Date", "", ""),
+        ("Risk Materiality Level", "Agency Proposed RML", "", ""),
+        ("Risk Materiality Level", "RML Alignment", "", ""),
+        ("Risk Materiality Level", "RML Justification", "", ""),
 
 
         # SCA/RML Approval field connections
@@ -609,8 +579,8 @@ if check_password():
 
         # Availability & Recovery field connections
         ("Availability & Recovery", "Service Availability", "", ""),
-        ("Availability & Recovery", "RTO", "", ""),
-        ("Availability & Recovery", "RPO", "", ""),
+        ("Availability & Recovery", "RECOVERY TIME OBJECTIVE", "", ""),
+        ("Availability & Recovery", "RECOVERY POINT OBJECTIVE", "", ""),
 
 
 
@@ -619,16 +589,15 @@ if check_password():
         ("Hosting and System Dependencies", "Dependencies Management", "", ""),
 
         # Dependencies Management field connections
-        ("Dependencies Management", "Total Dependencies", "", ""),
-        ("Dependencies Management", "Downstream Impact", "", ""),
-        ("Dependencies Management", "Direct Dependencies Count", "", ""),
         ("Dependencies Management", "Dependency ID", "", ""),
         ("Dependencies Management", "Dependency Status", "", ""),
         ("Dependencies Management", "Dependency Type", "", ""),
-        ("Dependencies Management", "Upstream System", "", ""),
         ("Dependencies Management", "Dependent System", "", ""),
-        ("Dependencies Management", "Data Exchange Frequency", "", ""),
-        ("Dependencies Management", "Inferred Dependencies", "", ""),
+        ("Downstream Dependency", "Dependency ID", "", ""),
+        ("Downstream Dependency", "Dependency Status", "", ""),
+        ("Downstream Dependency", "Dependency Type", "", ""),
+        ("Downstream Dependency", "Dependent System", "", ""),
+        ("Downstream Dependency", "Computed RML", "", ""),
 
         # Agency Management Module relationships
         ("Agency Management", "Agency", "", ""),
@@ -649,7 +618,6 @@ if check_password():
         ("System Criticality", "Computed RML", "", ""),
         ("Security Classification", "Computed RML", "", ""),
         ("Sensitivity Classification", "Computed RML", "", ""),
-        ("Inferred Dependencies", "Computed RML", "", ""),
 
     ]
 
