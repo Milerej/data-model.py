@@ -547,300 +547,131 @@ if check_password():
  # ----------- Break ----------
 
 
-    # Create NetworkX graph
-    G = nx.DiGraph()
-    for node, attributes in entities.items():
-        node_attrs = {
-            "color": attributes["color"],
-            "size": attributes["size"],
-            "shape": attributes["shape"],
-            "title": attributes["title"],
-            "label": node
-        }
-        G.add_node(node, **node_attrs)
+ # Second Chart
+st.markdown("## Data Model Interdependency Chart")
 
-    # Add edges
-    for source, target, label, direction in edges:
-        G.add_edge(source, target, title=label, label=label, arrows=direction)
+# Define entity modules and colors for second chart
+entities_2 = {
+    "Ministry Family": {"color": "blue", "size": 20, "shape": "dot", "title": "Ministry Family"},
+    "Agency": {"color": "blue", "size": 20, "shape": "dot", "title": "Agency"},
+    # ... [Add the rest of your entities with the same structure]
+}
 
-    # Create PyVis network
-    net = Network(height="900px", width="100%", directed=True)
-    net.from_nx(G)
+# [Your edges_2 definition remains the same]
 
-    # Add dynamic spacing function
-    def get_dynamic_spacing():
-        # Count nodes at each level
-        level_counts = {}
-        for edge in edges:
-            source = edge[0]
-            if source not in level_counts:
-                level_counts[source] = 0
-            level_counts[source] += 1
-        
-        # Calculate maximum nodes at any level
-        max_nodes = max(level_counts.values()) if level_counts else 1
-        
-        # Dynamic spacing calculations
-        base_node_spacing = 150
-        base_level_separation = 200
-        
-        # Adjust spacing based on number of nodes
-        dynamic_node_spacing = base_node_spacing * (1 + (max_nodes / 20))
-        dynamic_level_separation = base_level_separation * (1 + (len(level_counts) / 10))
-        
-        return dynamic_node_spacing, dynamic_level_separation
+# Create NetworkX graph for second chart
+G2 = nx.DiGraph()
+for node, attributes in entities_2.items():
+    node_attrs = {
+        "color": attributes["color"],
+        "size": attributes["size"],
+        "shape": attributes["shape"],
+        "title": attributes["title"],
+        "label": node
+    }
+    G2.add_node(node, **node_attrs)
 
-    # Get dynamic spacing values
-    node_spacing, level_separation = get_dynamic_spacing()
+# Add edges
+for source, target, label, direction in edges_2:
+    G2.add_edge(source, target, title=label, label=label, arrows=direction)
 
-    # Set hierarchical layout options based on toggle
-    if view_type:
-        net.set_options(f"""{{
-            "layout": {{
-                "hierarchical": {{
-                    "enabled": true,
-                    "direction": "UD",
-                    "sortMethod": "directed",
-                    "nodeSpacing": {node_spacing},
-                    "levelSeparation": {level_separation},
-                    "treeSpacing": {node_spacing * 1.2},
-                    "blockShifting": true,
-                    "edgeMinimization": true,
-                    "parentCentralization": true,
-                    "shakeTowards": "roots"
-                }}
-            }},
-            "physics": {{
+# Create PyVis network
+net2 = Network(height="900px", width="100%", directed=True)
+net2.from_nx(G2)
+
+# Add dynamic spacing function for second chart
+def get_dynamic_spacing_2():
+    level_counts = {}
+    for edge in edges_2:
+        source = edge[0]
+        if source not in level_counts:
+            level_counts[source] = 0
+        level_counts[source] += 1
+    
+    max_nodes = max(level_counts.values()) if level_counts else 1
+    
+    base_node_spacing = 150
+    base_level_separation = 200
+    
+    dynamic_node_spacing = base_node_spacing * (1 + (max_nodes / 20))
+    dynamic_level_separation = base_level_separation * (1 + (len(level_counts) / 10))
+    
+    return dynamic_node_spacing, dynamic_level_separation
+
+# Get dynamic spacing values for second chart
+node_spacing_2, level_separation_2 = get_dynamic_spacing_2()
+
+# Set hierarchical layout options for second chart
+if view_type:  # Assuming you have the same view_type toggle for both charts
+    net2.set_options(f"""{{
+        "layout": {{
+            "hierarchical": {{
                 "enabled": true,
-                "hierarchicalRepulsion": {{
-                    "centralGravity": 0.2,
-                    "springLength": {level_separation * 0.75},
-                    "springConstant": 0.2,
-                    "nodeDistance": {node_spacing * 1.1},
-                    "damping": 0.09,
-                    "avoidOverlap": 1
-                }},
-                "stabilization": {{
-                    "enabled": true,
-                    "iterations": 2000,
-                    "updateInterval": 100,
-                    "fit": true
-                }}
-            }},
-            "edges": {{
-                "smooth": {{
-                    "type": "cubicBezier",
-                    "forceDirection": "vertical",
-                    "roundness": 0.3
-                }},
-                "color": {{
-                    "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.6
-                }}
-            }},
-            "nodes": {{
-                "fixed": {{
-                    "x": false,
-                    "y": true
-                }},
-                "shape": "dot",
-                "size": 20,
-                "font": {{
-                    "size": 12,
-                    "face": "arial"
-                }}
-            }},
-            "interaction": {{
-                "dragNodes": true,
-                "dragView": true,
-                "zoomView": true,
-                "hover": true
-            }},
-            "groups": {{
-                "useDefaultGroups": false
+                "direction": "UD",
+                "sortMethod": "directed",
+                "nodeSpacing": {node_spacing_2},
+                "levelSeparation": {level_separation_2},
+                "treeSpacing": {node_spacing_2 * 1.2}
             }}
-        }}""")
-    else:
-        net.set_options("""{
-            "layout": {
-                "hierarchical": {
-                    "enabled": false
-                }
-            },
-            "physics": {
-                "enabled": true,
-                "barnesHut": {
-                    "gravitationalConstant": -60000,
-                    "centralGravity": 0.1,
-                    "springLength": 200,
-                    "springConstant": 0.08,
-                    "damping": 0.12,
-                    "avoidOverlap": 1
-                }
-            },
-            "edges": {
-                "smooth": {
-                    "type": "curvedCW",
-                    "roundness": 0.2
-                },
-                "color": {
-                    "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.8
-                }
-            }
-        }""")
+        }},
+        # ... [Rest of your options remain the same but use net2]
+    }}""")
+else:
+    net2.set_options("""{ ... }""")  # Your non-hierarchical options
 
-    # Save and display the network
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-            net.save_graph(tmp_file.name)
-            with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                html_content = f.read()
-            
-            fullscreen_html = """
-            <button 
-                style="
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 10000;
-                    padding: 8px 16px;
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-family: Arial, sans-serif;
-                    font-size: 14px;
-                "
-                onclick="toggleFullscreen()"
-            >
-                Full Screen
-            </button>
-            <script>
-                function toggleFullscreen() {
-                    let elem = document.documentElement;
-                    if (!document.fullscreenElement) {
-                        if (elem.requestFullscreen) {
-                            elem.requestFullscreen();
-                        } else if (elem.webkitRequestFullscreen) {
-                            elem.webkitRequestFullscreen();
-                        } else if (elem.msRequestFullscreen) {
-                            elem.msRequestFullscreen();
-                        }
-                    } else {
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) {
-                            document.msExitFullscreen();
-                        }
+# Save and display second chart with fullscreen
+try:
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+        net2.save_graph(tmp_file.name)
+        with open(tmp_file.name, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        
+        fullscreen_html = """
+        <button 
+            style="
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 10000;
+                padding: 8px 16px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+            "
+            onclick="toggleFullscreen2()"
+        >
+            Full Screen
+        </button>
+        <script>
+            function toggleFullscreen2() {
+                let elem = document.documentElement;
+                if (!document.fullscreenElement) {
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                        elem.webkitRequestFullscreen();
+                    } else if (elem.msRequestFullscreen) {
+                        elem.msRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
                     }
                 }
-            </script>
-            """
-            
-            modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
-            components.html(modified_html, height=900)
-            os.unlink(tmp_file.name)
-    except Exception as e:
-        st.error(f"An error occurred while generating the graph: {str(e)}")
-
-
-
-
-
- # Second Chart - add this after the except block of your first chart
-    st.markdown("## Data Model Interdependency Chart")
-
-    # Define entity modules and colors for second chart
-    entities_2 = {
-        "Ministry Family": "blue",
-        "Agency": "blue",
-        "System Overview": "teal",
-        "Criticality Assessment": "teal",
-        "Policy": "red",
-        "Policy Waivers": "red",
-        "Supplier Profile": "purple",
-        "Supplier Risk Management": "purple",
-        "Supplier Contracts": "purple",
-        "Actions Against Errant Supplier": "purple",
-        "Supplier Performance Feedback": "purple",
-        "Bulk Tender ECN Details": "purple",
-        "EDH Agency": "purple",
-        "Risk Assessments": "orange",
-        "Risk Treatments": "orange",
-        "Audit Findings": "gray",
-        "System Management": "green",
-        "Security & Sensitivity Classification": "green",
-        "Risk Materiality Level": "green",
-        "System Resiliency": "green",
-        "Hosting and System Dependencies": "green",
-        "Central Programmes": "green"
-    }
-
-    # Define edges for second chart
-    edges_2 = [
-        ("Agency", "System Overview", "FK: Agency_ID", "both"),
-        ("Agency", "Ministry Family", "FK: Ministry_ID", "both"),
-        ("System Overview", "Criticality Assessment", "FK: System_ID", "both"),
-        ("System Overview", "Policy", "FK: Policy_ID", "both"),
-        ("Policy", "Policy Waivers", "FK: Policy_ID", "both"),
-        ("Supplier Profile", "Supplier Risk Management", "FK: Supplier_ID", "both"),
-        ("Supplier Profile", "Supplier Contracts", "FK: Supplier_ID", "both"),
-        ("Supplier Profile", "Actions Against Errant Supplier", "FK: Supplier_ID", "both"),
-        ("Supplier Profile", "Supplier Performance Feedback", "FK: Supplier_ID", "both"),
-        ("Supplier Profile", "Bulk Tender ECN Details", "FK: Supplier_ID", "both"),
-        ("Supplier Profile", "EDH Agency", "FK: Supplier_ID", "both"),
-        ("Risk Assessments", "Risk Treatments", "FK: Assessment_ID", "both"),
-        ("Audit Findings", "Risk Treatments", "FK: Finding_ID", "both"),
-        ("Supplier Risk Management", "Risk Assessments", "FK: Risk_ID", "both"),
-        ("Supplier Performance Feedback", "Supplier Risk Management", "FK: Feedback_ID", "both"),
-        ("Actions Against Errant Supplier", "Supplier Contracts", "FK: Action_ID", "both"),
-        ("System Overview", "Supplier Contracts", "FK: System_ID", "both"),
-        ("System Overview", "Audit Findings", "FK: System_ID", "both"),
-        ("System Management", "System Overview", "FK: System_ID", "both"),
-        ("System Management", "Criticality Assessment", "FK: System_ID", "both"),
-        ("System Management", "Security & Sensitivity Classification", "FK: System_ID", "both"),
-        ("System Management", "Risk Materiality Level", "FK: System_ID", "both"),
-        ("System Management", "System Resiliency", "FK: System_ID", "both"),
-        ("System Management", "Hosting and System Dependencies", "FK: System_ID", "both"),
-        ("System Management", "Central Programmes", "FK: System_ID", "both"),
-        ("System Management", "Supplier Contracts", "FK: System_ID", "both"),
-        ("Supplier Contracts", "Hosting and System Dependencies", "FK: Contract_ID", "both")
-    ]
-
-    # Create NetworkX graph for second chart
-    G2 = nx.DiGraph()
-    for node, color in entities_2.items():
-        G2.add_node(node, title=node, color=color)
-
-    # Add edges with labels and custom arrow directions
-    for source, target, label, direction in edges_2:
-        G2.add_edge(source, target, title=label, label=label, arrows=direction)
-
-    # Create interactive PyVis network for second chart
-    net2 = Network(height="700px", width="100%", directed=True)
-    net2.from_nx(G2)
-    net2.repulsion(node_distance=200, central_gravity=0.3)
-
-    # Customize edge labels and arrows
-    for edge in net2.edges:
-        edge["label"] = edge["title"]
-        if edge["arrows"] == "both":
-            edge["arrows"] = "to,from"
-        else:
-            edge["arrows"] = edge["arrows"]
-
-    # Save and display second chart in Streamlit
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-            net2.save_graph(tmp_file.name)
-            with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                components.html(f.read(), height=750, scrolling=True)
-            os.unlink(tmp_file.name)
-    except Exception as e:
-        st.error(f"An error occurred while generating the second graph: {str(e)}")
+            }
+        </script>
+        """
+        
+        modified_html = html_content.replace('</body>', f'{fullscreen_html}</body>')
+        components.html(modified_html, height=900)
+        os.unlink(tmp_file.name)
+except Exception as e:
+    st.error(f"An error occurred while generating the second graph: {str(e)}")
