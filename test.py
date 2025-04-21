@@ -82,6 +82,7 @@ def generate_system_data(system_number):
         }
     }
 
+
 if check_password():
     st.set_page_config(page_title="System Impact Analysis", layout="wide")
     st.title("🔄 System Impact Analysis")
@@ -115,15 +116,33 @@ if check_password():
     for source, target, dep_type in st.session_state.dependencies:
         G.add_edge(source, target, dependency_type=dep_type)
 
-    # Sidebar for system selection
+    # Sidebar for system selection - Modified version
+    system_options = ["Show All Systems"] + sorted(list(st.session_state.systems_data.keys()))
+    
+    # Initialize session state for selected system if not exists
+    if 'selected_system' not in st.session_state:
+        st.session_state.selected_system = "Show All Systems"
+    
+    # Create the selectbox with a key
     selected_system = st.sidebar.selectbox(
         "Select a system to analyze impact:",
-        options=["Show All Systems"] + sorted(st.session_state.systems_data.keys())
+        options=system_options,
+        key='system_selector',
+        index=system_options.index(st.session_state.selected_system)
     )
+    
+    # Update session state
+    st.session_state.selected_system = selected_system
+
+    # Add reset button
+    if st.sidebar.button("Reset View"):
+        st.session_state.selected_system = "Show All Systems"
+        st.experimental_rerun()
 
     # Create network visualization
     net = Network(height="800px", width="100%", directed=True, bgcolor='#ffffff')
-    
+
+
     if selected_system == "Show All Systems":
         # Show all systems with default color
         for node in G.nodes():
@@ -195,7 +214,8 @@ Ministry: {system_info['System Identity & Classification']['Ministry Family Name
         # Impact Analysis
         st.sidebar.markdown("### Impact Analysis")
         st.sidebar.markdown(f"**Number of Impacted Systems:** {len(impacted_systems) - 1}")
-        
+
+
         # Add nodes with impact-based colors
         for node in G.nodes():
             system_info = st.session_state.systems_data[node]
@@ -282,3 +302,5 @@ Ministry: {system_info['System Identity & Classification']['Ministry Family Name
                 file_name=f"impact_analysis_{selected_system}.csv",
                 mime="text/csv"
             )
+
+
