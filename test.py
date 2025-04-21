@@ -592,6 +592,7 @@ if check_password():
         ("Dependencies Management", "Dependency ID", "", ""),
         ("Dependencies Management", "Dependency Status", "", ""),
         ("Dependencies Management", "Dependency Type", "", ""),
+        ("Dependencies Management", "Dependency System", "", ""),
         ("Downstream Dependency", "Dependent System", "", ""),
         ("Downstream Dependency", "Dependency ID", "", ""),
         ("Downstream Dependency", "Dependency Status", "", ""),
