@@ -32,7 +32,7 @@ def check_password():
 
 if check_password():
     st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
-    st.title("⚙️ Data Model : System Management and Agency Management V2.3)")
+    st.title("⚙️ Data Model : System Management and Agency Management (V2.4)")
 
     # Add the view toggle
     view_type = st.toggle("Enable Hierarchical Layout", False)
@@ -443,6 +443,12 @@ if check_password():
             "title": "Dependent System field"
         },
 
+        "Downstream Dependency": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Downstream Dependency field"
+        },
 
 
 
@@ -586,7 +592,11 @@ if check_password():
         ("Dependencies Management", "Dependency ID", "", ""),
         ("Dependencies Management", "Dependency Status", "", ""),
         ("Dependencies Management", "Dependency Type", "", ""),
-        ("Dependencies Management", "Dependent System", "", ""),
+        ("Downstream Dependency", "Dependent System", "", ""),
+        ("Downstream Dependency", "Dependency ID", "", ""),
+        ("Downstream Dependency", "Dependency Status", "", ""),
+        ("Downstream Dependency", "Dependency Type", "", ""),
+        ("Downstream Dependency", "Dependent System", "", ""),
 
         # Agency Management Module relationships
         ("Agency Management", "Agency", "", ""),
@@ -607,7 +617,7 @@ if check_password():
         ("System Criticality", "Computed RML", "", ""),
         ("Security Classification", "Computed RML", "", ""),
         ("Sensitivity Classification", "Computed RML", "", ""),
-        ("Dependency ID", "Computed RML", "", ""),
+        ("Downstream Dependency", "Computed RML", "", ""),
 
     ]
 
