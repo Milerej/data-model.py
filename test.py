@@ -1,15 +1,4 @@
 import streamlit as st
-from pyvis.network import Network
-import networkx as nx
-import streamlit.components.v1 as components
-import tempfile
-import os
-import random
-from datetime import datetime, timedelta
-import pandas as pd
-
-# [Previous password check function remains the same]
-
 def generate_random_date(start_year=2015):
     """Generate a random date from start_year to current date"""
     start_date = datetime(start_year, 1, 1)
