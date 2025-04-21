@@ -167,11 +167,11 @@ if check_password():
             "shape": NODE_SETTINGS["subgroup"]["shape"],
             "title": "Impact Assessment Sub-Group"
         },
-        "Risk Profile": {
+        "Risk Materiality Level": {
             "color": COLOR_SCHEMES["system_management"]["subgroup"],
             "size": NODE_SETTINGS["subgroup"]["size"],
             "shape": NODE_SETTINGS["subgroup"]["shape"],
-            "title": "Risk Profile Sub-Group"
+            "title": "Risk Materiality Level Sub-Group"
         },
         "SCA/RML Approval": {
             "color": COLOR_SCHEMES["system_management"]["subgroup"],
@@ -282,7 +282,7 @@ if check_password():
 
 
 
-            # System Management Fields - Risk Profile
+            # System Management Fields - Risk Materiality Level
         "System Criticality": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -534,7 +534,7 @@ if check_password():
 
         # Criticality & Risk relationships
         ("Criticality & Risk", "Impact Assessment", "", ""),
-        ("Criticality & Risk", "Risk Profile", "", ""),
+        ("Criticality & Risk", "Risk Materiality Level", "", ""),
         ("Criticality & Risk", "SCA/RML Approval", "", ""),
 
         # Impact Assessment field connections
@@ -553,12 +553,12 @@ if check_password():
 
 
 
-        # Risk Profile field connections
-        ("Risk Profile", "Computed RML", "", ""),
-        ("Risk Profile", "Computed RML Date", "", ""),
-        ("Risk Profile", "Agency Proposed RML", "", ""),
-        ("Risk Profile", "RML Alignment", "", ""),
-        ("Risk Profile", "RML Justification", "", ""),
+        # Risk Materiality Level field connections
+        ("Risk Materiality Level", "Computed RML", "", ""),
+        ("Risk Materiality Level", "Computed RML Date", "", ""),
+        ("Risk Materiality Level", "Agency Proposed RML", "", ""),
+        ("Risk Materiality Level", "RML Alignment", "", ""),
+        ("Risk Materiality Level", "RML Justification", "", ""),
 
 
         # SCA/RML Approval field connections
