@@ -59,6 +59,7 @@ if check_password():
 
 
 
+
     COLOR_SCHEMES = {
         "system_management": {
             "module": "#1B5E20",      # Darkest green
@@ -116,16 +117,18 @@ if check_password():
             "title": "Hosting and System Dependencies Sub-Module"
         },
 
-
-
-
-             # Agency Management Module and related nodes
+        # Agency Management Module and related nodes
         "Agency Management": {
             "color": COLOR_SCHEMES["agency_management"]["module"],
             "size": NODE_SETTINGS["module"]["size"],
             "shape": NODE_SETTINGS["module"]["shape"],
             "title": "Agency Management Module"
         },
+
+
+
+
+            # Agency Management submodules
         "Agency": {
             "color": COLOR_SCHEMES["agency_management"]["submodule"],
             "size": NODE_SETTINGS["submodule"]["size"],
@@ -192,8 +195,294 @@ if check_password():
 
 
 
-             # Fields for both modules
-        # Agency Management Fields
+            # System Management Fields - Basic Information
+        "System ID": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System ID field"
+        },
+        "System Name": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Name field"
+        },
+        "System Description": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Description field"
+        },
+        "System Status": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Status field"
+        },
+        "Operational Date": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Operational Date field"
+        },
+        "Decommission Date": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Decommission Date field"
+        },
+
+        # System Management Fields - Classification
+        "Security Classification": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Security Classification field"
+        },
+        "Sensitivity Classification": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Sensitivity Classification field"
+        },
+
+        # System Management Fields - Impact Assessment
+        "Economy": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Economy field"
+        },
+        "Public Health and Safety": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Public Health and Safety field"
+        },
+        "National Security": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "National Security field"
+        },
+        "Social Preparedness": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Social Preparedness field"
+        },
+        "Public Service": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Public Service field"
+        },
+
+
+
+
+            # System Management Fields - Risk Profile
+        "System Criticality": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "System Criticality field"
+        },
+        "Designated CII": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Designated CII field"
+        },
+        "Computed RML": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Computed RML field"
+        },
+        "Computed RML Date": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Computed RML Date field"
+        },
+        "Agency Proposed RML": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Agency Proposed RML field"
+        },
+        "RML Alignment": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "RML Alignment field"
+        },
+        "RML Justification": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "RML Justification field"
+        },
+        "Endorsed RML": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Endorsed RML field"
+        },
+        "RML Endorsement Date": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "RML Endorsement Date field"
+        },
+        "Endorsement Comments": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Endorsement Comments field"
+        },
+        "IDSC Approval Date": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "IDSC Approval Date field"
+        },
+        "IDSC Approval Attachment": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "IDSC Approval Attachment field"
+        },
+        "MHA Approval": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "MHA Approval field"
+        },
+        "CSA Approval": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "CSA Approval field"
+        },
+        "SNDGO Approval": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "SNDGO Approval field"
+        },
+
+
+
+
+            # System Management Fields - Additional Approval Fields
+        "MHA Comments": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "MHA Comments field"
+        },
+        "CSA Comments": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "CSA Comments field"
+        },
+        "SNDGO Comments": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "SNDGO Comments field"
+        },
+
+        # System Management Fields - System Resilience
+        "Service Availability": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Service Availability field"
+        },
+        "RTO": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "RTO field"
+        },
+        "RPO": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "RPO field"
+        },
+
+        # System Management Fields - Dependencies
+        "Total Dependencies": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Total Dependencies field"
+        },
+        "Downstream Impact": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Downstream Impact field"
+        },
+        "Direct Dependencies Count": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Direct Dependencies Count field"
+        },
+        "Dependency ID": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Dependency ID field"
+        },
+        "Dependency Status": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Dependency Status field"
+        },
+        "Dependency Type": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Dependency Type field"
+        },
+        "Upstream System": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Upstream System field"
+        },
+        "Dependent System": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Dependent System field"
+        },
+        "Data Exchange Frequency": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Data Exchange Frequency field"
+        },
+        "Inferred Dependencies": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Inferred Dependencies field"
+        },
+
+
+
+
+            # Agency Management Fields
         "Agency Name": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -235,84 +524,6 @@ if check_password():
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Email field"
-        },
-
-        # System Management Fields
-        "System ID": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "System ID field"
-        },
-        "System Name": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "System Name field"
-        },
-        "System Description": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "System Description field"
-        },
-        "System Status": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "System Status field"
-        },
-
-
-
-
-             "System Classification": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "System Classification field"
-        },
-        "Impact Level": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Impact Level field"
-        },
-        "Risk Level": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Risk Level field"
-        },
-        "SCA Status": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "SCA Status field"
-        },
-        "RML Status": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "RML Status field"
-        },
-        "System Availability": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "System Availability field"
-        },
-        "Recovery Time": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Recovery Time field"
-        },
-        "Dependencies": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Dependencies field"
         }
     }
 
@@ -328,76 +539,109 @@ if check_password():
         ("System Management", "System Resilience", "", ""),
         ("System Management", "Hosting and System Dependencies", "", ""),
 
-
-
-
-             # System Identity & Classification relationships
+        # System Identity & Classification relationships
         ("System Identity & Classification", "Basic Information", "", ""),
         ("System Identity & Classification", "Organizational Context", "", ""),
         ("System Identity & Classification", "Classification", "", ""),
+
+        # Basic Information field connections
+        ("Basic Information", "System ID", "", ""),
+        ("Basic Information", "System Name", "", ""),
+        ("Basic Information", "System Description", "", ""),
+        ("Basic Information", "System Status", "", ""),
+        ("Basic Information", "Operational Date", "", ""),
+        ("Basic Information", "Decommission Date", "", ""),
+
+
+
+
+            # Organizational Context field connections
+        ("Organizational Context", "Agency Name", "", ""),
+        ("Organizational Context", "Ministry Family Name", "", ""),
+
+        # Classification field connections
+        ("Classification", "Security Classification", "", ""),
+        ("Classification", "Sensitivity Classification", "", ""),
 
         # Criticality & Risk relationships
         ("Criticality & Risk", "Impact Assessment", "", ""),
         ("Criticality & Risk", "Risk Profile", "", ""),
         ("Criticality & Risk", "SCA/RML Approval", "", ""),
 
+        # Impact Assessment field connections
+        ("Impact Assessment", "Economy", "", ""),
+        ("Impact Assessment", "Public Health and Safety", "", ""),
+        ("Impact Assessment", "National Security", "", ""),
+        ("Impact Assessment", "Social Preparedness", "", ""),
+        ("Impact Assessment", "Public Service", "", ""),
+
+        # Risk Profile field connections
+        ("Risk Profile", "System Criticality", "", ""),
+        ("Risk Profile", "Designated CII", "", ""),
+        ("Risk Profile", "Computed RML", "", ""),
+        ("Risk Profile", "Computed RML Date", "", ""),
+        ("Risk Profile", "Agency Proposed RML", "", ""),
+        ("Risk Profile", "RML Alignment", "", ""),
+        ("Risk Profile", "RML Justification", "", ""),
+
+        # SCA/RML Approval field connections
+        ("SCA/RML Approval", "Endorsed RML", "", ""),
+        ("SCA/RML Approval", "RML Endorsement Date", "", ""),
+        ("SCA/RML Approval", "Endorsement Comments", "", ""),
+        ("SCA/RML Approval", "IDSC Approval Date", "", ""),
+        ("SCA/RML Approval", "IDSC Approval Attachment", "", ""),
+        ("SCA/RML Approval", "MHA Approval", "", ""),
+        ("SCA/RML Approval", "CSA Approval", "", ""),
+        ("SCA/RML Approval", "SNDGO Approval", "", ""),
+        ("SCA/RML Approval", "MHA Comments", "", ""),
+        ("SCA/RML Approval", "CSA Comments", "", ""),
+        ("SCA/RML Approval", "SNDGO Comments", "", ""),
+
         # System Resilience relationships
         ("System Resilience", "Availability & Recovery", "", ""),
 
-        # Hosting and System Dependencies relationships
+        # Availability & Recovery field connections
+        ("Availability & Recovery", "Service Availability", "", ""),
+        ("Availability & Recovery", "RTO", "", ""),
+        ("Availability & Recovery", "RPO", "", ""),
+
+
+
+
+            # Hosting and System Dependencies relationships
         ("Hosting and System Dependencies", "Dependencies Management", "", ""),
+
+        # Dependencies Management field connections
+        ("Dependencies Management", "Total Dependencies", "", ""),
+        ("Dependencies Management", "Downstream Impact", "", ""),
+        ("Dependencies Management", "Direct Dependencies Count", "", ""),
+        ("Dependencies Management", "Dependency ID", "", ""),
+        ("Dependencies Management", "Dependency Status", "", ""),
+        ("Dependencies Management", "Dependency Type", "", ""),
+        ("Dependencies Management", "Upstream System", "", ""),
+        ("Dependencies Management", "Dependent System", "", ""),
+        ("Dependencies Management", "Data Exchange Frequency", "", ""),
+        ("Dependencies Management", "Inferred Dependencies", "", ""),
 
         # Agency Management Module relationships
         ("Agency Management", "Agency", "", ""),
         ("Agency Management", "Key Appointment Holder", "", ""),
 
-        # Field relationships for Basic Information
-        ("Basic Information", "System ID", "", ""),
-        ("Basic Information", "System Name", "", ""),
-        ("Basic Information", "System Description", "", ""),
-        ("Basic Information", "System Status", "", ""),
-
-        # Field relationships for Organizational Context
-        ("Organizational Context", "Agency Name", "", ""),
-
-        # Field relationships for Classification
-        ("Classification", "System Classification", "", ""),
-
-        # Field relationships for Impact Assessment
-        ("Impact Assessment", "Impact Level", "", ""),
-
-        # Field relationships for Risk Profile
-        ("Risk Profile", "Risk Level", "", ""),
-
-        # Field relationships for SCA/RML Approval
-        ("SCA/RML Approval", "SCA Status", "", ""),
-        ("SCA/RML Approval", "RML Status", "", ""),
-
-        # Field relationships for Availability & Recovery
-        ("Availability & Recovery", "System Availability", "", ""),
-        ("Availability & Recovery", "Recovery Time", "", ""),
-
-        # Field relationships for Dependencies Management
-        ("Dependencies Management", "Dependencies", "", ""),
-
-        # Field relationships for Agency
+        # Agency field connections
         ("Agency", "Agency Name", "", ""),
         ("Agency", "Agency Abbreviation (Short Form)", "", ""),
         ("Agency", "Agency Operational Status", "", ""),
         ("Agency", "Ministry Family", "", ""),
 
-        # Field relationships for Key Appointment Holder
+        # Key Appointment Holder field connections
         ("Key Appointment Holder", "Full Name", "", ""),
         ("Key Appointment Holder", "Designation", "", ""),
         ("Key Appointment Holder", "Email", "", ""),
 
         # Cross-module relationships
-        #("Agency Name", "Agency", "", ""),
-        #("Dependencies", "System ID", "", "")
+        ("Agency Name", "Agency", "", ""),
+        ("Dependencies Management", "System ID", "", "")
     ]
-
-
-
 
     # Create NetworkX graph
     G = nx.DiGraph()
@@ -410,6 +654,9 @@ if check_password():
             "label": node
         }
         G.add_node(node, **node_attrs)
+
+
+
 
     # Add edges
     for source, target, label, direction in edges:
@@ -485,10 +732,6 @@ if check_password():
                 "useDefaultGroups": false
             }
         }""")
-
-
-
-
     else:
         net.set_options("""{
             "layout": {
