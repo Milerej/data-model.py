@@ -53,85 +53,87 @@ if check_password():
             "color": "#E41A1C",  # Red
             "size": 30,
             "shape": "dot",
-            "title": "Critical Payment System"
+            "title": "Critical Payment System",
+            "level": 1
         },
         "System B": {
             "color": "#377EB8",  # Blue
             "size": 30,
             "shape": "dot",
-            "title": "Authentication System"
+            "title": "Authentication System",
+            "level": 2
         },
         "System C": {
             "color": "#4DAF4A",  # Green
             "size": 30,
             "shape": "dot",
-            "title": "Document Management System"
+            "title": "Document Management System",
+            "level": 2
         },
         "System D": {
             "color": "#984EA3",  # Purple
             "size": 30,
             "shape": "dot",
-            "title": "Email System"
+            "title": "Email System",
+            "level": 3
         },
         "System E": {
             "color": "#FF7F00",  # Orange
             "size": 30,
             "shape": "dot",
-            "title": "Database System"
+            "title": "Database System",
+            "level": 3
         },
         "System F": {
             "color": "#FFFF33",  # Yellow
             "size": 30,
             "shape": "dot",
-            "title": "Reporting System"
+            "title": "Reporting System",
+            "level": 2
         },
         "System G": {
             "color": "#A65628",  # Brown
             "size": 30,
             "shape": "dot",
-            "title": "API Gateway"
+            "title": "API Gateway",
+            "level": 2
         },
         "System H": {
             "color": "#F781BF",  # Pink
             "size": 30,
             "shape": "dot",
-            "title": "Monitoring System"
+            "title": "Monitoring System",
+            "level": 4
         }
     }
 
-    # Define mock dependencies
+    # Define mock dependencies with clearer parent-child relationships
     edges = [
-        # System A dependencies
+        # Level 1 (Top Level Systems)
         ("System A", "System B", "Requires authentication", "to"),
         ("System A", "System E", "Stores transaction data", "to"),
         ("System A", "System G", "API access", "to"),
         
-        # System B dependencies
+        # Level 2 Systems
         ("System B", "System E", "User data storage", "to"),
         ("System B", "System H", "Security monitoring", "to"),
         
-        # System C dependencies
+        # Level 3 Systems
         ("System C", "System B", "User authentication", "to"),
         ("System C", "System E", "Document storage", "to"),
         ("System C", "System G", "API access", "to"),
         
-        # System D dependencies
+        # Level 4 Systems
         ("System D", "System B", "User verification", "to"),
         ("System D", "System C", "Document attachment", "to"),
         ("System D", "System H", "Email monitoring", "to"),
         
-        # System E dependencies
+        # Cross-level dependencies
         ("System E", "System H", "Database monitoring", "to"),
-        
-        # System F dependencies
         ("System F", "System A", "Payment data", "to"),
         ("System F", "System E", "Analytics data", "to"),
-        
-        # System G dependencies
         ("System G", "System B", "API authentication", "to"),
         ("System G", "System H", "API monitoring", "to"),
-        
-        # System H dependencies
         ("System H", "System E", "Logs storage", "to")
     ]
 
@@ -155,18 +157,50 @@ if check_password():
                     "enabled": true,
                     "direction": "UD",
                     "sortMethod": "directed",
-                    "nodeSpacing": 200,
-                    "levelSeparation": 200
+                    "nodeSpacing": 150,
+                    "levelSeparation": 150,
+                    "treeSpacing": 200,
+                    "blockShifting": true,
+                    "edgeMinimization": true,
+                    "parentCentralization": true,
+                    "shakeTowards": "roots"
                 }
             },
             "physics": {
+                "enabled": true,
                 "hierarchicalRepulsion": {
-                    "centralGravity": 0.5,
-                    "springLength": 150,
-                    "springConstant": 0.3,
-                    "nodeDistance": 200,
+                    "centralGravity": 0.0,
+                    "springLength": 100,
+                    "springConstant": 0.01,
+                    "nodeDistance": 120,
                     "damping": 0.09
+                },
+                "solver": "hierarchicalRepulsion",
+                "stabilization": {
+                    "enabled": true,
+                    "iterations": 1000,
+                    "updateInterval": 100,
+                    "onlyDynamicEdges": false,
+                    "fit": true
                 }
+            },
+            "edges": {
+                "smooth": {
+                    "type": "cubicBezier",
+                    "forceDirection": "vertical",
+                    "roundness": 0.4
+                },
+                "arrows": {
+                    "to": {
+                        "enabled": true,
+                        "scaleFactor": 0.5
+                    }
+                }
+            },
+            "interaction": {
+                "dragNodes": true,
+                "dragView": true,
+                "zoomView": true
             }
         }""")
     else:
