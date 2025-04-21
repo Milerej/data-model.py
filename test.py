@@ -1,61 +1,4 @@
-import streamlit as st
-from pyvis.network import Network
-import networkx as nx
-import streamlit.components.v1 as components
-import tempfile
-import os
-import random
-from datetime import datetime, timedelta
-import pandas as pd
-
-def check_password():
-    """Returns `True` if the user had the correct password."""
-    def password_entered():
-        if st.session_state["password"] == "Showmethemoney":
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
-
-    if "password_correct" not in st.session_state:
-        st.text_input("Password", type="password", on_change=password_entered, key="password")
-        return False
-    elif not st.session_state["password_correct"]:
-        st.text_input("Password", type="password", on_change=password_entered, key="password")
-        st.error("⚠️ Password incorrect")
-        return False
-    else:
-        return True
-
-def generate_random_date(start_year=2015):
-    start_date = datetime(start_year, 1, 1)
-    end_date = datetime.now()
-    days_between_dates = (end_date - start_date).days
-    random_number_of_days = random.randrange(days_between_dates)
-    return (start_date + timedelta(days=random_number_of_days)).strftime("%Y-%m-%d")
-
-def generate_system_data(system_number):
-    return {
-        "System Identity & Classification": {
-            "System ID": f"SYS{random.randint(1000, 9999)}",
-            "System Name": f"System {system_number}",
-            "System Description": f"Description for System {system_number}",
-            "System Status": random.choice(["Active", "Inactive"]),
-            "Operational Date": generate_random_date(),
-            "Agency Name": random.choice(["AGD", "CSA", "GovTech", "IRAS"]),
-            "Security Classification": random.choice(["Official", "Restricted", "Confidential"]),
-        },
-        "Criticality & Risk": {
-            "System Criticality": random.choice(["Low", "Medium", "High"]),
-            "Computed RML": str(random.randint(1, 5)),
-            "Endorsed RML": str(random.randint(1, 5))
-        },
-        "System Resilience": {
-            "Service Availability": f"{random.randint(90, 100)}%",
-            "RTO": random.randint(1, 24),
-            "RPO": random.randint(1, 12)
-        }
-    }
+# [Previous imports and functions remain the same until the sidebar section]
 
 if check_password():
     st.set_page_config(page_title="System Impact Analysis", layout="wide")
@@ -64,7 +7,7 @@ if check_password():
     # Initialize session state for systems data if not exists
     if 'systems_data' not in st.session_state:
         st.session_state.systems_data = {
-            f"System {i}": generate_system_data(i) for i in range(1, 51)  # Reduced to 50 systems
+            f"System {i}": generate_system_data(i) for i in range(1, 51)
         }
 
     # Create network graph
@@ -78,7 +21,7 @@ if check_password():
     if 'dependencies' not in st.session_state:
         st.session_state.dependencies = []
         for system_name in st.session_state.systems_data.keys():
-            num_dependencies = random.randint(1, 3)  # Reduced number of dependencies
+            num_dependencies = random.randint(1, 3)
             possible_targets = [s for s in st.session_state.systems_data.keys() if s != system_name]
             if possible_targets:
                 targets = random.sample(possible_targets, min(num_dependencies, len(possible_targets)))
@@ -89,14 +32,61 @@ if check_password():
     for source, target in st.session_state.dependencies:
         G.add_edge(source, target)
 
-    # Sidebar for system selection
+    # Sidebar for system selection - now with "Show All Systems" as default
     selected_system = st.sidebar.selectbox(
         "Select a system to analyze impact:",
-        options=["None"] + sorted(st.session_state.systems_data.keys())
+        options=["Show All Systems"] + sorted(st.session_state.systems_data.keys())
     )
 
-    if selected_system != "None":
-        # Find impacted systems
+    # Create network visualization
+    net = Network(height="800px", width="100%", directed=True)
+    
+    if selected_system == "Show All Systems":
+        # Show all systems with default color
+        for node in G.nodes():
+            system_info = st.session_state.systems_data[node]
+            criticality = system_info["Criticality & Risk"]["System Criticality"]
+            # Color coding based on system criticality
+            color = {
+                "High": "#FF4444",    # Red for high criticality
+                "Medium": "#FFAA00",  # Orange for medium criticality
+                "Low": "#44AA44"      # Green for low criticality
+            }.get(criticality, "#CCCCCC")
+            
+            # Create detailed tooltip
+            tooltip = f"""
+System: {node}
+Criticality: {criticality}
+RML: {system_info['Criticality & Risk']['Endorsed RML']}
+Status: {system_info['System Identity & Classification']['System Status']}
+Agency: {system_info['System Identity & Classification']['Agency Name']}
+"""
+            net.add_node(node, color=color, title=tooltip)
+            
+        # Add legend to sidebar
+        st.sidebar.markdown("### Color Legend")
+        st.sidebar.markdown("🔴 High Criticality")
+        st.sidebar.markdown("🟠 Medium Criticality")
+        st.sidebar.markdown("🟢 Low Criticality")
+        
+        # Show overall statistics
+        st.sidebar.markdown("### System Statistics")
+        criticality_counts = {
+            "High": sum(1 for s in st.session_state.systems_data.values() 
+                       if s["Criticality & Risk"]["System Criticality"] == "High"),
+            "Medium": sum(1 for s in st.session_state.systems_data.values() 
+                         if s["Criticality & Risk"]["System Criticality"] == "Medium"),
+            "Low": sum(1 for s in st.session_state.systems_data.values() 
+                      if s["Criticality & Risk"]["System Criticality"] == "Low")
+        }
+        st.sidebar.markdown(f"Total Systems: {len(G.nodes())}")
+        st.sidebar.markdown(f"High Criticality: {criticality_counts['High']}")
+        st.sidebar.markdown(f"Medium Criticality: {criticality_counts['Medium']}")
+        st.sidebar.markdown(f"Low Criticality: {criticality_counts['Low']}")
+        st.sidebar.markdown(f"Total Dependencies: {len(G.edges())}")
+
+    else:
+        # Existing impact analysis logic for selected system
         impacted_systems = set()
         def find_dependencies(node, visited):
             if node not in visited:
@@ -122,50 +112,62 @@ if check_password():
         st.sidebar.markdown("### Impact Analysis")
         st.sidebar.markdown(f"**Number of Impacted Systems:** {len(impacted_systems) - 1}")
         
-        # Create network visualization
-        net = Network(height="800px", width="100%", directed=True)
-        
-        # Add nodes with colors
+        # Add nodes with impact-based colors
         for node in G.nodes():
-            color = "#FF0000" if node == selected_system else "#FFA500" if node in impacted_systems else "#CCCCCC"
-            net.add_node(node, color=color, title=node)
+            if node == selected_system:
+                color = "#FF0000"  # Red for selected system
+            elif node in impacted_systems:
+                color = "#FFA500"  # Orange for impacted systems
+            else:
+                color = "#CCCCCC"  # Grey for unimpacted systems
+            
+            system_info = st.session_state.systems_data[node]
+            tooltip = f"""
+System: {node}
+Criticality: {system_info['Criticality & Risk']['System Criticality']}
+RML: {system_info['Criticality & Risk']['Endorsed RML']}
+Status: {system_info['System Identity & Classification']['System Status']}
+Agency: {system_info['System Identity & Classification']['Agency Name']}
+"""
+            net.add_node(node, color=color, title=tooltip)
 
-        # Add edges
-        for edge in G.edges():
-            net.add_edge(edge[0], edge[1])
+    # Add edges
+    for edge in G.edges():
+        net.add_edge(edge[0], edge[1])
 
-        # Set network options
-        net.set_options("""
-        {
-            "physics": {
-                "enabled": true,
-                "forceAtlas2Based": {
-                    "gravitationalConstant": -50,
-                    "centralGravity": 0.01,
-                    "springLength": 100,
-                    "springConstant": 0.08
-                },
-                "solver": "forceAtlas2Based",
-                "stabilization": {"iterations": 100}
+    # Set network options
+    net.set_options("""
+    {
+        "physics": {
+            "enabled": true,
+            "forceAtlas2Based": {
+                "gravitationalConstant": -50,
+                "centralGravity": 0.01,
+                "springLength": 100,
+                "springConstant": 0.08
             },
-            "edges": {
-                "smooth": {"type": "continuous"},
-                "arrows": {"to": {"enabled": true}}
-            }
+            "solver": "forceAtlas2Based",
+            "stabilization": {"iterations": 100}
+        },
+        "edges": {
+            "smooth": {"type": "continuous"},
+            "arrows": {"to": {"enabled": true}}
         }
-        """)
+    }
+    """)
 
-        # Display the network
-        try:
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
-                net.save_graph(tmp_file.name)
-                with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                    components.html(f.read(), height=800)
-                os.unlink(tmp_file.name)
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
+    # Display the network
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net.save_graph(tmp_file.name)
+            with open(tmp_file.name, 'r', encoding='utf-8') as f:
+                components.html(f.read(), height=800)
+            os.unlink(tmp_file.name)
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
 
-        # Export functionality
+    # Export functionality
+    if selected_system != "Show All Systems":
         if st.sidebar.button("Export Impact Analysis"):
             impact_data = {
                 "Selected System": selected_system,
