@@ -460,11 +460,11 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Dependent System field"
         },
-        " Downstream Dependency": {
+        "Downstream Dependency": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": " Downstream Dependency field"
+            "title": "Downstream Dependency field"
         },
 
 
