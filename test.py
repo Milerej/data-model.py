@@ -1,4 +1,5 @@
-#PART1
+#Part 1 - Initial imports and password check:
+
 import streamlit as st
 from pyvis.network import Network
 import networkx as nx
@@ -58,6 +59,9 @@ if check_password():
         }
     }
 
+#Part 2 - Color schemes and start of entities dictionary:
+
+
     COLOR_SCHEMES = {
         "system_management": {
             "module": "#1B5E20",      # Darkest green
@@ -71,11 +75,7 @@ if check_password():
             "subgroup": "#303F9F",    # Medium blue
             "field": "#3949AB"        # Light blue
         }
-}
-
-
-#PART2
-
+    }
 
     # Complete entities dictionary with all nodes
     entities = {
@@ -119,6 +119,11 @@ if check_password():
             "title": "Hosting and System Dependencies Sub-Module"
         },
 
+
+
+#Part 3 - Agency Management Module nodes and System Management subgroups:
+
+
         # Agency Management Module and related nodes
         "Agency Management": {
             "color": COLOR_SCHEMES["agency_management"]["module"],
@@ -126,10 +131,6 @@ if check_password():
             "shape": NODE_SETTINGS["module"]["shape"],
             "title": "Agency Management Module"
         },
-
-
-#PART3
-
 
         # Agency Management submodules
         "Agency": {
@@ -196,7 +197,9 @@ if check_password():
         },
 
 
-#PART4
+
+#Part 4 - System Management Fields - Basic Information and Classification:
+
 
 
         # System Management Fields - Basic Information
@@ -284,7 +287,8 @@ if check_password():
         },
 
 
-#PART5
+
+#Part 5 - System Management Fields - Risk Materiality Level:
 
 
         # System Management Fields - Risk Materiality Level
@@ -380,82 +384,203 @@ if check_password():
         },
 
 
-#PART6
+
+#Part 6 - Additional Approval Fields and System Resilience Fields:
 
 
-        # System Management Fields - Availability & Recovery
-        "Availability Tier": {
+
+        # Additional Approval Fields
+        "Approval Status": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Availability Tier field"
+            "title": "Approval Status field"
         },
-        "Recovery Tier": {
+        "Approval Comments": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Recovery Tier field"
+            "title": "Approval Comments field"
+        },
+
+        # System Resilience Fields
+        "Recovery Time Objective": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Recovery Time Objective field"
+        },
+        "Recovery Point Objective": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Recovery Point Objective field"
+        },
+        "Availability Requirement": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Availability Requirement field"
+        },
+        "Business Continuity Plan": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Business Continuity Plan field"
+        },
+        "Disaster Recovery Plan": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Disaster Recovery Plan field"
+        },
+        "Last DR Test Date": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Last DR Test Date field"
+        },
+        "Next DR Test Date": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Next DR Test Date field"
+        },
+        "DR Test Result": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "DR Test Result field"
+        },
+
+
+
+#Part 7 - Dependencies Management Fields and Agency Management Fields:
+
+
+
+        # Dependencies Management Fields
+        "Hosting Environment": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Hosting Environment field"
+        },
+        "Hosting Type": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Hosting Type field"
+        },
+        "Data Centre": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Data Centre field"
+        },
+        "Cloud Service Provider": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Cloud Service Provider field"
+        },
+        "Dependencies": {
+            "color": COLOR_SCHEMES["system_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Dependencies field"
         },
 
         # Agency Management Fields
-        "Agency Code": {
-            "color": COLOR_SCHEMES["agency_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Agency Code field"
-        },
         "Agency Name": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Agency Name field"
         },
-        "Agency Sector": {
+        "Agency Code": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Agency Sector field"
+            "title": "Agency Code field"
+        },
+        "Ministry": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "Ministry field"
         },
         "Agency Type": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Agency Type field"
+        },
+        "CIO Name": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "CIO Name field"
+        },
+        "CIO Email": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "CIO Email field"
+        },
+        "CISO Name": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "CISO Name field"
+        },
+        "CISO Email": {
+            "color": COLOR_SCHEMES["agency_management"]["field"],
+            "size": NODE_SETTINGS["field"]["size"],
+            "shape": NODE_SETTINGS["field"]["shape"],
+            "title": "CISO Email field"
         }
     }
 
-    # Define all edges (connections between nodes)
-    edges = [
+
+
+#Part 8 - Relationships dictionary and network creation:
+
+
+
+    # Define relationships between entities
+    relationships = [
+        # Root to Modules
         ("DGP 2.0", "System Management"),
         ("DGP 2.0", "Agency Management"),
 
-        # System Management connections
+        # System Management to Sub-modules
         ("System Management", "System Identity & Classification"),
         ("System Management", "Criticality & Risk"),
         ("System Management", "System Resilience"),
         ("System Management", "Hosting and System Dependencies"),
 
-        # System Identity & Classification connections
+        # Agency Management to Sub-modules
+        ("Agency Management", "Agency"),
+        ("Agency Management", "Key Appointment Holder"),
+
+        # System Identity & Classification to Sub-groups
         ("System Identity & Classification", "Basic Information"),
         ("System Identity & Classification", "Organizational Context"),
         ("System Identity & Classification", "Classification"),
 
-        # Criticality & Risk connections
+        # Criticality & Risk to Sub-groups
         ("Criticality & Risk", "Impact Assessment"),
         ("Criticality & Risk", "Risk Materiality Level"),
         ("Criticality & Risk", "SCA/RML Approval"),
 
-        # System Resilience connections
+        # System Resilience to Sub-groups
         ("System Resilience", "Availability & Recovery"),
 
-        # Hosting and System Dependencies connections
+        # Hosting and System Dependencies to Sub-groups
         ("Hosting and System Dependencies", "Dependencies Management"),
 
-
-#PART7
-
-
-        # Basic Information field connections
+        # Basic Information to Fields
         ("Basic Information", "System ID"),
         ("Basic Information", "System Name"),
         ("Basic Information", "System Description"),
@@ -463,18 +588,18 @@ if check_password():
         ("Basic Information", "Operational Date"),
         ("Basic Information", "Decommission Date"),
 
-        # Classification field connections
+        # Classification to Fields
         ("Classification", "Security Classification"),
         ("Classification", "Sensitivity Classification"),
 
-        # Impact Assessment field connections
+        # Impact Assessment to Fields
         ("Impact Assessment", "Economy"),
         ("Impact Assessment", "Public Health and Safety"),
         ("Impact Assessment", "National Security"),
         ("Impact Assessment", "Social Preparedness"),
         ("Impact Assessment", "Public Service"),
 
-        # Risk Materiality Level field connections
+        # Risk Materiality Level to Fields
         ("Risk Materiality Level", "System Criticality"),
         ("Risk Materiality Level", "Designated CII"),
         ("Risk Materiality Level", "Computed RML"),
@@ -486,51 +611,108 @@ if check_password():
         ("Risk Materiality Level", "RML Endorsement Date"),
         ("Risk Materiality Level", "Endorsement Comments"),
 
-        # SCA/RML Approval field connections
+        # SCA/RML Approval to Fields
         ("SCA/RML Approval", "IDSC Approval Date"),
         ("SCA/RML Approval", "IDSC Approval Attachment"),
         ("SCA/RML Approval", "MHA Approval"),
         ("SCA/RML Approval", "CSA Approval"),
         ("SCA/RML Approval", "SNDGO Approval"),
+        ("SCA/RML Approval", "Approval Status"),
+        ("SCA/RML Approval", "Approval Comments"),
 
-        # Availability & Recovery field connections
-        ("Availability & Recovery", "Availability Tier"),
-        ("Availability & Recovery", "Recovery Tier"),
+        # Availability & Recovery to Fields
+        ("Availability & Recovery", "Recovery Time Objective"),
+        ("Availability & Recovery", "Recovery Point Objective"),
+        ("Availability & Recovery", "Availability Requirement"),
+        ("Availability & Recovery", "Business Continuity Plan"),
+        ("Availability & Recovery", "Disaster Recovery Plan"),
+        ("Availability & Recovery", "Last DR Test Date"),
+        ("Availability & Recovery", "Next DR Test Date"),
+        ("Availability & Recovery", "DR Test Result"),
 
-        # Agency Management connections
-        ("Agency Management", "Agency"),
-        ("Agency Management", "Key Appointment Holder"),
+        # Dependencies Management to Fields
+        ("Dependencies Management", "Hosting Environment"),
+        ("Dependencies Management", "Hosting Type"),
+        ("Dependencies Management", "Data Centre"),
+        ("Dependencies Management", "Cloud Service Provider"),
+        ("Dependencies Management", "Dependencies"),
 
-        # Agency field connections
-        ("Agency", "Agency Code"),
+        # Agency to Fields
         ("Agency", "Agency Name"),
-        ("Agency", "Agency Sector"),
+        ("Agency", "Agency Code"),
+        ("Agency", "Ministry"),
         ("Agency", "Agency Type"),
+
+        # Key Appointment Holder to Fields
+        ("Key Appointment Holder", "CIO Name"),
+        ("Key Appointment Holder", "CIO Email"),
+        ("Key Appointment Holder", "CISO Name"),
+        ("Key Appointment Holder", "CISO Email"),
     ]
+
+
+#Part 9 - Network creation and visualization code:
+
 
     # Create network
     net = Network(height='750px', width='100%', bgcolor='#ffffff', font_color='black')
     net.force_atlas_2based()
 
     # Add nodes
-    for node_id, attrs in entities.items():
+    for entity, attributes in entities.items():
         net.add_node(
-            node_id,
-            color=attrs['color'],
-            size=attrs['size'],
-            title=attrs['title'],
-            shape=attrs['shape']
+            entity,
+            color=attributes["color"],
+            size=attributes["size"],
+            shape=attributes["shape"],
+            title=attributes["title"]
         )
 
-
-#PART8
-
-
     # Add edges
-    for edge in edges:
-        net.add_edge(edge[0], edge[1])
+    for source, target in relationships:
+        net.add_edge(source, target)
 
-    # Configure hierarchical layout if enabled
+    # Configure physics
+    net.set_options("""
+    const options = {
+        "physics": {
+            "enabled": true,
+            "forceAtlas2Based": {
+                "gravitationalConstant": -100,
+                "centralGravity": 0.01,
+                "springLength": 100,
+                "springConstant": 0.08,
+                "damping": 0.4,
+                "avoidOverlap": 1
+            },
+            "solver": "forceAtlas2Based",
+            "stabilization": {
+                "enabled": true,
+                "iterations": 1000,
+                "updateInterval": 25
+            }
+        },
+        "interaction": {
+            "hover": true,
+            "tooltipDelay": 200
+        },
+        "edges": {
+            "color": {
+                "color": "#000000",
+                "highlight": "#000000",
+                "hover": "#000000",
+                "inherit": false,
+                "opacity": 1.0
+            },
+            "smooth": {
+                "type": "continuous",
+                "forceDirection": "none"
+            }
+        }
+    }
+    """)
+
+    # If hierarchical layout is enabled
     if view_type:
         net.set_options("""
         const options = {
@@ -544,46 +726,38 @@ if check_password():
                     "edgeMinimization": true,
                     "parentCentralization": true,
                     "direction": "UD",
-                    "sortMethod": "directed",
-                    "shakeTowards": "roots"
+                    "sortMethod": "directed"
                 }
             },
             "physics": {
-                "hierarchicalRepulsion": {
-                    "centralGravity": 0.5,
-                    "springLength": 200,
-                    "springConstant": 0.01,
-                    "nodeDistance": 200,
-                    "damping": 0.09
+                "enabled": false
+            },
+            "interaction": {
+                "hover": true,
+                "tooltipDelay": 200
+            },
+            "edges": {
+                "color": {
+                    "color": "#000000",
+                    "highlight": "#000000",
+                    "hover": "#000000",
+                    "inherit": false,
+                    "opacity": 1.0
                 },
-                "minVelocity": 0.75,
-                "solver": "hierarchicalRepulsion"
-            }
-        }
-        """)
-    else:
-        net.set_options("""
-        const options = {
-            "physics": {
-                "forceAtlas2Based": {
-                    "gravitationalConstant": -100,
-                    "centralGravity": 0.01,
-                    "springLength": 200,
-                    "springConstant": 0.08,
-                    "damping": 0.4,
-                    "avoidOverlap": 1
-                },
-                "minVelocity": 0.75,
-                "solver": "forceAtlas2Based"
+                "smooth": {
+                    "type": "continuous",
+                    "forceDirection": "none"
+                }
             }
         }
         """)
 
-    # Save and display the network
+    # Save and display network
     try:
-        path = os.path.join(tempfile.gettempdir(), "graph.html")
+        path = os.path.join(tempfile.gettempdir(), "pyvis_graph.html")
         net.save_graph(path)
-        with open(path, 'r', encoding='utf-8') as file:
-            components.html(file.read(), height=800)
+        HtmlFile = open(path, 'r', encoding='utf-8')
+        components.html(HtmlFile.read(), height=750)
     except Exception as e:
         st.error(f"Error displaying graph: {str(e)}")
+
