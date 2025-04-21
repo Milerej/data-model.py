@@ -76,8 +76,8 @@ if check_password():
     entities = {
         # Root node
         "DGP 2.0": {
-            "color": "#1A237E",  # Dark blue color
-            "size": 60,  # Larger than module size
+            "color": "#808080",  # Grey
+            "size": 80,  # Larger than module size
             "shape": NODE_SETTINGS["module"]["shape"],
             "title": "DGP 2.0 Root"
         },
