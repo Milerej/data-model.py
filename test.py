@@ -8,6 +8,61 @@ import random
 from datetime import datetime, timedelta
 import pandas as pd
 
+def generate_random_date(start_year=2015):
+    start_date = datetime(start_year, 1, 1)
+    end_date = datetime.now()
+    days_between_dates = (end_date - start_date).days
+    random_number_of_days = random.randrange(days_between_dates)
+    return (start_date + timedelta(days=random_number_of_days)).strftime("%Y-%m-%d")
+
+def generate_system_data(system_number):
+    agencies = ["AGD", "CSA", "GovTech", "IRAS", "MHA", "MOE", "MOF", "MOH"]
+    ministry_families = ["PMO", "MHA", "MOF", "MOE", "MOH"]
+    security_classifications = ["Official", "Restricted", "Confidential", "Secret"]
+    sensitivity_classifications = ["Normal", "Sensitive", "Sensitive High"]
+    criticality_levels = ["Low", "Medium", "High"]
+    rml_levels = ["1", "2", "3", "4", "5"]
+    dependency_types = ["API", "Database", "File Transfer", "Web Service"]
+    
+    return {
+        "System Identity & Classification": {
+            "System ID": f"SYS{random.randint(1000, 9999)}",
+            "System Name": f"System {system_number}",
+            "System Description": f"Description for System {system_number}",
+            "System Status": random.choice(["Active", "Inactive", "Maintenance"]),
+            "Operational Date": generate_random_date(),
+            "Decommission Date": generate_random_date(2025),
+            "Agency Name": random.choice(agencies),
+            "Ministry Family Name": random.choice(ministry_families),
+            "Security Classification": random.choice(security_classifications),
+            "Sensitivity Classification": random.choice(sensitivity_classifications)
+        },
+        "Criticality & Risk": {
+            "Economy": random.choice(criticality_levels),
+            "Public Health and Safety": random.choice(criticality_levels),
+            "National Security": random.choice(criticality_levels),
+            "Social Preparedness": random.choice(criticality_levels),
+            "Public Service": random.choice(criticality_levels),
+            "System Criticality": random.choice(criticality_levels),
+            "Designated CII": random.choice(["Yes", "No"]),
+            "Computed RML": random.choice(rml_levels),
+            "Computed RML Date": generate_random_date(),
+            "Agency Proposed RML": random.choice(rml_levels),
+            "RML Alignment": random.choice(["Aligned", "Not Aligned"]),
+            "Endorsed RML": random.choice(rml_levels),
+            "RML Endorsement Date": generate_random_date()
+        },
+        "System Resilience": {
+            "Service Availability": f"{random.randint(90, 100)}%",
+            "RTO": random.randint(1, 24),
+            "RPO": random.randint(1, 12)
+        },
+        "Dependencies": {
+            "Dependency Type": random.choice(dependency_types),
+            "Dependency Status": random.choice(["Active", "Inactive"])
+        }
+    }
+
 # Initialize session state for password check
 if 'password_correct' not in st.session_state:
     st.session_state.password_correct = False
@@ -27,6 +82,10 @@ def check_password():
     return False
 
 
+# Main app
+if check_password():
+    st.set_page_config(page_title="System Impact Analysis", layout="wide")
+    st.title("🔄 System Impact Analysis")
 
     # Initialize session state for systems data if not exists
     if 'systems_data' not in st.session_state:
@@ -57,7 +116,7 @@ def check_password():
     for source, target, dep_type in st.session_state.dependencies:
         G.add_edge(source, target, dependency_type=dep_type)
 
-    # Sidebar for system selection - Modified version
+    # Sidebar for system selection
     system_options = ["Show All Systems"] + sorted(list(st.session_state.systems_data.keys()))
     
     # Initialize session state for selected system if not exists
@@ -150,7 +209,6 @@ Ministry: {system_info['System Identity & Classification']['Ministry Family Name
         # Impact Analysis
         st.sidebar.markdown("### Impact Analysis")
         st.sidebar.markdown(f"**Number of Impacted Systems:** {len(impacted_systems) - 1}")
-
 
         # Add nodes with impact-based colors
         for node in G.nodes():
