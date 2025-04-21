@@ -1,4 +1,8 @@
 import streamlit as st
+
+# Must be the first Streamlit command
+st.set_page_config(page_title="System Impact Analysis", layout="wide")
+
 from pyvis.network import Network
 import networkx as nx
 import streamlit.components.v1 as components
@@ -7,6 +11,10 @@ import os
 import random
 from datetime import datetime, timedelta
 import pandas as pd
+
+# Initialize session state for password check
+if 'password_correct' not in st.session_state:
+    st.session_state.password_correct = False
 
 def generate_random_date(start_year=2015):
     start_date = datetime(start_year, 1, 1)
@@ -63,10 +71,6 @@ def generate_system_data(system_number):
         }
     }
 
-# Initialize session state for password check
-if 'password_correct' not in st.session_state:
-    st.session_state.password_correct = False
-
 def check_password():
     """Returns `True` if the user had the correct password."""
     if st.session_state.password_correct:
@@ -81,10 +85,8 @@ def check_password():
         return False
     return False
 
-
 # Main app
 if check_password():
-    st.set_page_config(page_title="System Impact Analysis", layout="wide")
     st.title("🔄 System Impact Analysis")
 
     # Initialize session state for systems data if not exists
