@@ -646,6 +646,7 @@ if check_password():
     net.from_nx(G)
 
     # Set hierarchical layout options based on toggle
+# Set hierarchical layout options based on toggle
 if view_type:
     net.set_options("""{
         "layout": {
@@ -713,36 +714,36 @@ if view_type:
             "useDefaultGroups": false
         }
     }""")
-    else:
-        net.set_options("""{
-            "layout": {
-                "hierarchical": {
-                    "enabled": false
-                }
-            },
-            "physics": {
-                "enabled": true,
-                "barnesHut": {
-                    "gravitationalConstant": -60000,
-                    "centralGravity": 0.1,
-                    "springLength": 200,
-                    "springConstant": 0.08,
-                    "damping": 0.12,
-                    "avoidOverlap": 1
-                }
-            },
-            "edges": {
-                "smooth": {
-                    "type": "curvedCW",
-                    "roundness": 0.2
-                },
-                "color": {
-                    "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.8
-                }
+else:
+    net.set_options("""{
+        "layout": {
+            "hierarchical": {
+                "enabled": false
             }
-        }""")
+        },
+        "physics": {
+            "enabled": true,
+            "barnesHut": {
+                "gravitationalConstant": -60000,
+                "centralGravity": 0.1,
+                "springLength": 200,
+                "springConstant": 0.08,
+                "damping": 0.12,
+                "avoidOverlap": 1
+            }
+        },
+        "edges": {
+            "smooth": {
+                "type": "curvedCW",
+                "roundness": 0.2
+            },
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            }
+        }
+    }""")
 
     # Save and display the network
     try:
