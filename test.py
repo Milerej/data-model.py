@@ -8,11 +8,9 @@ import random
 from datetime import datetime, timedelta
 import pandas as pd
 
-# Add password check function
 def check_password():
     """Returns `True` if the user had the correct password."""
     def password_entered():
-        """Checks whether a password entered by the user is correct."""
         if st.session_state["password"] == "Showmethemoney":
             st.session_state["password_correct"] = True
             del st.session_state["password"]
@@ -20,75 +18,42 @@ def check_password():
             st.session_state["password_correct"] = False
 
     if "password_correct" not in st.session_state:
-        st.text_input(
-            "Password", type="password", on_change=password_entered, key="password"
-        )
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
         return False
     elif not st.session_state["password_correct"]:
-        st.text_input(
-            "Password", type="password", on_change=password_entered, key="password"
-        )
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
         st.error("⚠️ Password incorrect")
         return False
     else:
         return True
-        
+
 def generate_random_date(start_year=2015):
-    """Generate a random date from start_year to current date"""
     start_date = datetime(start_year, 1, 1)
     end_date = datetime.now()
-    time_between_dates = end_date - start_date
-    days_between_dates = time_between_dates.days
+    days_between_dates = (end_date - start_date).days
     random_number_of_days = random.randrange(days_between_dates)
-    return start_date + timedelta(days=random_number_of_days)
+    return (start_date + timedelta(days=random_number_of_days)).strftime("%Y-%m-%d")
 
-def generate_system_data():
-    """Generate realistic system data"""
-    agencies = ["AGD", "CSA", "GovTech", "IRAS", "MHA", "MOE", "MOF", "MOH"]
-    ministry_families = ["PMO", "MHA", "MOF", "MOE", "MOH"]
-    security_classifications = ["Official", "Restricted", "Confidential", "Secret"]
-    sensitivity_classifications = ["Normal", "Sensitive", "Sensitive High"]
-    criticality_levels = ["Low", "Medium", "High", "Critical"]
-    rml_levels = ["1", "2", "3", "4", "5"]
-    dependency_types = ["API", "Database", "File Transfer", "Web Service"]
-    
+def generate_system_data(system_number):
     return {
         "System Identity & Classification": {
             "System ID": f"SYS{random.randint(1000, 9999)}",
-            "System Name": f"System {random.randint(1, 200)}",
-            "System Description": f"This is a description for System {random.randint(1, 200)}",
-            "System Status": random.choice(["Active", "Inactive", "Maintenance"]),
+            "System Name": f"System {system_number}",
+            "System Description": f"Description for System {system_number}",
+            "System Status": random.choice(["Active", "Inactive"]),
             "Operational Date": generate_random_date(),
-            "Decommission Date": generate_random_date(2025),
-            "Agency Name": random.choice(agencies),
-            "Ministry Family Name": random.choice(ministry_families),
-            "Security Classification": random.choice(security_classifications),
-            "Sensitivity Classification": random.choice(sensitivity_classifications)
+            "Agency Name": random.choice(["AGD", "CSA", "GovTech", "IRAS"]),
+            "Security Classification": random.choice(["Official", "Restricted", "Confidential"]),
         },
         "Criticality & Risk": {
-            "Economy": random.choice(criticality_levels),
-            "Public Health and Safety": random.choice(criticality_levels),
-            "National Security": random.choice(criticality_levels),
-            "Social Preparedness": random.choice(criticality_levels),
-            "Public Service": random.choice(criticality_levels),
-            "System Criticality": random.choice(criticality_levels),
-            "Designated CII": random.choice(["Yes", "No"]),
-            "Computed RML": random.choice(rml_levels),
-            "Computed RML Date": generate_random_date(),
-            "Agency Proposed RML": random.choice(rml_levels),
-            "RML Alignment": random.choice(["Aligned", "Not Aligned"]),
-            "Endorsed RML": random.choice(rml_levels),
-            "RML Endorsement Date": generate_random_date()
+            "System Criticality": random.choice(["Low", "Medium", "High"]),
+            "Computed RML": str(random.randint(1, 5)),
+            "Endorsed RML": str(random.randint(1, 5))
         },
         "System Resilience": {
             "Service Availability": f"{random.randint(90, 100)}%",
             "RTO": random.randint(1, 24),
             "RPO": random.randint(1, 12)
-        },
-        "Dependencies": {
-            "Dependency Type": random.choice(dependency_types),
-            "Dependency Status": random.choice(["Active", "Inactive"]),
-            "Downstream Dependencies": []
         }
     }
 
@@ -96,36 +61,38 @@ if check_password():
     st.set_page_config(page_title="System Impact Analysis", layout="wide")
     st.title("🔄 System Impact Analysis")
 
-    # Generate systems with detailed information
-    systems_data = {}
-    for i in range(1, 201):
-        systems_data[f"System {i}"] = generate_system_data()
+    # Initialize session state for systems data if not exists
+    if 'systems_data' not in st.session_state:
+        st.session_state.systems_data = {
+            f"System {i}": generate_system_data(i) for i in range(1, 51)  # Reduced to 50 systems
+        }
 
     # Create network graph
     G = nx.DiGraph()
     
-    # Add nodes with attributes
-    for system_name, system_info in systems_data.items():
+    # Add nodes
+    for system_name, system_info in st.session_state.systems_data.items():
         G.add_node(system_name, **system_info)
 
-    # Generate dependencies
-    for system_name in systems_data.keys():
-        num_dependencies = random.randint(2, 4)
-        possible_targets = [s for s in systems_data.keys() if s != system_name]
-        if possible_targets:
-            targets = random.sample(possible_targets, min(num_dependencies, len(possible_targets)))
-            for target in targets:
-                dependency_type = random.choice(["API", "Database", "File Transfer", "Web Service"])
-                G.add_edge(system_name, target, 
-                          dependency_type=dependency_type,
-                          title=f"{dependency_type} dependency")
-                systems_data[system_name]["Dependencies"]["Downstream Dependencies"].append(target)
+    # Generate dependencies if not in session state
+    if 'dependencies' not in st.session_state:
+        st.session_state.dependencies = []
+        for system_name in st.session_state.systems_data.keys():
+            num_dependencies = random.randint(1, 3)  # Reduced number of dependencies
+            possible_targets = [s for s in st.session_state.systems_data.keys() if s != system_name]
+            if possible_targets:
+                targets = random.sample(possible_targets, min(num_dependencies, len(possible_targets)))
+                for target in targets:
+                    st.session_state.dependencies.append((system_name, target))
 
-    # Sidebar for system selection and analysis
-    st.sidebar.title("Impact Analysis")
+    # Add edges from session state
+    for source, target in st.session_state.dependencies:
+        G.add_edge(source, target)
+
+    # Sidebar for system selection
     selected_system = st.sidebar.selectbox(
         "Select a system to analyze impact:",
-        options=["None"] + sorted(systems_data.keys())
+        options=["None"] + sorted(st.session_state.systems_data.keys())
     )
 
     if selected_system != "None":
@@ -144,43 +111,30 @@ if check_password():
 
         # Display system details
         st.sidebar.markdown("### Selected System Details")
-        system_info = systems_data[selected_system]
+        system_info = st.session_state.systems_data[selected_system]
         
-        # System Identity
-        st.sidebar.markdown("#### System Identity")
-        identity_info = system_info["System Identity & Classification"]
-        for key, value in identity_info.items():
-            st.sidebar.markdown(f"**{key}:** {value}")
-
-        # Criticality
-        st.sidebar.markdown("#### Criticality & Risk")
-        criticality_info = system_info["Criticality & Risk"]
-        for key, value in criticality_info.items():
-            st.sidebar.markdown(f"**{key}:** {value}")
-
-        # Resilience
-        st.sidebar.markdown("#### System Resilience")
-        resilience_info = system_info["System Resilience"]
-        for key, value in resilience_info.items():
-            st.sidebar.markdown(f"**{key}:** {value}")
+        for category, details in system_info.items():
+            st.sidebar.markdown(f"#### {category}")
+            for key, value in details.items():
+                st.sidebar.markdown(f"**{key}:** {value}")
 
         # Impact Analysis
         st.sidebar.markdown("### Impact Analysis")
         st.sidebar.markdown(f"**Number of Impacted Systems:** {len(impacted_systems) - 1}")
         
         # Create network visualization
-        net = Network(height="900px", width="100%", directed=True)
+        net = Network(height="800px", width="100%", directed=True)
         
-        # Add nodes with colors based on impact
+        # Add nodes with colors
         for node in G.nodes():
             color = "#FF0000" if node == selected_system else "#FFA500" if node in impacted_systems else "#CCCCCC"
-            net.add_node(node, color=color, title=f"System: {node}\nCriticality: {systems_data[node]['Criticality & Risk']['System Criticality']}\nRML: {systems_data[node]['Criticality & Risk']['Endorsed RML']}")
+            net.add_node(node, color=color, title=node)
 
-        # Add edges with dependency information
-        for edge in G.edges(data=True):
-            net.add_edge(edge[0], edge[1], title=edge[2]['title'])
+        # Add edges
+        for edge in G.edges():
+            net.add_edge(edge[0], edge[1])
 
-        # Network visualization options
+        # Set network options
         net.set_options("""
         {
             "physics": {
@@ -192,7 +146,7 @@ if check_password():
                     "springConstant": 0.08
                 },
                 "solver": "forceAtlas2Based",
-                "stabilization": {"iterations": 1000}
+                "stabilization": {"iterations": 100}
             },
             "edges": {
                 "smooth": {"type": "continuous"},
@@ -206,7 +160,7 @@ if check_password():
             with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
                 net.save_graph(tmp_file.name)
                 with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                    components.html(f.read(), height=900)
+                    components.html(f.read(), height=800)
                 os.unlink(tmp_file.name)
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
