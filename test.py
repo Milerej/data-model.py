@@ -34,8 +34,12 @@ if check_password():
     st.set_page_config(page_title="Interactive Dependency Graph", layout="wide")
     st.title("🔄 System Dependencies Visualization")
 
-    # Add the view toggle
-    view_type = st.toggle("Enable Hierarchical Layout", False)
+    # Add the view toggle and physics toggle
+    col1, col2 = st.columns(2)
+    with col1:
+        view_type = st.toggle("Enable Hierarchical Layout", False)
+    with col2:
+        physics_enabled = st.toggle("Enable Physics", False)
 
     # Define color schemes
     COLOR_SCHEMES = {
@@ -75,7 +79,6 @@ if check_password():
             "shape": "dot",
             "title": "Database System"
         },
-        # Additional mock systems
         "System F": {
             "color": "#FFFF33",  # Yellow
             "size": 30,
@@ -167,53 +170,57 @@ if check_password():
             }
         }""")
     else:
-        net.set_options("""{
-            "layout": {
+        net.set_options(f"""{{
+            "layout": {{
                 "randomSeed": 42
-            },
-            "physics": {
-                "forceAtlas2Based": {
-                    "gravitationalConstant": -50,
-                    "centralGravity": 0.01,
-                    "springLength": 200,
-                    "springConstant": 0.08,
-                    "damping": 0.4,
-                    "avoidOverlap": 1
-                },
-                "maxVelocity": 50,
-                "minVelocity": 0.1,
-                "solver": "forceAtlas2Based",
-                "stabilization": {
+            }},
+            "physics": {{
+                "enabled": {str(physics_enabled).lower()},
+                "stabilization": {{
                     "enabled": true,
-                    "iterations": 1000,
-                    "updateInterval": 100
-                }
-            },
-            "edges": {
-                "smooth": {
-                    "type": "curvedCW",
-                    "roundness": 0.2
-                },
-                "arrows": {
-                    "to": {
+                    "iterations": 2000,
+                    "updateInterval": 50,
+                    "fit": true
+                }},
+                "barnesHut": {{
+                    "gravitationalConstant": -2000,
+                    "centralGravity": 0.3,
+                    "springLength": 200,
+                    "springConstant": 0.04,
+                    "damping": 0.09,
+                    "avoidOverlap": 0.1
+                }},
+                "minVelocity": 0.75,
+                "maxVelocity": 30
+            }},
+            "edges": {{
+                "smooth": {{
+                    "type": "continuous",
+                    "roundness": 0.5
+                }},
+                "arrows": {{
+                    "to": {{
                         "enabled": true,
                         "scaleFactor": 0.5
-                    }
-                },
-                "color": {
+                    }}
+                }},
+                "color": {{
                     "inherit": false,
                     "color": "#666666",
                     "opacity": 0.8
-                }
-            },
-            "interaction": {
+                }}
+            }},
+            "interaction": {{
                 "hover": true,
                 "navigationButtons": true,
-                "keyboard": {
+                "keyboard": {{
                     "enabled": true
-                }
-            }
-        }""")
+                }},
+                "dragNodes": true,
+                "dragView": true,
+                "zoomView": true
+            }}
+        }}""")
 
     # Save and display the network
     try:
