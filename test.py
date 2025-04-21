@@ -573,10 +573,17 @@ if check_password():
         ("Impact Assessment", "National Security", "", ""),
         ("Impact Assessment", "Social Preparedness", "", ""),
         ("Impact Assessment", "Public Service", "", ""),
+        ("Impact Assessment ", "Designated CII", "", ""),
+        ("System Criticality ", "Economy", "", ""),
+        ("System Criticality ", "Public Health and Safety", "", ""),
+        ("System Criticality ", "National Security", "", ""),
+        ("System Criticality ", "Social Preparedness", "", ""),
+        ("System Criticality ", "Public Service", "", ""),
+        ("System Criticality ", "Designated CII", "", ""),
+
+
 
         # Risk Profile field connections
-        ("Risk Profile", "System Criticality", "", ""),
-        ("Risk Profile", "Designated CII", "", ""),
         ("Risk Profile", "Computed RML", "", ""),
         ("Risk Profile", "Computed RML Date", "", ""),
         ("Risk Profile", "Agency Proposed RML", "", ""),
