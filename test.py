@@ -8,6 +8,80 @@ import random
 from datetime import datetime, timedelta
 import pandas as pd
 
+def check_password():
+    """Returns `True` if the user had the correct password."""
+    def password_entered():
+        if st.session_state["password"] == "Showmethemoney":
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
+        return False
+    elif not st.session_state["password_correct"]:
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
+        st.error("⚠️ Password incorrect")
+        return False
+    else:
+        return True
+
+def generate_random_date(start_year=2015):
+    start_date = datetime(start_year, 1, 1)
+    end_date = datetime.now()
+    days_between_dates = (end_date - start_date).days
+    random_number_of_days = random.randrange(days_between_dates)
+    return (start_date + timedelta(days=random_number_of_days)).strftime("%Y-%m-%d")
+
+def generate_system_data(system_number):
+    agencies = ["AGD", "CSA", "GovTech", "IRAS", "MHA", "MOE", "MOF", "MOH"]
+    ministry_families = ["PMO", "MHA", "MOF", "MOE", "MOH"]
+    security_classifications = ["Official", "Restricted", "Confidential", "Secret"]
+    sensitivity_classifications = ["Normal", "Sensitive", "Sensitive High"]
+    criticality_levels = ["Low", "Medium", "High"]
+    rml_levels = ["1", "2", "3", "4", "5"]
+    dependency_types = ["API", "Database", "File Transfer", "Web Service"]
+    
+    return {
+        "System Identity & Classification": {
+            "System ID": f"SYS{random.randint(1000, 9999)}",
+            "System Name": f"System {system_number}",
+            "System Description": f"Description for System {system_number}",
+            "System Status": random.choice(["Active", "Inactive", "Maintenance"]),
+            "Operational Date": generate_random_date(),
+            "Decommission Date": generate_random_date(2025),
+            "Agency Name": random.choice(agencies),
+            "Ministry Family Name": random.choice(ministry_families),
+            "Security Classification": random.choice(security_classifications),
+            "Sensitivity Classification": random.choice(sensitivity_classifications)
+        },
+        "Criticality & Risk": {
+            "Economy": random.choice(criticality_levels),
+            "Public Health and Safety": random.choice(criticality_levels),
+            "National Security": random.choice(criticality_levels),
+            "Social Preparedness": random.choice(criticality_levels),
+            "Public Service": random.choice(criticality_levels),
+            "System Criticality": random.choice(criticality_levels),
+            "Designated CII": random.choice(["Yes", "No"]),
+            "Computed RML": random.choice(rml_levels),
+            "Computed RML Date": generate_random_date(),
+            "Agency Proposed RML": random.choice(rml_levels),
+            "RML Alignment": random.choice(["Aligned", "Not Aligned"]),
+            "Endorsed RML": random.choice(rml_levels),
+            "RML Endorsement Date": generate_random_date()
+        },
+        "System Resilience": {
+            "Service Availability": f"{random.randint(90, 100)}%",
+            "RTO": random.randint(1, 24),
+            "RPO": random.randint(1, 12)
+        },
+        "Dependencies": {
+            "Dependency Type": random.choice(dependency_types),
+            "Dependency Status": random.choice(["Active", "Inactive"])
+        }
+    }
+
 if check_password():
     st.set_page_config(page_title="System Impact Analysis", layout="wide")
     st.title("🔄 System Impact Analysis")
@@ -34,20 +108,21 @@ if check_password():
             if possible_targets:
                 targets = random.sample(possible_targets, min(num_dependencies, len(possible_targets)))
                 for target in targets:
-                    st.session_state.dependencies.append((system_name, target))
+                    dependency_type = random.choice(["API", "Database", "File Transfer", "Web Service"])
+                    st.session_state.dependencies.append((system_name, target, dependency_type))
 
     # Add edges from session state
-    for source, target in st.session_state.dependencies:
-        G.add_edge(source, target)
+    for source, target, dep_type in st.session_state.dependencies:
+        G.add_edge(source, target, dependency_type=dep_type)
 
-    # Sidebar for system selection - now with "Show All Systems" as default
+    # Sidebar for system selection
     selected_system = st.sidebar.selectbox(
         "Select a system to analyze impact:",
         options=["Show All Systems"] + sorted(st.session_state.systems_data.keys())
     )
 
     # Create network visualization
-    net = Network(height="800px", width="100%", directed=True)
+    net = Network(height="800px", width="100%", directed=True, bgcolor='#ffffff')
     
     if selected_system == "Show All Systems":
         # Show all systems with default color
@@ -57,7 +132,7 @@ if check_password():
             # Color coding based on system criticality
             color = {
                 "High": "#FF4444",    # Red for high criticality
-                "Medium": "#FFAA00",  # Orange for medium criticality
+                "Medium": "#FFAA00",   # Orange for medium criticality
                 "Low": "#44AA44"      # Green for low criticality
             }.get(criticality, "#CCCCCC")
             
@@ -68,6 +143,7 @@ Criticality: {criticality}
 RML: {system_info['Criticality & Risk']['Endorsed RML']}
 Status: {system_info['System Identity & Classification']['System Status']}
 Agency: {system_info['System Identity & Classification']['Agency Name']}
+Ministry: {system_info['System Identity & Classification']['Ministry Family Name']}
 """
             net.add_node(node, color=color, title=tooltip)
             
@@ -94,7 +170,7 @@ Agency: {system_info['System Identity & Classification']['Agency Name']}
         st.sidebar.markdown(f"Total Dependencies: {len(G.edges())}")
 
     else:
-        # Existing impact analysis logic for selected system
+        # Impact analysis for selected system
         impacted_systems = set()
         def find_dependencies(node, visited):
             if node not in visited:
@@ -122,6 +198,7 @@ Agency: {system_info['System Identity & Classification']['Agency Name']}
         
         # Add nodes with impact-based colors
         for node in G.nodes():
+            system_info = st.session_state.systems_data[node]
             if node == selected_system:
                 color = "#FF0000"  # Red for selected system
             elif node in impacted_systems:
@@ -129,19 +206,21 @@ Agency: {system_info['System Identity & Classification']['Agency Name']}
             else:
                 color = "#CCCCCC"  # Grey for unimpacted systems
             
-            system_info = st.session_state.systems_data[node]
             tooltip = f"""
 System: {node}
 Criticality: {system_info['Criticality & Risk']['System Criticality']}
 RML: {system_info['Criticality & Risk']['Endorsed RML']}
 Status: {system_info['System Identity & Classification']['System Status']}
 Agency: {system_info['System Identity & Classification']['Agency Name']}
+Ministry: {system_info['System Identity & Classification']['Ministry Family Name']}
 """
             net.add_node(node, color=color, title=tooltip)
 
-    # Add edges
-    for edge in G.edges():
-        net.add_edge(edge[0], edge[1])
+    # Add edges with dependency type information
+    for edge in G.edges(data=True):
+        source, target = edge[0], edge[1]
+        dep_type = edge[2].get('dependency_type', 'Unknown')
+        net.add_edge(source, target, title=f"Dependency Type: {dep_type}")
 
     # Set network options
     net.set_options("""
@@ -159,7 +238,22 @@ Agency: {system_info['System Identity & Classification']['Agency Name']}
         },
         "edges": {
             "smooth": {"type": "continuous"},
-            "arrows": {"to": {"enabled": true}}
+            "arrows": {"to": {"enabled": true}},
+            "color": {"inherit": false, "color": "#666666"}
+        },
+        "nodes": {
+            "font": {
+                "size": 12
+            },
+            "borderWidth": 2,
+            "borderWidthSelected": 4
+        },
+        "interaction": {
+            "hover": true,
+            "navigationButtons": true,
+            "keyboard": {
+                "enabled": true
+            }
         }
     }
     """)
