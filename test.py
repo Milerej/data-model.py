@@ -32,42 +32,10 @@ def check_password():
 
 if check_password():
     st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
-    
-    # Sidebar
-    with st.sidebar:
-        st.title("Graph Controls")
-        
-        # Add sidebar controls
-        st.header("Filter Options")
-        show_system_management = st.checkbox("Show System Management", value=True)
-        show_agency_management = st.checkbox("Show Agency Management", value=True)
-        
-        st.header("Display Settings")
-        node_spacing = st.slider("Node Spacing", 100, 300, 200)
-        edge_opacity = st.slider("Edge Opacity", 0.1, 1.0, 0.8)
-        
-        # Add a divider
-        st.divider()
-        
-        # Add some helpful information
-        st.markdown("""
-        ### Legend
-        - 🟢 System Management
-        - 🔵 Agency Management
-        
-        ### Tips
-        - Use mouse wheel to zoom
-        - Drag nodes to reposition
-        - Click and drag background to pan
-        """)
-
-    # Main content
     st.title("⚙️ Entity Relationship Diagram : System Management and Agency Management Data Model (V2.2)")
     
     # Add the view toggle
     view_type = st.toggle("Enable Hierarchical Layout", False)
-
-
 
     # Define standardised settings
     NODE_SETTINGS = {
@@ -113,9 +81,8 @@ if check_password():
             "shape": NODE_SETTINGS["module"]["shape"],
             "title": "DGP 2.0 Root"
         },
-
-
-                # System Management Module and related nodes
+    
+        # System Management Module and related nodes
         "System Management": {
             "color": COLOR_SCHEMES["system_management"]["module"],
             "size": NODE_SETTINGS["module"]["size"],
@@ -147,7 +114,7 @@ if check_password():
             "title": "Hosting and System Dependencies Sub-Module"
         },
 
-        # Agency Management Module and related nodes
+            # Agency Management Module and related nodes
         "Agency Management": {
             "color": COLOR_SCHEMES["agency_management"]["module"],
             "size": NODE_SETTINGS["module"]["size"],
@@ -174,11 +141,7 @@ if check_password():
             "shape": NODE_SETTINGS["subgroup"]["shape"],
             "title": "Basic Information Sub-Group"
         },
-
-
-
-
-                "Organizational Context": {
+        "Organizational Context": {
             "color": COLOR_SCHEMES["system_management"]["subgroup"],
             "size": NODE_SETTINGS["subgroup"]["size"],
             "shape": NODE_SETTINGS["subgroup"]["shape"],
@@ -221,7 +184,7 @@ if check_password():
             "title": "Dependencies Management Sub-Group"
         },
 
-        # Fields for both modules
+            # Fields for both modules
         # Agency Management Fields
         "Agency Name": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
@@ -235,11 +198,7 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Agency Abbreviation field"
         },
-
-
-
-
-                "Agency Operational Status": {
+        "Agency Operational Status": {
             "color": COLOR_SCHEMES["agency_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
@@ -301,11 +260,7 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "System Classification field"
         },
-
-
-
-
-                "Impact Level": {
+        "Impact Level": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
@@ -361,10 +316,7 @@ if check_password():
         ("System Management", "System Resilience", "", ""),
         ("System Management", "Hosting and System Dependencies", "", ""),
 
-
-
-
-                # System Identity & Classification relationships
+        # System Identity & Classification relationships
         ("System Identity & Classification", "Basic Information", "", ""),
         ("System Identity & Classification", "Organizational Context", "", ""),
         ("System Identity & Classification", "Classification", "", ""),
@@ -423,17 +375,15 @@ if check_password():
         ("Key Appointment Holder", "Full Name", "", ""),
         ("Key Appointment Holder", "Designation", "", ""),
         ("Key Appointment Holder", "Email", "", ""),
+
+        # Cross-module relationships
+        #("Agency Name", "Agency", "", ""),
+        #("Dependencies", "System ID", "", "")
     ]
 
     # Create NetworkX graph
     G = nx.DiGraph()
     for node, attributes in entities.items():
-        # Filter nodes based on sidebar selections
-        if not show_system_management and "system_management" in str(attributes["color"]):
-            continue
-        if not show_agency_management and "agency_management" in str(attributes["color"]):
-            continue
-            
         node_attrs = {
             "color": attributes["color"],
             "size": attributes["size"],
@@ -443,10 +393,9 @@ if check_password():
         }
         G.add_node(node, **node_attrs)
 
-    # Add edges with filtered nodes
+    # Add edges
     for source, target, label, direction in edges:
-        if source in G.nodes and target in G.nodes:
-            G.add_edge(source, target, title=label, label=label, arrows=direction)
+        G.add_edge(source, target, title=label, label=label, arrows=direction)
 
     # Create PyVis network
     net = Network(height="900px", width="100%", directed=True)
@@ -454,100 +403,100 @@ if check_password():
 
     # Set hierarchical layout options based on toggle
     if view_type:
-        net.set_options(f"""{{
-            "layout": {{
-                "hierarchical": {{
+        net.set_options("""{
+            "layout": {
+                "hierarchical": {
                     "enabled": true,
                     "direction": "UD",
                     "sortMethod": "directed",
-                    "nodeSpacing": {node_spacing},
-                    "levelSeparation": {node_spacing},
-                    "treeSpacing": {node_spacing},
+                    "nodeSpacing": 200,
+                    "levelSeparation": 200,
+                    "treeSpacing": 200,
                     "blockShifting": false,
                     "edgeMinimization": false,
                     "parentCentralization": false,
                     "shakeTowards": "roots"
-                }}
-            }},
-            "physics": {{
+                }
+            },
+            "physics": {
                 "enabled": true,
-                "hierarchicalRepulsion": {{
+                "hierarchicalRepulsion": {
                     "centralGravity": 0.5,
                     "springLength": 150,
                     "springConstant": 0.3,
-                    "nodeDistance": {node_spacing},
+                    "nodeDistance": 200,
                     "damping": 0.09,
                     "avoidOverlap": 1
-                }},
-                "stabilization": {{
+                },
+                "stabilization": {
                     "enabled": true,
                     "iterations": 2000,
                     "updateInterval": 100,
                     "fit": true
-                }}
-            }},
-            "edges": {{
-                "smooth": {{
+                }
+            },
+            "edges": {
+                "smooth": {
                     "type": "cubicBezier",
                     "forceDirection": "vertical",
                     "roundness": 0.5
-                }},
-                "color": {{
+                },
+                "color": {
                     "inherit": false,
                     "color": "#2E7D32",
-                    "opacity": {edge_opacity}
-                }}
-            }},
-            "nodes": {{
-                "fixed": {{
+                    "opacity": 0.8
+                }
+            },
+            "nodes": {
+                "fixed": {
                     "x": false,
                     "y": true
-                }},
+                },
                 "shape": "dot",
                 "size": 25,
-                "font": {{
+                "font": {
                     "size": 14
-                }}
-            }},
-            "interaction": {{
+                }
+            },
+            "interaction": {
                 "dragNodes": true,
                 "dragView": true,
                 "zoomView": true
-            }},
-            "groups": {{
+            },
+            "groups": {
                 "useDefaultGroups": false
-            }}
-        }}""")
+            }
+        }""")
     else:
-        net.set_options(f"""{{
-            "layout": {{
-                "hierarchical": {{
+        net.set_options("""{
+            "layout": {
+                "hierarchical": {
                     "enabled": false
-                }}
-            }},
-            "physics": {{
+                }
+            },
+            "physics": {
                 "enabled": true,
-                "barnesHut": {{
+                "barnesHut": {
                     "gravitationalConstant": -60000,
                     "centralGravity": 0.1,
                     "springLength": 200,
                     "springConstant": 0.08,
                     "damping": 0.12,
                     "avoidOverlap": 1
-                }}
-            }},
-            "edges": {{
-                "smooth": {{
+                }
+            },
+            "edges": {
+                "smooth": {
                     "type": "curvedCW",
                     "roundness": 0.2
-                }},
-                "color": {{
+                },
+                "color": {
                     "inherit": false,
                     "color": "#2E7D32",
-                    "opacity": {edge_opacity}
-                }}
-            }}
-        }}""")
+                    "opacity": 0.8
+                }
+            }
+        }""")
 
     # Save and display the network
     try:
@@ -605,6 +554,3 @@ if check_password():
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
-
-
-
