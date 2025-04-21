@@ -573,12 +573,12 @@ if check_password():
         ("Impact Assessment", "National Security", "", ""),
         ("Impact Assessment", "Social Preparedness", "", ""),
         ("Impact Assessment", "Public Service", "", ""),
-        ("System Criticality ", "Economy", "", ""),
-        ("System Criticality ", "Public Health and Safety", "", ""),
-        ("System Criticality ", "National Security", "", ""),
-        ("System Criticality ", "Social Preparedness", "", ""),
-        ("System Criticality ", "Public Service", "", ""),
-        ("System Criticality ", "Designated CII", "", ""),
+        ("Economy", "System Criticality ", "", ""),
+        ("Public Health and Safety", "System Criticality ", "", ""),
+        ("National Security", "System Criticality ", "", ""),
+        ("Social Preparedness", "System Criticality ", "", ""),
+        ("Public Service", "System Criticality ", "", ""),
+        ("Designated CII", "System Criticality ", "", ""),
 
 
 
