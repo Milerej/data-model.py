@@ -74,7 +74,6 @@ if check_password():
 
 
 
-
     # Complete entities dictionary with all nodes
     entities = {
         # Root node
@@ -140,7 +139,7 @@ if check_password():
 
 
 
-            # System Management Subgroups
+               # System Management Subgroups
         "Basic Information": {
             "color": COLOR_SCHEMES["system_management"]["subgroup"],
             "size": NODE_SETTINGS["subgroup"]["size"],
@@ -190,7 +189,7 @@ if check_password():
             "title": "Dependencies Management Sub-Group"
         },
 
-        # System Management Fields - Basic Information
+        # System Management Fields
         "System ID": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -206,8 +205,7 @@ if check_password():
 
 
 
-
-            # More System Management Fields
+        # More System Management Fields
         "System Description": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -278,7 +276,7 @@ if check_password():
 
 
 
-            # Risk Materiality Level and related fields
+                # Risk Materiality Level and related fields
         "System Criticality": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -348,7 +346,9 @@ if check_password():
 
 
 
-        # System Resilience fields
+
+
+                # System Resilience fields
         "Recovery Time Objective": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -417,23 +417,40 @@ if check_password():
 
     # Define the edges (connections between nodes)
     edges = [
+        # Root level connections
         ("DGP 2.0", "System Management"),
         ("DGP 2.0", "Agency Management"),
 
 
 
-        # System Management connections
+
+                # System Management Module connections - Level 1
         ("System Management", "System Identity & Classification"),
         ("System Management", "Criticality & Risk"),
         ("System Management", "System Resilience"),
         ("System Management", "Hosting and System Dependencies"),
 
-        # System Identity & Classification connections
+        # Agency Management Module connections - Level 1
+        ("Agency Management", "Agency"),
+        ("Agency Management", "Key Appointment Holder"),
+
+        # System Identity & Classification connections - Level 2
         ("System Identity & Classification", "Basic Information"),
         ("System Identity & Classification", "Organizational Context"),
         ("System Identity & Classification", "Classification"),
 
-        # Basic Information connections
+        # Criticality & Risk connections - Level 2
+        ("Criticality & Risk", "Impact Assessment"),
+        ("Criticality & Risk", "Risk Materiality Level"),
+        ("Criticality & Risk", "SCA/RML Approval"),
+
+        # System Resilience connections - Level 2
+        ("System Resilience", "Availability & Recovery"),
+
+        # Hosting and Dependencies connections - Level 2
+        ("Hosting and System Dependencies", "Dependencies Management"),
+
+        # Basic Information connections - Level 3
         ("Basic Information", "System ID"),
         ("Basic Information", "System Name"),
         ("Basic Information", "System Description"),
@@ -441,23 +458,18 @@ if check_password():
         ("Basic Information", "Operational Date"),
         ("Basic Information", "Decommission Date"),
 
-        # Classification connections
+        # Classification connections - Level 3
         ("Classification", "Security Classification"),
         ("Classification", "Sensitivity Classification"),
 
-        # Criticality & Risk connections
-        ("Criticality & Risk", "Impact Assessment"),
-        ("Criticality & Risk", "Risk Materiality Level"),
-        ("Criticality & Risk", "SCA/RML Approval"),
-
-        # Impact Assessment connections
+        # Impact Assessment connections - Level 3
         ("Impact Assessment", "Economy"),
         ("Impact Assessment", "Public Health and Safety"),
         ("Impact Assessment", "National Security"),
         ("Impact Assessment", "Social Preparedness"),
         ("Impact Assessment", "Public Service"),
 
-        # Risk Materiality Level connections
+        # Risk Materiality Level connections - Level 3
         ("Risk Materiality Level", "System Criticality"),
         ("Risk Materiality Level", "Designated CII"),
         ("Risk Materiality Level", "Computed RML"),
@@ -466,32 +478,31 @@ if check_password():
         ("Risk Materiality Level", "RML Alignment"),
         ("Risk Materiality Level", "RML Justification"),
 
-        # SCA/RML Approval connections
+        # SCA/RML Approval connections - Level 3
         ("SCA/RML Approval", "Endorsed RML"),
         ("SCA/RML Approval", "RML Endorsement Date"),
         ("SCA/RML Approval", "Endorsement Comments"),
         ("SCA/RML Approval", "IDSC Approval Date"),
 
-        # System Resilience connections
-        ("System Resilience", "Availability & Recovery"),
+        # Availability & Recovery connections - Level 3
         ("Availability & Recovery", "Recovery Time Objective"),
         ("Availability & Recovery", "Recovery Point Objective"),
         ("Availability & Recovery", "Availability Target"),
 
-        # Hosting and System Dependencies connections
-        ("Hosting and System Dependencies", "Dependencies Management"),
+        # Dependencies Management connections - Level 3
         ("Dependencies Management", "Hosting Environment"),
         ("Dependencies Management", "Dependencies"),
 
-        # Agency Management connections
-        ("Agency Management", "Agency"),
-        ("Agency Management", "Key Appointment Holder"),
+        # Agency connections - Level 2
         ("Agency", "Agency Code"),
         ("Agency", "Agency Name"),
         ("Agency", "Ministry"),
+
+        # Key Appointment Holder connections - Level 2
         ("Key Appointment Holder", "CIO Name"),
         ("Key Appointment Holder", "CIO Email"),
     ]
+
 
 
 
@@ -512,16 +523,16 @@ if check_password():
     for edge in edges:
         net.add_edge(edge[0], edge[1])
 
-    # Configure physics
+    # Configure physics based on view type
     if view_type:
         net.set_options("""
         const options = {
             "physics": {
                 "hierarchicalRepulsion": {
                     "centralGravity": 0.0,
-                    "springLength": 100,
+                    "springLength": 150,
                     "springConstant": 0.01,
-                    "nodeDistance": 120,
+                    "nodeDistance": 150,
                     "damping": 0.09
                 },
                 "solver": "hierarchicalRepulsion"
@@ -529,14 +540,15 @@ if check_password():
             "layout": {
                 "hierarchical": {
                     "enabled": true,
-                    "levelSeparation": 150,
-                    "nodeSpacing": 100,
+                    "levelSeparation": 200,
+                    "nodeSpacing": 200,
                     "treeSpacing": 200,
                     "blockShifting": true,
                     "edgeMinimization": true,
                     "parentCentralization": true,
                     "direction": "UD",
-                    "sortMethod": "directed"
+                    "sortMethod": "directed",
+                    "shakeTowards": "roots"
                 }
             }
         }
@@ -599,6 +611,4 @@ if check_password():
         st.markdown(f'<span style="color: {COLOR_SCHEMES["agency_management"]["submodule"]}">●</span> Sub-Module', unsafe_allow_html=True)
         st.markdown(f'<span style="color: {COLOR_SCHEMES["agency_management"]["subgroup"]}">●</span> Sub-Group', unsafe_allow_html=True)
         st.markdown(f'<span style="color: {COLOR_SCHEMES["agency_management"]["field"]}">●</span> Field', unsafe_allow_html=True)
-
         
-    
