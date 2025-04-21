@@ -8,9 +8,25 @@ import random
 from datetime import datetime, timedelta
 import pandas as pd
 
-if check_password():
-    st.set_page_config(page_title="System Impact Analysis", layout="wide")
-    st.title("🔄 System Impact Analysis")
+# Initialize session state for password check
+if 'password_correct' not in st.session_state:
+    st.session_state.password_correct = False
+
+def check_password():
+    """Returns `True` if the user had the correct password."""
+    if st.session_state.password_correct:
+        return True
+
+    password = st.text_input("Password", type="password")
+    if password == "Showmethemoney":
+        st.session_state.password_correct = True
+        return True
+    elif password:
+        st.error("⚠️ Password incorrect")
+        return False
+    return False
+
+[Rest of the code remains exactly the same]
 
     # Initialize session state for systems data if not exists
     if 'systems_data' not in st.session_state:
