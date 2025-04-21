@@ -646,71 +646,73 @@ if check_password():
     net.from_nx(G)
 
     # Set hierarchical layout options based on toggle
-    if view_type:
-        net.set_options("""{
-            "layout": {
-                "hierarchical": {
-                    "enabled": true,
-                    "direction": "UD",
-                    "sortMethod": "directed",
-                    "nodeSpacing": 200,
-                    "levelSeparation": 200,
-                    "treeSpacing": 200,
-                    "blockShifting": false,
-                    "edgeMinimization": false,
-                    "parentCentralization": false,
-                    "shakeTowards": "roots"
-                }
-            },
-            "physics": {
+if view_type:
+    net.set_options("""{
+        "layout": {
+            "hierarchical": {
                 "enabled": true,
-                "hierarchicalRepulsion": {
-                    "centralGravity": 0.5,
-                    "springLength": 150,
-                    "springConstant": 0.3,
-                    "nodeDistance": 200,
-                    "damping": 0.09,
-                    "avoidOverlap": 1
-                },
-                "stabilization": {
-                    "enabled": true,
-                    "iterations": 2000,
-                    "updateInterval": 100,
-                    "fit": true
-                }
-            },
-            "edges": {
-                "smooth": {
-                    "type": "cubicBezier",
-                    "forceDirection": "vertical",
-                    "roundness": 0.5
-                },
-                "color": {
-                    "inherit": false,
-                    "color": "#2E7D32",
-                    "opacity": 0.8
-                }
-            },
-            "nodes": {
-                "fixed": {
-                    "x": false,
-                    "y": true
-                },
-                "shape": "dot",
-                "size": 25,
-                "font": {
-                    "size": 14
-                }
-            },
-            "interaction": {
-                "dragNodes": true,
-                "dragView": true,
-                "zoomView": true
-            },
-            "groups": {
-                "useDefaultGroups": false
+                "direction": "UD",
+                "sortMethod": "directed",
+                "nodeSpacing": 250,
+                "levelSeparation": 150,
+                "treeSpacing": 250,
+                "blockShifting": true,
+                "edgeMinimization": true,
+                "parentCentralization": true,
+                "shakeTowards": "leaves"
             }
-        }""")
+        },
+        "physics": {
+            "enabled": true,
+            "hierarchicalRepulsion": {
+                "centralGravity": 0.2,
+                "springLength": 200,
+                "springConstant": 0.2,
+                "nodeDistance": 250,
+                "damping": 0.09,
+                "avoidOverlap": 1
+            },
+            "stabilization": {
+                "enabled": true,
+                "iterations": 2500,
+                "updateInterval": 50,
+                "fit": true
+            }
+        },
+        "edges": {
+            "smooth": {
+                "type": "cubicBezier",
+                "forceDirection": "vertical",
+                "roundness": 0.4
+            },
+            "color": {
+                "inherit": false,
+                "color": "#2E7D32",
+                "opacity": 0.8
+            }
+        },
+        "nodes": {
+            "fixed": {
+                "x": false,
+                "y": false
+            },
+            "shape": "dot",
+            "size": 25,
+            "font": {
+                "size": 14
+            },
+            "levelAlignment": true
+        },
+        "interaction": {
+            "dragNodes": true,
+            "dragView": true,
+            "zoomView": true,
+            "navigationButtons": true
+        },
+        "groups": {
+            "useDefaultGroups": false
+        }
+    }""")
     else:
         net.set_options("""{
             "layout": {
@@ -798,4 +800,3 @@ if check_password():
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
-
