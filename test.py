@@ -418,24 +418,6 @@ if check_password():
         },
 
         # System Management Fields - Dependencies
-        "Total Dependencies": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Total Dependencies field"
-        },
-        "Downstream Impact": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Downstream Impact field"
-        },
-        "Direct Dependencies Count": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Direct Dependencies Count field"
-        },
         "Dependency ID": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
@@ -454,29 +436,11 @@ if check_password():
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Dependency Type field"
         },
-        "Upstream System": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Upstream System field"
-        },
         "Dependent System": {
             "color": COLOR_SCHEMES["system_management"]["field"],
             "size": NODE_SETTINGS["field"]["size"],
             "shape": NODE_SETTINGS["field"]["shape"],
             "title": "Dependent System field"
-        },
-        "Data Exchange Frequency": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Data Exchange Frequency field"
-        },
-        "Inferred Dependencies": {
-            "color": COLOR_SCHEMES["system_management"]["field"],
-            "size": NODE_SETTINGS["field"]["size"],
-            "shape": NODE_SETTINGS["field"]["shape"],
-            "title": "Inferred Dependencies field"
         },
 
 
@@ -619,16 +583,10 @@ if check_password():
         ("Hosting and System Dependencies", "Dependencies Management", "", ""),
 
         # Dependencies Management field connections
-        ("Dependencies Management", "Total Dependencies", "", ""),
-        ("Dependencies Management", "Downstream Impact", "", ""),
-        ("Dependencies Management", "Direct Dependencies Count", "", ""),
         ("Dependencies Management", "Dependency ID", "", ""),
         ("Dependencies Management", "Dependency Status", "", ""),
         ("Dependencies Management", "Dependency Type", "", ""),
-        ("Dependencies Management", "Upstream System", "", ""),
         ("Dependencies Management", "Dependent System", "", ""),
-        ("Dependencies Management", "Data Exchange Frequency", "", ""),
-        ("Dependencies Management", "Inferred Dependencies", "", ""),
 
         # Agency Management Module relationships
         ("Agency Management", "Agency", "", ""),
@@ -649,7 +607,7 @@ if check_password():
         ("System Criticality", "Computed RML", "", ""),
         ("Security Classification", "Computed RML", "", ""),
         ("Sensitivity Classification", "Computed RML", "", ""),
-        ("Inferred Dependencies", "Computed RML", "", ""),
+        ("Dependency ID", "Computed RML", "", ""),
 
     ]
 
@@ -829,3 +787,4 @@ if check_password():
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred while generating the graph: {str(e)}")
+
