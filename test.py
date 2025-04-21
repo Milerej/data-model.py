@@ -1,9 +1,9 @@
 import streamlit as st
- from pyvis.network import Network
- import networkx as nx
- import streamlit.components.v1 as components
- import tempfile
- import os
+from pyvis.network import Network
+import networkx as nx
+import streamlit.components.v1 as components
+import tempfile
+import os
  
  def check_password():
      """Returns `True` if the user had the correct password."""
