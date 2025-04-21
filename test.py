@@ -32,7 +32,7 @@ def check_password():
 
 if check_password():
     st.set_page_config(page_title="Interactive Interdependency Graph", layout="wide")
-    st.title("⚙️ Data Model : System Management and Agency Management (V2.2)")
+    st.title("⚙️ Data Model : System Management and Agency Management V2.3)")
 
     # Add the view toggle
     view_type = st.toggle("Enable Hierarchical Layout", False)
@@ -79,8 +79,8 @@ if check_password():
     entities = {
         # Root node
         "DGP 2.0": {
-            "color": "#1A237E",  # Dark blue color
-            "size": 60,  # Larger than module size
+            "color": "##808080",  # Grey color
+            "size": 80,  # Larger than module size
             "shape": NODE_SETTINGS["module"]["shape"],
             "title": "DGP 2.0 Root"
         },
