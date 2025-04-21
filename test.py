@@ -592,11 +592,12 @@ if check_password():
         ("Dependencies Management", "Dependency ID", "", ""),
         ("Dependencies Management", "Dependency Status", "", ""),
         ("Dependencies Management", "Dependency Type", "", ""),
-        ("Dependencies Management", "Dependency System", "", ""),
+        ("Dependencies Management", "Dependent System", "", ""),
         ("Downstream Dependency", "Dependent System", "", ""),
         ("Downstream Dependency", "Dependency ID", "", ""),
         ("Downstream Dependency", "Dependency Status", "", ""),
         ("Downstream Dependency", "Dependency Type", "", ""),
+        ("Downstream Dependency", "Dependent System", "", ""),
 
         # Agency Management Module relationships
         ("Agency Management", "Agency", "", ""),
