@@ -8,81 +8,6 @@ import random
 from datetime import datetime, timedelta
 import pandas as pd
 
-def check_password():
-    """Returns `True` if the user had the correct password."""
-    def password_entered():
-        if st.session_state["password"] == "Showmethemoney":
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
-
-    if "password_correct" not in st.session_state:
-        st.text_input("Password", type="password", on_change=password_entered, key="password")
-        return False
-    elif not st.session_state["password_correct"]:
-        st.text_input("Password", type="password", on_change=password_entered, key="password")
-        st.error("⚠️ Password incorrect")
-        return False
-    else:
-        return True
-
-def generate_random_date(start_year=2015):
-    start_date = datetime(start_year, 1, 1)
-    end_date = datetime.now()
-    days_between_dates = (end_date - start_date).days
-    random_number_of_days = random.randrange(days_between_dates)
-    return (start_date + timedelta(days=random_number_of_days)).strftime("%Y-%m-%d")
-
-def generate_system_data(system_number):
-    agencies = ["AGD", "CSA", "GovTech", "IRAS", "MHA", "MOE", "MOF", "MOH"]
-    ministry_families = ["PMO", "MHA", "MOF", "MOE", "MOH"]
-    security_classifications = ["Official", "Restricted", "Confidential", "Secret"]
-    sensitivity_classifications = ["Normal", "Sensitive", "Sensitive High"]
-    criticality_levels = ["Low", "Medium", "High"]
-    rml_levels = ["1", "2", "3", "4", "5"]
-    dependency_types = ["API", "Database", "File Transfer", "Web Service"]
-    
-    return {
-        "System Identity & Classification": {
-            "System ID": f"SYS{random.randint(1000, 9999)}",
-            "System Name": f"System {system_number}",
-            "System Description": f"Description for System {system_number}",
-            "System Status": random.choice(["Active", "Inactive", "Maintenance"]),
-            "Operational Date": generate_random_date(),
-            "Decommission Date": generate_random_date(2025),
-            "Agency Name": random.choice(agencies),
-            "Ministry Family Name": random.choice(ministry_families),
-            "Security Classification": random.choice(security_classifications),
-            "Sensitivity Classification": random.choice(sensitivity_classifications)
-        },
-        "Criticality & Risk": {
-            "Economy": random.choice(criticality_levels),
-            "Public Health and Safety": random.choice(criticality_levels),
-            "National Security": random.choice(criticality_levels),
-            "Social Preparedness": random.choice(criticality_levels),
-            "Public Service": random.choice(criticality_levels),
-            "System Criticality": random.choice(criticality_levels),
-            "Designated CII": random.choice(["Yes", "No"]),
-            "Computed RML": random.choice(rml_levels),
-            "Computed RML Date": generate_random_date(),
-            "Agency Proposed RML": random.choice(rml_levels),
-            "RML Alignment": random.choice(["Aligned", "Not Aligned"]),
-            "Endorsed RML": random.choice(rml_levels),
-            "RML Endorsement Date": generate_random_date()
-        },
-        "System Resilience": {
-            "Service Availability": f"{random.randint(90, 100)}%",
-            "RTO": random.randint(1, 24),
-            "RPO": random.randint(1, 12)
-        },
-        "Dependencies": {
-            "Dependency Type": random.choice(dependency_types),
-            "Dependency Status": random.choice(["Active", "Inactive"])
-        }
-    }
-
-
 if check_password():
     st.set_page_config(page_title="System Impact Analysis", layout="wide")
     st.title("🔄 System Impact Analysis")
@@ -133,11 +58,6 @@ if check_password():
     
     # Update session state
     st.session_state.selected_system = selected_system
-
-    # Add reset button
-    if st.sidebar.button("Reset View"):
-        st.session_state.selected_system = "Show All Systems"
-        st.experimental_rerun()
 
     # Create network visualization
     net = Network(height="800px", width="100%", directed=True, bgcolor='#ffffff')
@@ -287,20 +207,3 @@ Ministry: {system_info['System Identity & Classification']['Ministry Family Name
             os.unlink(tmp_file.name)
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
-
-    # Export functionality
-    if selected_system != "Show All Systems":
-        if st.sidebar.button("Export Impact Analysis"):
-            impact_data = {
-                "Selected System": selected_system,
-                "Impacted Systems": list(impacted_systems),
-                "System Details": system_info
-            }
-            st.sidebar.download_button(
-                "Download Analysis Report",
-                data=pd.DataFrame([impact_data]).to_csv(index=False),
-                file_name=f"impact_analysis_{selected_system}.csv",
-                mime="text/csv"
-            )
-
-
