@@ -639,8 +639,8 @@ if check_password():
         ("Key Appointment Holder", "Email", "", ""),
 
         # Cross-module relationships
-        ("Agency Name", "Agency", "", ""),
-        ("Dependencies Management", "System ID", "", "")
+        #("Agency Name", "Agency", "", ""),
+        #("Dependencies Management", "System ID", "", "")
     ]
 
     # Create NetworkX graph
